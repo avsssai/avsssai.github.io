@@ -1,0 +1,25 @@
+---
+import { site } from '../config/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ButtonLink from '../components/ui/ButtonLink.astro';
+import Container from '../components/ui/Container.astro';
+---
+
+<BaseLayout title="Contact" description={`Get in touch with ${site.name}.`}>
+  <Container class="py-20">
+    <section class="grid gap-12 lg:grid-cols-[1fr_0.55fr] lg:items-end">
+      <div>
+        <p class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent">Contact</p>
+        <h1 class="mt-4 max-w-4xl text-6xl font-semibold leading-[0.96] tracking-tight sm:text-8xl">
+          Have a hard problem worth solving?
+        </h1>
+      </div>
+      <div>
+        <p class="text-lg leading-relaxed text-muted">
+          Send a short note with the context, constraints, and what a good outcome looks like.
+        </p>
+        <ButtonLink class="mt-7" href={`mailto:${site.email}`}>Email {site.email}</ButtonLink>
+      </div>
+    </section>
+  </Container>
+</BaseLayout>

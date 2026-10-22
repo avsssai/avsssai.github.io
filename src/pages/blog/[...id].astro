@@ -1,0 +1,33 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/ui/Container.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <Container class="py-20">
+    <article>
+      <header class="mx-auto max-w-4xl border-b border-line pb-12">
+        <p class="font-mono text-xs text-accent">{post.data.tags.join(' · ')}</p>
+        <h1 class="mt-5 text-5xl font-semibold leading-tight tracking-tight sm:text-7xl">{post.data.title}</h1>
+        <p class="mt-6 max-w-2xl text-xl leading-relaxed text-muted">{post.data.description}</p>
+        <time class="mt-8 block font-mono text-xs text-muted" datetime={post.data.publishedAt.toISOString()}>
+          {post.data.publishedAt.toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+      </header>
+      <div class="prose mx-auto mt-12"><Content /></div>
+    </article>
+  </Container>
+</BaseLayout>

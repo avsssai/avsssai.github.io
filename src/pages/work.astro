@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/ui/Container.astro';
+import ButtonLink from '../components/ui/ButtonLink.astro';
+---
+
+<BaseLayout title="Work" description="Selected development work and case studies.">
+  <Container class="py-20">
+    <p class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent">Selected work</p>
+    <h1 class="mt-4 max-w-3xl text-5xl font-semibold tracking-tight sm:text-7xl">Things I have built.</h1>
+    <div class="mt-16 grid gap-px overflow-hidden rounded-3xl border border-line bg-line md:grid-cols-2">
+      {
+        ['Project one', 'Project two'].map((title, index) => (
+          <article class="min-h-80 bg-paper p-8 sm:p-10">
+            <p class="font-mono text-xs text-accent">0{index + 1} / CASE STUDY</p>
+            <h2 class="mt-20 text-3xl font-semibold tracking-tight">{title}</h2>
+            <p class="mt-3 text-muted">Replace this with the problem, your contribution, and the measurable outcome.</p>
+            <ButtonLink class="mt-8" href="/contact" variant="text">Discuss the work →</ButtonLink>
+          </article>
+        ))
+      }
+    </div>
+  </Container>
+</BaseLayout>

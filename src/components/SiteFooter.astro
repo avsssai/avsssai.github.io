@@ -1,0 +1,15 @@
+---
+import { site } from '../config/site';
+import Container from './ui/Container.astro';
+---
+
+<footer class="mt-24 border-t border-line py-8">
+  <Container class="flex flex-col gap-3 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+    <p>© {new Date().getFullYear()} {site.name}. Built with Astro.</p>
+    <div class="flex gap-5">
+      <a class="hover:text-ink" href={site.social.github}>GitHub</a>
+      <a class="hover:text-ink" href={site.social.linkedin}>LinkedIn</a>
+      <a class="hover:text-ink" href="/rss.xml">RSS</a>
+    </div>
+  </Container>
+</footer>

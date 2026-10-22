@@ -1,0 +1,68 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Berkeley Mono', 'SFMono-Regular', Consolas, monospace;
+  --color-ink: #11110f;
+  --color-paper: #f4f1e9;
+  --color-accent: #ff5c35;
+  --color-muted: #777369;
+  --color-line: #d9d4c8;
+}
+
+:root {
+  color-scheme: light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 85% 8%, rgb(255 92 53 / 12%), transparent 24rem),
+    var(--color-paper);
+  color: var(--color-ink);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: white;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+.prose {
+  max-width: 68ch;
+  font-size: 1.075rem;
+  line-height: 1.8;
+}
+
+.prose :where(h2, h3) {
+  margin-block: 2.5em 0.7em;
+  line-height: 1.15;
+}
+
+.prose :where(a) {
+  color: var(--color-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.prose :where(pre) {
+  overflow-x: auto;
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
+  padding: 1rem;
+}

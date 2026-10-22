@@ -1,0 +1,39 @@
+---
+import { site } from '../config/site';
+import Container from './ui/Container.astro';
+
+const pathname = Astro.url.pathname;
+const links = [
+  { href: '/work', label: 'Work' },
+  { href: '/blog', label: 'Writing' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<header class="border-b border-line/80">
+  <Container class="flex h-20 items-center justify-between">
+    <a class="font-mono text-sm font-bold tracking-tight" href="/" aria-label={`${site.name}, home`}>
+      {site.name}<span class="text-accent">.</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <ul class="flex items-center gap-5 sm:gap-8">
+        {
+          links.map(({ href, label }) => (
+            <li>
+              <a
+                class:list={[
+                  'text-sm transition hover:text-accent',
+                  pathname.startsWith(href) ? 'font-semibold text-ink' : 'text-muted',
+                ]}
+                href={href}
+                aria-current={pathname.startsWith(href) ? 'page' : undefined}
+              >
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </Container>
+</header>
