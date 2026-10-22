@@ -9,15 +9,32 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 );
 ---
 
-<BaseLayout title="Writing" description="Technical notes, experiments, and lessons from building software.">
+<BaseLayout
+  title="Writing"
+  description="Technical notes, experiments, and lessons from building software."
+>
   <Container class="py-20">
-    <p class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent">Blog</p>
-    <h1 class="mt-4 max-w-3xl text-5xl font-semibold tracking-tight sm:text-7xl">Notes from the workbench.</h1>
+    <p class="terminal-kicker">
+      <span aria-hidden="true">$ </span>cat ./blog/index
+    </p>
+    <h1
+      class="mt-5 max-w-3xl text-5xl font-semibold tracking-tight sm:text-7xl"
+    >
+      Notes from the workbench.
+    </h1>
     <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
       Technical notes, experiments, and lessons from building software.
     </p>
-    <div class="mt-16">
-      {posts.map((post) => <PostCard href={`/blog/${post.id}/`} {...post.data} date={post.data.publishedAt} />)}
+    <div class="mt-16 border-b border-line">
+      {
+        posts.map((post) => (
+          <PostCard
+            href={`/blog/${post.id}/`}
+            {...post.data}
+            date={post.data.publishedAt}
+          />
+        ))
+      }
     </div>
   </Container>
 </BaseLayout>

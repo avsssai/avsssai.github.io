@@ -1,19 +1,48 @@
 @import 'tailwindcss';
 
-@theme {
+@theme inline {
   --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Berkeley Mono', 'SFMono-Regular', Consolas, monospace;
-  --color-ink: #11110f;
-  --color-paper: #f4f1e9;
-  --color-accent: #ff5c35;
-  --color-muted: #777369;
-  --color-line: #d9d4c8;
+  --color-ink: var(--theme-ink);
+  --color-paper: var(--theme-paper);
+  --color-surface: var(--theme-surface);
+  --color-accent: var(--theme-accent);
+  --color-cyan: var(--theme-cyan);
+  --color-magenta: var(--theme-magenta);
+  --color-muted: var(--theme-muted);
+  --color-line: var(--theme-line);
 }
 
 :root {
+  --theme-paper: #f2f6ec;
+  --theme-surface: #ffffff;
+  --theme-ink: #122019;
+  --theme-muted: #5c7063;
+  --theme-accent: #087a42;
+  --theme-cyan: #006d7c;
+  --theme-magenta: #a82178;
+  --theme-line: #cbd8ce;
+  --grid-color: rgb(18 32 25 / 7%);
+  --scanline-color: rgb(18 32 25 / 2.5%);
+  --pixel-shadow: #9ab2a0;
   color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+}
+
+:root[data-theme='dark'] {
+  --theme-paper: #070a09;
+  --theme-surface: #0d1310;
+  --theme-ink: #e2f7e9;
+  --theme-muted: #82998a;
+  --theme-accent: #48ff91;
+  --theme-cyan: #45e6ff;
+  --theme-magenta: #ff55cf;
+  --theme-line: #24372b;
+  --grid-color: rgb(72 255 145 / 7%);
+  --scanline-color: rgb(226 247 233 / 2.5%);
+  --pixel-shadow: #173822;
+  color-scheme: dark;
 }
 
 html {
@@ -23,14 +52,22 @@ html {
 body {
   margin: 0;
   background:
-    radial-gradient(circle at 85% 8%, rgb(255 92 53 / 12%), transparent 24rem),
+    linear-gradient(var(--scanline-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
     var(--color-paper);
+  background-size:
+    4px 4px,
+    32px 32px,
+    auto;
   color: var(--color-ink);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
 }
 
 ::selection {
   background: var(--color-accent);
-  color: white;
+  color: var(--color-paper);
 }
 
 a,
@@ -63,6 +100,36 @@ button {
 .prose :where(pre) {
   overflow-x: auto;
   border: 1px solid var(--color-line);
-  border-radius: 1rem;
+  background: var(--color-surface);
   padding: 1rem;
+  box-shadow: 4px 4px 0 var(--pixel-shadow);
+}
+
+.pixel-panel {
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  background: color-mix(in srgb, var(--color-surface) 94%, transparent);
+  box-shadow: 4px 4px 0 var(--pixel-shadow);
+}
+
+.terminal-kicker {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

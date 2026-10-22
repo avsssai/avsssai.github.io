@@ -1,0 +1,89 @@
+<button
+  class="theme-switcher"
+  type="button"
+  data-theme-toggle
+  aria-label="Switch color theme"
+>
+  <span class="theme-switcher__icon" aria-hidden="true">◐</span>
+  <span class="theme-switcher__label" data-theme-label>Theme</span>
+</button>
+
+<script>
+  const root = document.documentElement;
+  const toggle = document.querySelector<HTMLButtonElement>(
+    '[data-theme-toggle]',
+  );
+  const label = toggle?.querySelector<HTMLElement>('[data-theme-label]');
+
+  const updateToggle = () => {
+    const isDark = root.dataset.theme === 'dark';
+    if (label) label.textContent = isDark ? 'Light' : 'Dark';
+    toggle?.setAttribute(
+      'aria-label',
+      `Switch to ${isDark ? 'light' : 'dark'} theme`,
+    );
+    toggle?.setAttribute('aria-pressed', String(isDark));
+  };
+
+  toggle?.addEventListener('click', () => {
+    const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = nextTheme;
+    try {
+      localStorage.setItem('theme', nextTheme);
+    } catch {}
+    updateToggle();
+  });
+
+  updateToggle();
+</script>
+
+<style>
+  .theme-switcher {
+    display: inline-flex;
+    min-height: 2.25rem;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+    padding: 0.4rem 0.65rem;
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 2px 2px 0 var(--pixel-shadow);
+    cursor: pointer;
+    transition:
+      color 120ms ease,
+      border-color 120ms ease,
+      transform 120ms ease,
+      box-shadow 120ms ease;
+  }
+
+  .theme-switcher:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .theme-switcher:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
+
+  .theme-switcher__icon {
+    color: var(--color-magenta);
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 30rem) {
+    .theme-switcher__label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+</style>

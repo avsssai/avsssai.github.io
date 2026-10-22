@@ -1,13 +1,13 @@
 # Developer site
 
-An Astro-based personal site with a landing page, developer blog, work index, contact page, RSS, sitemap, and CI foundation.
+An Astro-based personal site with a neon terminal theme, developer blog, work index, RSS, sitemap, and CI foundation.
 
 ## Requirements
 
 - Node.js 22.23.4 or newer
 - Corepack and pnpm 10
 
-Your current machine reports Node 15, so upgrade before installing dependencies. With `nvm`:
+Use the pinned Node version with `nvm`:
 
 ```sh
 nvm install
@@ -27,14 +27,14 @@ pnpm dev
 
 ## Commands
 
-| Command | Purpose |
-| --- | --- |
-| `pnpm dev` | Start the local development server |
-| `pnpm check` | Check Astro and TypeScript |
-| `pnpm build` | Check and create the static production build |
-| `pnpm preview` | Preview the production build |
-| `pnpm format` | Format supported files |
-| `pnpm format:check` | Verify formatting without changing files |
+| Command             | Purpose                                      |
+| ------------------- | -------------------------------------------- |
+| `pnpm dev`          | Start the local development server           |
+| `pnpm check`        | Check Astro and TypeScript                   |
+| `pnpm build`        | Check and create the static production build |
+| `pnpm preview`      | Preview the production build                 |
+| `pnpm format`       | Format supported files                       |
+| `pnpm format:check` | Verify formatting without changing files     |
 
 ## GitHub Actions
 
