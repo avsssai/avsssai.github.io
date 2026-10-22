@@ -21,6 +21,7 @@
     "@astrojs/sitemap": "^3.6.0",
     "@tailwindcss/vite": "^4.1.16",
     "astro": "^7.4.0",
+    "cookie": "2.0.1",
     "tailwindcss": "^4.1.16"
   },
   "devDependencies": {

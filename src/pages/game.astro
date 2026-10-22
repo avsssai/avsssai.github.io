@@ -1,0 +1,27 @@
+---
+import GameLauncher from '../components/GameLauncher.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/ui/Container.astro';
+---
+
+<BaseLayout
+  title="Agent Runner"
+  description="An 8 bit strategy runner about agents, limits, and an endless Jira backlog."
+>
+  <Container class="py-12 sm:py-16">
+    <header class="mb-10 max-w-4xl">
+      <p class="terminal-kicker">
+        <span aria-hidden="true">$ </span>run agent-runner
+      </p>
+      <h1 class="mt-5 text-5xl font-semibold tracking-tight sm:text-7xl">
+        Agent Runner
+      </h1>
+      <p class="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
+        A tiny strategy runner about defending a sprint with temporary coding
+        agents and very finite limits.
+      </p>
+    </header>
+
+    <GameLauncher />
+  </Container>
+</BaseLayout>

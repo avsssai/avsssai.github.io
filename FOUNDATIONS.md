@@ -25,8 +25,9 @@
 1. `/` — personal introduction, featured work, recent writing, and primary calls to action.
 2. `/work/` — selected case studies focused on problem, contribution, decisions, and outcome.
 3. `/blog/` and `/blog/[slug]/` — durable technical writing with tags and RSS.
+4. `/game/` — an on-demand launcher for the Agent Runner browser game.
 
-Astro enforces trailing slashes for page routes. The header exposes only Home, Work, Blog, and the theme switcher.
+Astro enforces trailing slashes for page routes. The header exposes Home, Work, Blog, Play, and the theme switcher.
 
 ## Component layers
 
