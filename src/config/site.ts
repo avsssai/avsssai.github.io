@@ -1,5 +1,5 @@
 export const site = {
-  name: 'Your Name',
+  name: 'Siva Addanki',
   role: 'Software developer',
   description:
     'A developer portfolio and field notes on building thoughtful software.',

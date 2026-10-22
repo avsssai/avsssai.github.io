@@ -42,6 +42,7 @@ Astro enforces trailing slashes for page routes. The header exposes only Home, W
 - An inline head script applies the saved theme before the body renders to prevent a color flash.
 - Both palettes use the same semantic tokens for background, surface, text, muted text, borders, and green, cyan, and magenta accents.
 - Body text stays in a readable sans serif. Navigation, labels, metadata, and code use monospace.
+- `PixelCompanion.astro` introduces the site on the homepage and stays available as a compact route-aware guide on interior pages.
 
 ## Near-term roadmap
 

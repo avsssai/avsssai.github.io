@@ -1,0 +1,285 @@
+---
+import { site } from '../config/site';
+
+interface Props {
+  compact?: boolean;
+  message?: string;
+}
+
+const {
+  compact = false,
+  message = 'route loaded. everything looks operational.',
+} = Astro.props;
+
+const speaker = site.name.toUpperCase().replaceAll(' ', '_');
+---
+
+<figure
+  class:list={['pixel-companion', { 'pixel-companion--compact': compact }]}
+  data-pixel-companion={compact ? 'compact' : 'featured'}
+>
+  <div class="pixel-companion__sprite" aria-hidden="true">
+    <svg viewBox="0 0 16 22" shape-rendering="crispEdges" role="presentation">
+      <rect class="shadow" x="2" y="21" width="12" height="1"></rect>
+
+      <rect class="hair" x="5" y="1" width="6" height="1"></rect>
+      <rect class="hair" x="4" y="2" width="8" height="2"></rect>
+      <rect class="hair" x="3" y="4" width="2" height="4"></rect>
+      <rect class="hair" x="11" y="4" width="2" height="4"></rect>
+      <rect class="skin" x="4" y="5" width="8" height="4"></rect>
+      <rect class="skin" x="5" y="4" width="6" height="7"></rect>
+      <rect class="hair" x="5" y="3" width="3" height="1"></rect>
+      <rect class="hair" x="10" y="3" width="2" height="2"></rect>
+      <rect class="eye" x="6" y="6" width="1" height="1"></rect>
+      <rect class="eye" x="9" y="6" width="1" height="1"></rect>
+      <rect class="skin-shadow" x="8" y="7" width="1" height="1"></rect>
+      <rect class="mouth" x="7" y="9" width="3" height="1"></rect>
+
+      <rect class="skin" x="7" y="11" width="3" height="2"></rect>
+      <rect class="shirt" x="4" y="13" width="8" height="5"></rect>
+      <rect class="shirt-detail" x="7" y="13" width="2" height="5"></rect>
+      <rect class="skin" x="2" y="14" width="2" height="4"></rect>
+      <rect class="skin" x="12" y="12" width="2" height="5"></rect>
+      <rect class="skin" x="13" y="10" width="2" height="3"></rect>
+      <rect class="skin" x="14" y="9" width="1" height="1"></rect>
+
+      <rect class="pants" x="5" y="18" width="3" height="3"></rect>
+      <rect class="pants" x="9" y="18" width="3" height="3"></rect>
+      <rect class="shoe" x="4" y="20" width="4" height="1"></rect>
+      <rect class="shoe" x="9" y="20" width="4" height="1"></rect>
+    </svg>
+  </div>
+
+  <figcaption class="pixel-companion__dialog">
+    {
+      compact && (
+        <button
+          class="pixel-companion__close"
+          type="button"
+          data-companion-close
+          aria-label="Close pixel companion"
+        >
+          ×
+        </button>
+      )
+    }
+    <span class="pixel-companion__name">&gt; {speaker}:</span>
+    <div class="pixel-companion__copy">
+      <slot>{message}</slot>
+    </div>
+  </figcaption>
+</figure>
+
+<script>
+  const companion = document.querySelector<HTMLElement>(
+    '[data-pixel-companion="compact"]',
+  );
+  const closeButton = companion?.querySelector<HTMLButtonElement>(
+    '[data-companion-close]',
+  );
+
+  try {
+    if (sessionStorage.getItem('pixel-companion-dismissed') === 'true') {
+      companion?.setAttribute('hidden', '');
+    }
+  } catch {}
+
+  closeButton?.addEventListener('click', () => {
+    companion?.setAttribute('hidden', '');
+    try {
+      sessionStorage.setItem('pixel-companion-dismissed', 'true');
+    } catch {}
+  });
+</script>
+
+<style>
+  .pixel-companion {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    align-items: end;
+    gap: 1.25rem;
+  }
+
+  .pixel-companion__sprite {
+    width: 6rem;
+    filter: drop-shadow(4px 4px 0 var(--pixel-shadow));
+    animation: pixel-idle 1.4s steps(2, end) infinite;
+  }
+
+  .pixel-companion__sprite svg {
+    display: block;
+    width: 100%;
+    image-rendering: pixelated;
+  }
+
+  .hair,
+  .eye,
+  .shoe {
+    fill: #211613;
+  }
+
+  .skin {
+    fill: #a96543;
+  }
+
+  .skin-shadow {
+    fill: #75402f;
+  }
+
+  .mouth {
+    fill: var(--color-magenta);
+  }
+
+  .shirt {
+    fill: var(--color-cyan);
+  }
+
+  .shirt-detail {
+    fill: var(--color-accent);
+  }
+
+  .pants {
+    fill: var(--color-ink);
+  }
+
+  .shadow {
+    fill: var(--color-line);
+  }
+
+  .pixel-companion__dialog {
+    position: relative;
+    border: 2px solid var(--color-ink);
+    background: var(--color-surface);
+    padding: 1rem;
+    box-shadow: 4px 4px 0 var(--pixel-shadow);
+  }
+
+  .pixel-companion__dialog::before {
+    position: absolute;
+    bottom: 1rem;
+    left: -0.75rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-bottom: 2px solid var(--color-ink);
+    border-left: 2px solid var(--color-ink);
+    background: var(--color-surface);
+    content: '';
+    transform: rotate(45deg);
+  }
+
+  .pixel-companion__name {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--color-magenta);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .pixel-companion__copy {
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.65;
+  }
+
+  .pixel-companion--compact {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 40;
+    grid-template-columns: 3.25rem minmax(0, 15rem);
+    gap: 0.75rem;
+    max-width: calc(100vw - 2rem);
+  }
+
+  .pixel-companion--compact .pixel-companion__sprite {
+    width: 3.25rem;
+  }
+
+  .pixel-companion--compact .pixel-companion__dialog {
+    padding: 0.7rem 0.8rem;
+    border-width: 1px;
+    box-shadow: 3px 3px 0 var(--pixel-shadow);
+  }
+
+  .pixel-companion[hidden] {
+    display: none;
+  }
+
+  .pixel-companion__close {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.3rem;
+    display: grid;
+    width: 1.25rem;
+    height: 1.25rem;
+    place-items: center;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .pixel-companion__close:hover,
+  .pixel-companion__close:focus-visible {
+    border-color: var(--color-magenta);
+    color: var(--color-magenta);
+  }
+
+  .pixel-companion--compact .pixel-companion__dialog::before {
+    bottom: 0.75rem;
+    left: -0.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-width: 0 0 1px 1px;
+  }
+
+  .pixel-companion--compact .pixel-companion__name {
+    margin-bottom: 0.25rem;
+    font-size: 0.5625rem;
+  }
+
+  .pixel-companion--compact .pixel-companion__copy {
+    color: var(--color-muted);
+    font-size: 0.6875rem;
+    line-height: 1.45;
+  }
+
+  @keyframes pixel-idle {
+    50% {
+      transform: translateY(-2px);
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .pixel-companion {
+      grid-template-columns: 4.25rem 1fr;
+      gap: 0.9rem;
+    }
+
+    .pixel-companion__sprite {
+      width: 4.25rem;
+    }
+
+    .pixel-companion--compact {
+      right: 0.75rem;
+      bottom: 0.75rem;
+      grid-template-columns: 2.75rem minmax(0, 11rem);
+    }
+
+    .pixel-companion--compact .pixel-companion__sprite {
+      width: 2.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pixel-companion__sprite {
+      animation: none;
+    }
+  }
+</style>
