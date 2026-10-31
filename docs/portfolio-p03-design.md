@@ -33,6 +33,12 @@ Candidate A is the base. The fresh read-only judge scored A 23/25 and B 17/25 ag
 
 Grafts from B: explicit unavailable target results and separate attachment/renderer transfer reporting, with one aggregate deferred-byte gate. No competing application implementation was merged; both candidates were read-only sketches.
 
+## Placement revision after operator feedback
+
+The operator rejected the two-column arrangement as too simple. Desktop objects now use uneven anchors, different scales and individual tilts around the heading. React is the largest object; TypeScript, Python and Astro support it, while GCP, FastAPI and GitHub are smaller accents. Mobile uses a compact asymmetric arrangement below the copy instead of a uniform icon grid.
+
+Both layouts come from the same registry. CSS controls anchor size and tilt; the scene reads those values and keeps its projected centres aligned. Labels remain horizontal HTML. Build, pure tests and the existing desktop/mobile/resize checks cover this change. No new animation, renderer or dependency is added. The earlier independent review and cold benchmark predate this placement revision.
+
 No continuous decorative motion is added in P03. Demand rendering avoids paying an idle GPU cost without a functional purpose. P04 owns deliberate kick feedback. Reduced motion stays entirely static.
 
 ## Tradeoffs accepted

@@ -22,10 +22,11 @@ test('registry has seven unique, complete records and real fallback assets', () 
     assert.ok(item.label && item.geometry);
     assert.match(item.colour, /^#[0-9a-f]{6}$/i);
     assert.ok(existsSync(`public${item.fallbackAsset}`));
-    for (const value of Object.values(item.desktopAnchor))
-      assert.ok(value > 0 && value < 1);
-    assert.ok(item.mobileAnchor.column >= 1 && item.mobileAnchor.column <= 4);
-    assert.ok(item.mobileAnchor.row >= 1 && item.mobileAnchor.row <= 2);
+    for (const anchor of [item.desktopAnchor, item.mobileAnchor]) {
+      assert.ok(anchor.x > 0 && anchor.x < 1 && anchor.y > 0 && anchor.y < 1);
+      assert.ok(anchor.scale > 0 && anchor.scale <= 2);
+      assert.ok(Number.isFinite(anchor.tilt));
+    }
   }
 });
 
@@ -78,7 +79,9 @@ test('unchanged hero-local anchors do not revise the scene on scroll', () => {
     revision: 1,
     width: 1440,
     height: 700,
-    targets: [{ id: 'react' as const, centre: { x: 500, y: 300 }, size: 80 }],
+    targets: [
+      { id: 'react' as const, centre: { x: 500, y: 300 }, size: 80, tilt: 0 },
+    ],
   };
   assert.ok(sameLayout(layout, { ...layout, revision: 2 }));
   assert.ok(!sameLayout(layout, { ...layout, width: 390 }));

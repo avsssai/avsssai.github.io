@@ -190,10 +190,12 @@ function Contents({ layout, active, onFrame }: Props) {
           ]}
           scale={target.size * 0.43}
         >
-          <Sculpture
-            kind={stackItems[index].geometry}
-            colour={stackItems[index].colour}
-          />
+          <group rotation={[0, 0, (-target.tilt * Math.PI) / 180]}>
+            <Sculpture
+              kind={stackItems[index].geometry}
+              colour={stackItems[index].colour}
+            />
+          </group>
           <mesh position={[0.05, -1.03, -0.6]} scale={[0.8, 0.11, 1]}>
             <circleGeometry args={[1, 24]} />
             <meshBasicMaterial

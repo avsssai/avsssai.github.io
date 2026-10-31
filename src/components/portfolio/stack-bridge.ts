@@ -99,9 +99,10 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
     const box = root.getBoundingClientRect();
     if (!box.width || !box.height) return;
     const targets = controls.map((control, i) => {
-      const anchor = control
-        .querySelector('[data-stack-anchor]')!
-        .getBoundingClientRect();
+      const element = control.querySelector<HTMLElement>(
+        '[data-stack-anchor]',
+      )!;
+      const anchor = element.getBoundingClientRect();
       return {
         id: stackItems[i].id,
         centre: {
@@ -109,6 +110,10 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
           y: anchor.y - box.y + anchor.height / 2,
         },
         size: anchor.width,
+        tilt:
+          parseFloat(
+            getComputedStyle(element).getPropertyValue('--stack-tilt'),
+          ) || 0,
       };
     });
     return {
