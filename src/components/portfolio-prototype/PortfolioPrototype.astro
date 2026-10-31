@@ -198,8 +198,10 @@ import './viewport.css';
           >Static artwork ready. Preparing the 3D experiment.</span
         >
       </div>
-      <div id="peel-cover" hidden aria-hidden="true">
-        <span>Siva<br /><em>Addanki.</em></span><i></i>
+      <div class="peel-viewport" aria-hidden="true">
+        <div id="peel-cover" hidden>
+          <span>Siva<br /><em>Addanki.</em></span><i></i>
+        </div>
       </div>
     </div>
 
@@ -653,6 +655,13 @@ import './viewport.css';
     background: #fff;
     font-size: 11px;
   }
+  .peel-viewport {
+    position: absolute;
+    z-index: 10;
+    inset: 0;
+    overflow: clip;
+    pointer-events: none;
+  }
   #peel-cover {
     position: absolute;
     z-index: 10;
@@ -735,7 +744,7 @@ import './viewport.css';
   }
   @media (max-width: 1000px) {
     h1 {
-      font-size: 73px;
+      font-size: clamp(50px, 8vw, 73px);
     }
     #target {
       right: 2%;
