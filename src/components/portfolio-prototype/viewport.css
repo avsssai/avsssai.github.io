@@ -21,15 +21,6 @@
     font-size: min(6vw, 12dvh);
   }
 
-  #stage .eyebrow {
-    margin-bottom: 12px;
-  }
-
-  #stage .intro {
-    margin-block: 10px;
-    font-size: 11px;
-  }
-
   #stage #target {
     height: 170px;
   }
@@ -45,14 +36,6 @@
   #stage .editorial {
     top: 18%;
   }
-
-  #stage .eyebrow {
-    margin-bottom: 16px;
-  }
-
-  #stage .intro {
-    margin-block: 14px;
-  }
 }
 
 @media (max-height: 500px) and (max-width: 650px) {
@@ -66,17 +49,8 @@
     font-size: 32px;
   }
 
-  #stage .eyebrow {
-    display: none;
-  }
-
   #stage .with {
     margin-top: 4px;
-  }
-
-  #stage .intro {
-    margin-block: 8px;
-    font-size: 10px;
   }
 
   #stage #target {

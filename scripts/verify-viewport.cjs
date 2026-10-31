@@ -56,6 +56,27 @@ const cases = [
               height: rect.height,
             };
           };
+          const textRects = (selector) => {
+            const walker = document.createTreeWalker(
+              document.querySelector(selector),
+              NodeFilter.SHOW_TEXT,
+            );
+            const rects = [];
+            while (walker.nextNode()) {
+              if (!walker.currentNode.textContent.trim()) continue;
+              const range = document.createRange();
+              range.selectNodeContents(walker.currentNode);
+              for (const rect of range.getClientRects()) {
+                rects.push({
+                  x: rect.x,
+                  y: rect.y,
+                  right: rect.right,
+                  bottom: rect.bottom,
+                });
+              }
+            }
+            return rects;
+          };
           const stage = box('#stage');
           const heading = box('h1');
           const cta = box('.work-link');
@@ -70,6 +91,22 @@ const cases = [
             viewportHeight: innerHeight,
             stage,
             heading,
+            headingRects: textRects('h1'),
+            headerRects: [
+              box('.identity a'),
+              box('#perch'),
+              ...Array.from(document.querySelectorAll('.masthead nav a'))
+                .filter((link) => link.getClientRects().length)
+                .map((link) => {
+                  const rect = link.getBoundingClientRect();
+                  return {
+                    x: rect.x,
+                    y: rect.y,
+                    right: rect.right,
+                    bottom: rect.bottom,
+                  };
+                }),
+            ],
             cta,
             target,
             header,
@@ -98,12 +135,14 @@ const cases = [
           'stack target stays clear of the primary link',
         );
         assert.equal(
-          overlap(metrics.heading, metrics.target),
+          metrics.headingRects.some((rect) => overlap(rect, metrics.target)),
           false,
           'stack target stays clear of the heading',
         );
         assert.equal(
-          overlap(metrics.heading, metrics.header),
+          metrics.headingRects.some((heading) =>
+            metrics.headerRects.some((header) => overlap(heading, header)),
+          ),
           false,
           'header stays clear of the heading',
         );
@@ -122,6 +161,11 @@ const cases = [
           metrics.stageOverflow,
           'hidden',
           'content is not hidden to fake the viewport fit',
+        );
+        assert.doesNotMatch(
+          await page.locator('body').innerText(),
+          /code is the medium|curiosity is the point|a little logic|a little mischief|a different way to build|outside the grid|built with logic/i,
+          'no invented promotional filler',
         );
         await page.screenshot({
           path: path.join(output, `${slug}.png`),

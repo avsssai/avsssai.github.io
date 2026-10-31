@@ -121,7 +121,7 @@ export function mountPrototype(root: HTMLElement) {
     };
     try {
       phase('anticipation');
-      status.textContent = 'A little mischief incoming.';
+      status.textContent = 'Kick animation started.';
       await animate(
         avatar,
         [
@@ -188,10 +188,9 @@ export function mountPrototype(root: HTMLElement) {
       root.dataset.lastDuration = String(
         Math.round(performance.now() - started),
       );
-      status.textContent = 'React survived. Back to the perch.';
+      status.textContent = 'Kick animation complete.';
     } catch {
-      if (own === generation)
-        status.textContent = 'Reset to the perch. Ready when you are.';
+      if (own === generation) status.textContent = 'Animation reset.';
     } finally {
       if (own === generation) {
         setState({ phase: 'idle' });
@@ -333,7 +332,7 @@ export function mountPrototype(root: HTMLElement) {
           )!.disabled = true;
         });
         root.dataset.scene = 'ready';
-        sceneStatus.textContent = 'Live 3D. One canvas. No Blender required.';
+        sceneStatus.textContent = 'Live 3D.';
         root.querySelector<HTMLButtonElement>(
           '[data-peel-button="mesh"]',
         )!.disabled = false;

@@ -30,26 +30,16 @@ import './viewport.css';
 
       <div id="scene" aria-hidden="true"></div>
       <div class="editorial">
-        <p class="eyebrow">
-          <span></span> CODE IS THE MEDIUM. CURIOSITY IS THE POINT.
-        </p>
         <h1>
           Full stack<br /><span class="developer">web developer</span><br
           /><span class="with">with an</span>
           <em>Imagination.</em>
         </h1>
-        <p class="intro">
-          A little logic. A little mischief.<br />A different way to build for
-          the web.
-        </p>
         <a class="work-link" href="/work/"
           >Explore my work <span aria-hidden="true">↗</span></a
         >
       </div>
 
-      <div class="side-note" aria-hidden="true">
-        GOOD THINGS HAPPEN<br />OUTSIDE THE GRID.
-      </div>
       <span class="stack-tag python" aria-hidden="true"
         ><span>Py</span><small>Python</small></span
       >
@@ -86,7 +76,7 @@ import './viewport.css';
         <span class="target-caption"
           >React <span aria-hidden="true">↗</span></span
         >
-        <span class="target-hint">HOVER. I DARE YOU.</span>
+        <span class="target-hint">Hover to interact</span>
       </button>
 
       <div id="avatar" aria-hidden="true">
@@ -204,9 +194,8 @@ import './viewport.css';
         ></svg
       >
       <div class="stage-footer">
-        <span>BUILT WITH LOGIC & A LITTLE IMAGINATION</span><span
-          id="scene-status"
-          role="status">Static artwork ready. Preparing the 3D experiment.</span
+        <span id="scene-status" role="status"
+          >Static artwork ready. Preparing the 3D experiment.</span
         >
       </div>
       <div id="peel-cover" hidden aria-hidden="true">
@@ -379,21 +368,6 @@ import './viewport.css';
   .editorial a {
     pointer-events: auto;
   }
-  .eyebrow {
-    margin: 0 0 25px;
-    font-size: 9px;
-    letter-spacing: 0.17em;
-    font-weight: 500;
-  }
-  .eyebrow > span {
-    display: inline-block;
-    width: 5px;
-    height: 5px;
-    margin-right: 8px;
-    background: #8477ad;
-    border-radius: 50%;
-    vertical-align: middle;
-  }
   h1 {
     margin: 0;
     font:
@@ -418,17 +392,12 @@ import './viewport.css';
     font-size: 1.1em;
     letter-spacing: -0.045em;
   }
-  .intro {
-    font-size: 12px;
-    line-height: 1.7;
-    margin: 27px 0 22px;
-    color: #77756f;
-  }
   .work-link {
     display: inline-flex;
     align-items: center;
     gap: 28px;
     min-height: 46px;
+    margin-top: 24px;
     padding: 8px 9px 8px 23px;
     border-radius: 50px;
     background: var(--ink);
@@ -564,16 +533,6 @@ import './viewport.css';
     font-size: 78px;
     line-height: 1;
   }
-  .side-note {
-    position: absolute;
-    top: 52%;
-    right: 2%;
-    font-size: 8px;
-    letter-spacing: 0.1em;
-    line-height: 1.8;
-    writing-mode: vertical-rl;
-    color: #99958b;
-  }
   #avatar {
     position: absolute;
     z-index: 6;
@@ -627,6 +586,7 @@ import './viewport.css';
     color: #97938b;
   }
   #scene-status {
+    margin-left: auto;
     text-align: right;
     max-width: 300px;
     letter-spacing: 0;
@@ -756,9 +716,6 @@ import './viewport.css';
   [data-composition='b'] .target-hint {
     top: -18px;
   }
-  [data-composition='b'] .intro {
-    margin: 19px 0 14px;
-  }
   .noscript {
     text-align: center;
     font-size: 13px;
@@ -798,9 +755,6 @@ import './viewport.css';
     .masthead {
       padding-inline: 4%;
     }
-    .side-note {
-      display: none;
-    }
   }
   @media (max-width: 650px) {
     .lab-bar {
@@ -839,11 +793,6 @@ import './viewport.css';
       top: 20%;
       padding: 0 15px;
     }
-    .eyebrow {
-      font-size: 7px;
-      letter-spacing: 0.08em;
-      margin-bottom: 22px;
-    }
     h1,
     [data-composition='b'] h1 {
       font-size: clamp(32px, min(12.5vw, 6.5dvh), 77px);
@@ -858,11 +807,6 @@ import './viewport.css';
       line-height: 1.6;
       margin-top: 12px;
       font-size: 0.34em;
-    }
-    .intro,
-    [data-composition='b'] .intro {
-      margin: 20px 0 18px;
-      font-size: 11px;
     }
     .work-link {
       min-height: 46px;
