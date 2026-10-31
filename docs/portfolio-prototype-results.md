@@ -43,7 +43,9 @@ Run `BASE_URL=http://127.0.0.1:4322 node scripts/measure-portfolio.cjs` to recor
 
 ## Read the evidence status
 
-Browser results, measured budgets, exact head SHA, and review screenshots are pending. Update this section only after running the actual preview build. No independent model review or real-device check has been claimed.
+The code revision `daac2b88338f2a011512244c3826916d7c2576ee` passed all ten browser scenarios and the interleaved performance probe. The lab transferred 194,516 bytes including its document. The active p95 frame interval was 17 ms. The kick completed in 1,088 ms. These were local Chrome measurements with 4x CPU throttling, not device results.
+
+[Review the compositions, measurements, limitations, and recording](portfolio-review/p01/README.md). Candidate A and the CSS paper direction are recommendations, not approved decisions. The character is provisional. Neither peel is the final bandage effect. Independent model review and the operator's visual gate remain open.
 
 ## Read the asset provenance
 
