@@ -237,6 +237,13 @@ async function main() {
           );
           await page.waitForTimeout(kind === 'css' ? 700 : 250);
           await screenshot(`peel-${kind}`);
+          assert.equal(
+            await page.evaluate(
+              () => document.documentElement.scrollWidth > innerWidth,
+            ),
+            false,
+            `${kind} reveal does not introduce horizontal page scroll`,
+          );
           await page.waitForFunction(
             () =>
               document.querySelector('#playground')?.dataset.peel === 'none',
