@@ -17,6 +17,7 @@ async function main() {
   const browser = await chromium.launch({
     headless: true,
     args: ['--enable-unsafe-swiftshader'],
+    ignoreDefaultArgs: ['--disable-back-forward-cache'],
     ...(process.env.CHROME_PATH
       ? { executablePath: process.env.CHROME_PATH }
       : {}),
@@ -192,6 +193,23 @@ async function main() {
           await page.locator('#playground').getAttribute('data-kicks'),
           '1',
         );
+        await page.locator('#target').click();
+        await page.waitForFunction(
+          () => document.querySelector('#playground')?.dataset.phase === 'kick',
+        );
+        await page.evaluate(() =>
+          document.getAnimations().forEach((animation) => {
+            animation.pause();
+            animation.currentTime = 110;
+          }),
+        );
+        await screenshot('kick-contact');
+        await page.evaluate(() =>
+          document.getAnimations().forEach((animation) => animation.play()),
+        );
+        await page.waitForFunction(
+          () => document.querySelector('#playground')?.dataset.kicks === '2',
+        );
         await page.getByRole('button', { name: 'B · Object stage' }).click();
         await geometry(page);
         await screenshot('candidate-b');
@@ -228,7 +246,7 @@ async function main() {
           true,
         );
         if (record) {
-          for (let i = 0; i < 5; i++) {
+          for (let i = 0; i < 7; i++) {
             await page.waitForTimeout(1700);
             await kick(page);
             await page
@@ -333,6 +351,16 @@ async function main() {
           '0',
         );
         assert.equal(await page.locator('#scene canvas').count(), 0);
+        assert.equal(
+          await page.evaluate(
+            () =>
+              performance
+                .getEntriesByType('resource')
+                .filter((entry) => /scene.*\.js/.test(entry.name)).length,
+          ),
+          0,
+          'reduced motion does not download Three.js',
+        );
         await screenshot('reduced');
       },
     );
@@ -387,9 +415,18 @@ async function main() {
     );
     await lane(
       9,
-      'Resize cancellation and perch recovery',
+      'Resize cancellation and browser-history recovery',
       {},
       async ({ page, open, screenshot }) => {
+        await page.addInitScript(() =>
+          addEventListener(
+            'pageshow',
+            (event) =>
+              (document.documentElement.dataset.fromBfcache = String(
+                event.persisted,
+              )),
+          ),
+        );
         await open();
         await page.locator('#target').click();
         await page.waitForFunction(
@@ -406,6 +443,28 @@ async function main() {
         const bounds = await page.locator('#avatar').boundingBox();
         assert.ok(bounds.x >= 0 && bounds.x + bounds.width < 768);
         await screenshot('resize');
+        await page.waitForFunction(
+          () =>
+            document.querySelector('#playground')?.dataset.scene === 'ready',
+        );
+        for (let visit = 0; visit < 2; visit++) {
+          await page.getByRole('link', { name: 'Explore my work' }).click();
+          await page.waitForURL('**/work/');
+          await page.goBack({ waitUntil: 'commit' });
+          await page.waitForURL('**/lab/portfolio/', { waitUntil: 'commit' });
+          assert.equal(
+            await page.locator('html').getAttribute('data-from-bfcache'),
+            'true',
+            'exercise a real cached page restore',
+          );
+          assert.equal(
+            await page.locator('#scene canvas').count(),
+            1,
+            'cached scene survives',
+          );
+          await kick(page);
+        }
+        await screenshot('history');
       },
     );
     await lane(

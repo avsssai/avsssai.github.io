@@ -37,7 +37,6 @@ export function mountPrototype(root: HTMLElement) {
   let disposed = false;
   let returnFocus: HTMLElement | null = null;
   root.dataset.kicks = '0';
-  root.dataset.frames = '0';
 
   const relative = (node: Element) => {
     const box = node.getBoundingClientRect();
@@ -312,32 +311,38 @@ export function mountPrototype(root: HTMLElement) {
   observer.observe(stage);
   resetVisuals();
 
-  void import('./scene')
-    .then(({ createScene }) => {
-      if (disposed || reduce.matches) {
-        root.dataset.scene = 'static';
-        sceneStatus.textContent = 'Static artwork. Reduced motion is enabled.';
-        return;
-      }
-      scene = createScene(sceneHost, target, () => {
-        root.dataset.scene = 'fallback';
-        sceneStatus.textContent = '3D unavailable. Static artwork stays ready.';
-        cancel();
+  if (reduce.matches) {
+    root.dataset.scene = 'static';
+    sceneStatus.textContent = 'Static artwork. Reduced motion is enabled.';
+  } else
+    void import('./scene')
+      .then(({ createScene }) => {
+        if (disposed || reduce.matches) {
+          root.dataset.scene = 'static';
+          sceneStatus.textContent =
+            'Static artwork. Reduced motion is enabled.';
+          return;
+        }
+        scene = createScene(sceneHost, target, () => {
+          root.dataset.scene = 'fallback';
+          sceneStatus.textContent =
+            '3D unavailable. Static artwork stays ready.';
+          cancel();
+          root.querySelector<HTMLButtonElement>(
+            '[data-peel-button="mesh"]',
+          )!.disabled = true;
+        });
+        root.dataset.scene = 'ready';
+        sceneStatus.textContent = 'Live 3D. One canvas. No Blender required.';
         root.querySelector<HTMLButtonElement>(
           '[data-peel-button="mesh"]',
-        )!.disabled = true;
+        )!.disabled = false;
+        resetVisuals();
+      })
+      .catch(() => {
+        root.dataset.scene = 'fallback';
+        sceneStatus.textContent = '3D unavailable. Static artwork stays ready.';
       });
-      root.dataset.scene = 'ready';
-      sceneStatus.textContent = 'Live 3D. One canvas. No Blender required.';
-      root.querySelector<HTMLButtonElement>(
-        '[data-peel-button="mesh"]',
-      )!.disabled = false;
-      resetVisuals();
-    })
-    .catch(() => {
-      root.dataset.scene = 'fallback';
-      sceneStatus.textContent = '3D unavailable. Static artwork stays ready.';
-    });
 
   document.addEventListener(
     'visibilitychange',
@@ -346,15 +351,19 @@ export function mountPrototype(root: HTMLElement) {
     },
     { signal: lifetime.signal },
   );
+  window.addEventListener('pageshow', resetVisuals, {
+    signal: lifetime.signal,
+  });
   window.addEventListener(
     'pagehide',
-    () => {
-      disposed = true;
+    (event) => {
       cancel();
+      if (event.persisted) return;
+      disposed = true;
       observer.disconnect();
       lifetime.abort();
       scene?.dispose();
     },
-    { signal: lifetime.signal, once: true },
+    { signal: lifetime.signal },
   );
 }
