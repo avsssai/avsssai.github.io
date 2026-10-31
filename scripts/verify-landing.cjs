@@ -252,10 +252,16 @@ const sizes = [
         '200% zoom has no horizontal page scroll',
       );
       await zoomPage.locator('.work-link').scrollIntoViewIfNeeded();
-      await zoomPage.screenshot({
-        path: path.join(output, 'zoom-200.png'),
-        fullPage: true,
+      const zoomSession = await zoomContext.newCDPSession(zoomPage);
+      const capture = await zoomSession.send('Page.captureScreenshot', {
+        format: 'png',
+        captureBeyondViewport: false,
       });
+      fs.writeFileSync(
+        path.join(output, 'zoom-200.png'),
+        Buffer.from(capture.data, 'base64'),
+      );
+      await zoomSession.detach();
       await zoomPage.locator('.work-link').click();
       await zoomPage.waitForURL('**/work/');
       results.push({

@@ -1,0 +1,33 @@
+{
+  "baseURL": "http://127.0.0.1:4327",
+  "scenes": [
+    {
+      "route": "/",
+      "theme": "light"
+    },
+    {
+      "route": "/",
+      "theme": "dark"
+    },
+    {
+      "route": "/work/",
+      "theme": "dark"
+    },
+    {
+      "route": "/blog/",
+      "theme": "dark"
+    },
+    {
+      "route": "/blog/starting-with-the-system/",
+      "theme": "dark"
+    },
+    {
+      "route": "/",
+      "theme": "light"
+    }
+  ],
+  "viewport": "1440x900",
+  "durationMs": 37808,
+  "browser": "156.0.8078.74",
+  "bytes": 2174617
+}
