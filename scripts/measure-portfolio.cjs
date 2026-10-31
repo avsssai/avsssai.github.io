@@ -211,7 +211,11 @@ async function main() {
   }
 }
 
-main().catch((error) => {
+const run =
+  process.env.PORTFOLIO_TICKET === 'P03'
+    ? require('./measure-stack.cjs').main
+    : main;
+run().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });

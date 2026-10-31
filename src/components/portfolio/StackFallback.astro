@@ -1,0 +1,153 @@
+---
+import { stackItems } from './stack-items';
+---
+
+<div class="stack-canvas" data-stack-canvas aria-hidden="true"></div>
+<ul class="stack-targets" aria-label="Technology stack">
+  {
+    stackItems.map((item) => (
+      <li
+        style={`--stack-x:${item.desktopAnchor.x * 100}%;--stack-y:${item.desktopAnchor.y * 100}%;--stack-column:${item.mobileAnchor.column};--stack-row:${item.mobileAnchor.row}`}
+      >
+        <button
+          type="button"
+          data-stack-target={item.id}
+          aria-pressed="false"
+          disabled
+        >
+          <span class="stack-anchor" data-stack-anchor>
+            <img src={item.fallbackAsset} alt="" width="160" height="170" />
+          </span>
+          <span class="stack-label">{item.label}</span>
+        </button>
+      </li>
+    ))
+  }
+</ul>
+<output class="stack-status" data-stack-status aria-live="polite"></output>
+
+<script>
+  import { mountStackExperience } from './stack-bridge';
+  document
+    .querySelectorAll<HTMLElement>('[data-stack-experience]')
+    .forEach(mountStackExperience);
+</script>
+
+<style>
+  .stack-canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+  }
+  .stack-canvas :global(canvas) {
+    display: block;
+  }
+  .stack-targets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .stack-targets li {
+    position: absolute;
+    left: var(--stack-x);
+    top: var(--stack-y);
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+  .stack-targets button {
+    display: grid;
+    justify-items: center;
+    gap: 3px;
+    border: 0;
+    padding: 3px;
+    min-width: 64px;
+    min-height: 44px;
+    color: var(--color-ink);
+    background: transparent;
+    border-radius: 8px;
+    font: inherit;
+    cursor: pointer;
+  }
+  .stack-targets button:disabled {
+    cursor: default;
+    opacity: 1;
+  }
+  .stack-targets button[aria-pressed='true'] .stack-label {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .stack-anchor {
+    display: block;
+    width: clamp(54px, 5.5vw, 86px);
+    aspect-ratio: 160 / 170;
+    pointer-events: none;
+  }
+  .stack-anchor img {
+    width: 100%;
+    height: 100%;
+  }
+  .stack-label {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  :global([data-stack-scene='ready']) .stack-anchor img {
+    opacity: 0;
+  }
+  :global([data-stack-scene='ready']) .stack-canvas {
+    opacity: 1;
+  }
+  .stack-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  @media (max-width: 1000px), (max-height: 550px) {
+    .stack-targets {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.5rem;
+      width: min(100%, 480px);
+      margin: 1.25rem auto 0;
+    }
+    .stack-targets li {
+      position: static;
+      transform: none;
+      display: grid;
+      justify-items: center;
+      grid-column: var(--stack-column);
+      grid-row: var(--stack-row);
+    }
+    .stack-anchor {
+      width: 48px;
+    }
+    .stack-targets button {
+      min-width: 64px;
+    }
+  }
+  @media (min-width: 701px) and (max-width: 1000px) {
+    .stack-targets {
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      width: min(100%, 650px);
+    }
+    .stack-targets li {
+      grid-column: auto;
+      grid-row: auto;
+    }
+  }
+  @media (max-height: 550px) and (min-width: 1001px) {
+    .stack-targets {
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      width: min(100%, 650px);
+    }
+    .stack-targets li {
+      grid-column: auto;
+      grid-row: auto;
+    }
+  }
+</style>

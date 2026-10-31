@@ -76,6 +76,9 @@ const sizes = [
           return {
             width: innerWidth,
             height: innerHeight,
+            reflow:
+              !!document.querySelector('[data-stack-experience]') &&
+              matchMedia('(max-width: 1000px), (max-height: 550px)').matches,
             scrollWidth: document.documentElement.scrollWidth,
             scrollHeight: document.documentElement.scrollHeight,
             heading: rect('h1'),
@@ -95,18 +98,45 @@ const sizes = [
           'no horizontal page scroll',
         );
         assert.ok(
-          metrics.scrollHeight <= metrics.height + 1,
+          metrics.reflow || metrics.scrollHeight <= metrics.height + 1,
           `whole homepage fits 100dvh; observed ${metrics.scrollHeight}/${metrics.height}`,
         );
         assert.ok(
-          metrics.heading.y >= 0 && metrics.heading.bottom <= metrics.height,
+          metrics.heading.y >= 0 &&
+            metrics.heading.bottom <=
+              (metrics.reflow ? metrics.scrollHeight : metrics.height),
           'heading fits',
         );
         assert.ok(
-          metrics.cta.bottom <= metrics.height && metrics.cta.height >= 44,
+          metrics.cta.bottom <=
+            (metrics.reflow ? metrics.scrollHeight : metrics.height) &&
+            metrics.cta.height >= 44,
           'CTA fits and retains touch size',
         );
-        assert.ok(metrics.hit, 'primary work link is unobstructed');
+        if (metrics.reflow) {
+          assert.equal(
+            await page.locator('[data-stack-target]').count(),
+            7,
+            'reflow retains every stack target',
+          );
+          await page.locator('.work-link').scrollIntoViewIfNeeded();
+          assert.ok(
+            await page.locator('.work-link').evaluate((link) => {
+              const box = link.getBoundingClientRect();
+              return (
+                box.top >= 0 &&
+                box.bottom <= innerHeight &&
+                link.contains(
+                  document.elementFromPoint(
+                    box.x + box.width / 2,
+                    box.y + box.height / 2,
+                  ),
+                )
+              );
+            }),
+            'primary work link is reachable and unobstructed after reflow',
+          );
+        } else assert.ok(metrics.hit, 'primary work link is unobstructed');
         assert.equal(
           await page
             .locator('a[href*="example.com"], a[href*="your-handle"]')
