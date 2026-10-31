@@ -214,7 +214,7 @@ export function mountPrototype(root: HTMLElement) {
     skip.hidden = false;
     skip.focus({ preventScroll: true });
     const started = performance.now();
-    revealDeadline = setTimeout(finishPeel, 1500);
+    revealDeadline = setTimeout(finishPeel, kind === 'css' ? 2500 : 1500);
     if (kind === 'css') {
       cover.hidden = false;
       void animate(
@@ -229,7 +229,7 @@ export function mountPrototype(root: HTMLElement) {
             opacity: 0.8,
           },
         ],
-        800,
+        1400,
         MOVE,
       )
         .then(finishPeel)

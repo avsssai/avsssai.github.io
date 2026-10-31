@@ -13,7 +13,9 @@ The SVG character is an original provisional drawing. It is not a confirmed like
 
 ## Compare the reveal methods
 
-Use Paper peel to run an 800 ms CSS perspective reveal. Use 3D curl to run an 800 ms deformed mesh experiment. Neither runs automatically. Both have a skip control, a 1500 ms safety dismissal, and a reduced-motion alternative.
+The operator approved Candidate A and the paper peel direction, then requested a slower reveal.
+
+Use Paper peel to run a 1400 ms CSS perspective reveal. Its safety dismissal is 2500 ms. Skip remains immediate. The rejected 3D curl experiment stays at 800 ms with a 1500 ms safety dismissal. Neither runs automatically. Both respect reduced motion.
 
 The paper version includes readable lettering and a folded corner. The mesh version tests curvature and lighting with an untextured sheet. It does not yet provide a text or material parity comparison. The operator chooses the visual direction after reviewing recordings.
 
@@ -45,7 +47,7 @@ Run `BASE_URL=http://127.0.0.1:4322 node scripts/measure-portfolio.cjs` to recor
 
 The code revision `daac2b88338f2a011512244c3826916d7c2576ee` passed all ten browser scenarios and the interleaved performance probe. The lab transferred 194,516 bytes including its document. The active p95 frame interval was 17 ms. The kick completed in 1,088 ms. These were local Chrome measurements with 4x CPU throttling, not device results.
 
-[Review the compositions, measurements, limitations, and recording](portfolio-review/p01/README.md). Candidate A and the CSS paper direction are recommendations, not approved decisions. The character is provisional. Neither peel is the final bandage effect. Independent model review and the operator's visual gate remain open.
+[Review the compositions, measurements, limitations, and recording](portfolio-review/p01/README.md). Candidate A and the CSS paper direction are approved. The paper timing was increased from 800 ms to 1400 ms after feedback. The character is provisional. Neither peel is the final bandage effect. Independent model review and the operator's visual gate remain open.
 
 ## Read the asset provenance
 

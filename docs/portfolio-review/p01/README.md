@@ -4,7 +4,7 @@ Open the throwaway lab at `/lab/portfolio/` on the P01 branch. The production ho
 
 ## Choose a composition
 
-Candidate A uses larger central typography and objects around the edges. It gives the character more room to travel without turning the stack into a toolbar. This is the recommended direction.
+Candidate A uses larger central typography and objects around the edges. It gives the character more room to travel without turning the stack into a toolbar. The operator approved this direction.
 
 ![Candidate A on desktop](candidate-a.png)
 
@@ -26,11 +26,11 @@ The contact screenshot pauses the kick animation at 110 ms so its limb position 
 
 ![The character at kick contact](kick-contact.png)
 
-[Watch the 33-second interaction recording](review.webm). The compressed recording is about 399 KB. It includes both layouts, the kick, and both peel experiments. It is a prototype recording, not a production loader demonstration.
+[Watch the 37-second interaction recording](review.webm). The compressed recording is about 697 KB. It includes both layouts, the kick, and both peel experiments. It also deliberately pauses an animation to check the safety dismissal. It is a prototype recording, not a production loader demonstration.
 
 ## Compare the peel experiments
 
-The CSS paper peel has typography and a folded corner. It is the current recommendation because it is cheaper and the mesh experiment has not demonstrated a visual advantage.
+The CSS paper peel has typography and a folded corner. The operator approved this direction. The operator then requested a slower peel. Its duration is now 1400 ms instead of 800 ms, with a 2500 ms safety dismissal and immediate skip.
 
 ![CSS paper peel during the reveal](peel-css.png)
 
@@ -39,6 +39,8 @@ The deformed mesh tests geometry and lighting. Its untextured sheet does not mat
 ![Mesh curl during the reveal](peel-mesh.png)
 
 Both experiments are manually triggered. Both offer skip and a safety dismissal. The production readiness-driven entrance belongs to P05.
+
+The original paper reveal completed in 895 ms in a live browser probe. After the timing refinement, the browser scenario observed completion in 1450 ms. The authored duration is 1400 ms. The scenario also checks immediate skip and a 2500 ms safety dismissal when the animation is deliberately paused. The metrics below predate this timing-only refinement and remain historical evidence for their named revision.
 
 ## Read the measured evidence
 
@@ -73,8 +75,8 @@ The inline review used `openai/gpt-6.1-sol`. It found and fixed the cached-histo
 
 The first CI run failed on formatting in the lockfile and new Astro markup. Both were corrected. Windows line-ending differences were normalized only in the isolated worktree. The aggregate diff contains no edits to existing production pages or shared styles.
 
-The user must review the composition, character style, and reveal direction. Real touch hardware, non-Chromium testing, final likeness, seven-object rendering, letter effects, and a readiness-driven loader are not complete in P01.
+The user approved Candidate A and the paper reveal direction. The character likeness remains provisional. The revised paper timing still needs a feel-check. Real touch hardware, non-Chromium testing, final likeness, seven-object rendering, letter effects, and a readiness-driven loader are not complete in P01.
 
 ## Continue only after review
 
-Record the operator's composition and peel decision on issue 1. Keep this PR unmerged. Do not deploy. P02 through P06 remain parked until that review gate is satisfied.
+Record Candidate A and paper peel as the operator's decisions on issue 1. Keep this PR unmerged. Do not deploy. Check the slower paper timing before P02 resumes.

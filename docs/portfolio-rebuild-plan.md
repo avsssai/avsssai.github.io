@@ -316,7 +316,7 @@ Each live lane runs in an isolated worktree at the ticket head. Drive the browse
 - [ ] Support pointer exploration and one labelled touch and keyboard action to demonstrate the word. Do not create eleven mandatory tab stops in a heading.
 - [ ] Implement the peel method selected in P01. Keep the cover absent by default in server HTML. Activate it only after the reveal controller can guarantee dismissal.
 - [ ] Drive loading from real scene readiness. Show an indeterminate state when progress cannot be measured. Never fabricate percentages.
-- [ ] Provide skip immediately, a five-second loading deadline, and a shorter repeat-visit path. Catch storage failures. Finish a ready peel within 900 ms unless the prototype supports a better measured value.
+- [ ] Provide skip immediately, a five-second loading deadline, and a shorter repeat-visit path. Catch storage failures. Use the operator-requested 1400 ms paper peel. Verify ready-to-dismiss stays within 1800 ms. Keep skip immediate.
 - [ ] Under reduced motion, errors, disabled JavaScript, or unavailable WebGL, show content without the peel. Never make reading or navigation depend on the scene.
 - [ ] Clean up letter timelines, reveal listeners, and cover elements on route changes.
 
@@ -346,7 +346,7 @@ Each live lane runs in an isolated worktree at the ticket head. Drive the browse
 - [ ] Metric. Measure navigation-to-visible-heading, navigation-to-usable-work-link, and CLS at trunk and head. At head measure skip latency and letter-animation frame intervals.
 - [ ] Probe. Run `node scripts/measure-portfolio.cjs` for five interleaved cold loads, a delayed-scene run, and ten letter activations. Keep viewport, network profile, and CPU throttle fixed.
 - [ ] Baseline. Record trunk timings before head. Do not compare scene readiness with static heading readiness as though they were the same metric.
-- [ ] Rule. Fail if CLS exceeds 0.1, skip acknowledgment exceeds 100 ms, cover dismissal exceeds 5 seconds under a stalled scene, ready-to-dismiss exceeds 900 ms, or active p95 frame interval exceeds 33.4 ms. Report the visible-heading and usable-link cost of the entrance explicitly.
+- [ ] Rule. Fail if CLS exceeds 0.1, skip acknowledgment exceeds 100 ms, cover dismissal exceeds 5 seconds under a stalled scene, ready-to-dismiss exceeds 1800 ms, or active p95 frame interval exceeds 33.4 ms. Report the visible-heading and usable-link cost of the entrance explicitly.
 
 **Review gate.** The operator reviews before merge.
 
@@ -426,6 +426,8 @@ Each live lane runs in an isolated worktree at the ticket head. Drive the browse
 No new prototype ran during this planning task. No layout, timing, peel-quality, alignment, or performance claim is proven by this plan. P01 is the required experiment before production work. It must record its branch, SHA, screenshot paths, recordings, measured timings, and rejected candidate.
 
 The planning baseline is commit `7cf8da1f5eaa3fc5696545c28d190852a3a844b6` plus an existing dirty working tree. Do not confuse the baseline commit with the current hero implementation.
+
+The operator approved Candidate A and the paper peel after reviewing P01. The operator then reported that the 800 ms paper peel was too fast. The revised paper duration is 1400 ms. The timing and safety checks must pass before P02 resumes.
 
 The user permits a 2D character and has no Blender access. That is a product constraint, not an empirical question. SVG is the proposed authoring format. P01 must verify its alignment with the WebGL objects.
 

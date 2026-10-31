@@ -218,23 +218,49 @@ async function main() {
           ['Paper peel', 'css'],
           ['3D curl', 'mesh'],
         ]) {
+          const revealStarted = performance.now();
           await page.getByRole('button', { name, exact: true }).click();
+          if (kind === 'css') {
+            assert.equal(
+              await page
+                .locator('#peel-cover')
+                .evaluate(
+                  (node) =>
+                    node.getAnimations()[0].effect.getComputedTiming().duration,
+                ),
+              1400,
+            );
+          }
           assert.equal(
             await page.locator('#playground').getAttribute('data-peel'),
             kind,
           );
-          await page.waitForTimeout(250);
+          await page.waitForTimeout(kind === 'css' ? 700 : 250);
           await screenshot(`peel-${kind}`);
           await page.waitForFunction(
             () =>
               document.querySelector('#playground')?.dataset.peel === 'none',
           );
           assert.equal(await page.locator('#skip-peel').isVisible(), false);
+          if (kind === 'css') {
+            const elapsed = Math.round(performance.now() - revealStarted);
+            assert.ok(
+              elapsed >= 1300 && elapsed < 2300,
+              `paper reveal completes at its slower pace, observed ${elapsed} ms`,
+            );
+            console.log(`Paper peel completed in ${elapsed} ms.`);
+          }
         }
         await page
           .getByRole('button', { name: 'Paper peel', exact: true })
           .click();
-        await page.getByRole('button', { name: 'Skip reveal' }).click();
+        const skipMs = await page.locator('#skip-peel').evaluate((button) => {
+          const started = performance.now();
+          button.click();
+          return performance.now() - started;
+        });
+        assert.ok(skipMs < 100, `skip stays immediate, observed ${skipMs} ms`);
+        console.log(`Skip acknowledged in ${Math.round(skipMs)} ms.`);
         assert.equal(
           await page.locator('#playground').getAttribute('data-peel'),
           'none',
@@ -245,6 +271,25 @@ async function main() {
             .evaluate((node) => document.activeElement === node),
           true,
         );
+        await page
+          .getByRole('button', { name: 'Paper peel', exact: true })
+          .click();
+        const safetyStarted = performance.now();
+        await page
+          .locator('#peel-cover')
+          .evaluate((node) =>
+            node.getAnimations().forEach((animation) => animation.pause()),
+          );
+        await page.waitForFunction(
+          () => document.querySelector('#playground')?.dataset.peel === 'none',
+        );
+        const safetyMs = Math.round(performance.now() - safetyStarted);
+        assert.ok(
+          safetyMs >= 2300 && safetyMs < 2900,
+          `stalled paper reveal clears at its safety deadline, observed ${safetyMs} ms`,
+        );
+        console.log(`Stalled paper reveal dismissed in ${safetyMs} ms.`);
+        await page.getByRole('button', { name: 'A · Editorial' }).click();
         if (record) {
           for (let i = 0; i < 7; i++) {
             await page.waitForTimeout(1700);
