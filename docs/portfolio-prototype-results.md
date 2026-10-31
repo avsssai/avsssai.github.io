@@ -1,0 +1,56 @@
+# Review the portfolio interaction prototype
+
+This is a throwaway lab at `/lab/portfolio/`. The production homepage is unchanged. Do not treat the prototype as approved production code.
+
+## Compare the compositions
+
+Use the composition controls below the hero.
+
+- Candidate A places the serif headline in the centre and objects around its edges.
+- Candidate B moves the objects into a lower stage and reduces desktop headline size.
+
+The SVG character is an original provisional drawing. It is not a confirmed likeness of Siva. The coloured CSS objects are composition placeholders. Only React is a live 3D object in this ticket.
+
+## Compare the reveal methods
+
+The operator approved Candidate A and the paper peel direction, then requested a slower reveal.
+
+Use Paper peel to run a 1400 ms CSS perspective reveal. Its safety dismissal is 2500 ms. Skip remains immediate. The rejected 3D curl experiment stays at 800 ms with a 1500 ms safety dismissal. Neither runs automatically. Both respect reduced motion.
+
+The paper version includes readable lettering and a folded corner. The mesh version tests curvature and lighting with an untextured sheet. It does not yet provide a text or material parity comparison. The operator chooses the visual direction after reviewing recordings.
+
+## Test the interaction
+
+Hover React for 150 ms on a fine pointer, tap it, or activate its labelled button. The sequence anticipates, travels, kicks, shows a local crack, and returns. It ignores requests while busy. Resizing, scrolling during travel, hiding the tab, or losing the WebGL context resets it.
+
+The sequence uses WAAPI transforms and opacity. The marketing demonstration is an occasional deliberate interaction. The SVG and CSS remain visible without WebGL. JavaScript-disabled visitors can read the heading and follow the work link.
+
+## Inspect the ownership decision
+
+The caller mounts one hero with `mountPrototype(root)`. The hero owns its target record and character state. It dynamically loads `createScene(host, target, onFailure)` and disposes it on page exit.
+
+Candidate A for architecture keeps one hero-owned controller and a small renderer adapter. It shares one DOM target anchor between the character and 3D object. This avoids a second layout model and a global event bus.
+
+Candidate B for architecture gives independent components an event bus and shared registry. It permits later reuse, but spreads cancellation and coordinate rules across components. That extra coordination is not useful for one prototype target.
+
+Select the hero-owned controller for this experiment. Keep geometry and GPU cleanup in `scene.ts`. Revisit the boundary before the seven-object production scene. No competing worktree was merged. Architecture exploration ran as inline passes under the parent model because fresh child launch tooling was unavailable.
+
+## Reproduce the checks
+
+Install with `pnpm install --frozen-lockfile`. Run `pnpm build`, then `pnpm preview --host 127.0.0.1 --port 4322`.
+
+Run `BASE_URL=http://127.0.0.1:4322 node scripts/verify-portfolio.cjs`. Set `CHROME_PATH` if bundled Chromium is unavailable. Set `VERIFY_OUTPUT` to a writable evidence folder. Set `LANE` to run one numbered scenario.
+
+Run `BASE_URL=http://127.0.0.1:4322 node scripts/measure-portfolio.cjs` to record homepage readiness and prototype costs. Set `BASELINE_URL` to an independently served trunk worktree for interleaved measurements.
+
+## Read the evidence status
+
+The code revision `daac2b88338f2a011512244c3826916d7c2576ee` passed all ten browser scenarios and the interleaved performance probe. The lab transferred 194,516 bytes including its document. The active p95 frame interval was 17 ms. The kick completed in 1,088 ms. These were local Chrome measurements with 4x CPU throttling, not device results.
+
+[Review the compositions, measurements, limitations, and recording](portfolio-review/p01/README.md). Candidate A and the CSS paper direction are approved. The paper timing was increased from 800 ms to 1400 ms after feedback. The character is provisional. Neither peel is the final bandage effect. Independent model review and the operator's visual gate remain open.
+
+## Read the asset provenance
+
+The character SVG is original code drawn for this prototype. The React-inspired orbital geometry is generated procedurally. It is not a downloaded model.
+
+Instrument Serif and Space Grotesk are copied from the existing local site assets with their OFL license files. Those files are included under `public/fonts/`. No paid font, external avatar service, or Blender project is required.

@@ -1,0 +1,929 @@
+---
+import './viewport.css';
+---
+
+<div class="playground">
+  <div class="lab-bar">
+    <a href="/">SIVA / DESIGN LAB</a>
+    <span>01 &nbsp; AN INTERACTION STUDY</span>
+    <span class="lab-badge">Not the finished site</span>
+  </div>
+
+  <main
+    id="playground"
+    data-composition="a"
+    data-phase="idle"
+    data-scene="loading"
+    data-peel="none"
+  >
+    <div class="stage" id="stage">
+      <header class="masthead">
+        <div class="identity">
+          <span id="perch" aria-hidden="true"></span>
+          <a href="/">Siva Addanki<span class="identity-dot">.</span></a>
+        </div>
+        <nav aria-label="Portfolio">
+          <a href="/work/">Selected work <span aria-hidden="true">↗</span></a>
+          <a href="/blog/">Field notes</a>
+        </nav>
+      </header>
+
+      <div id="scene" aria-hidden="true"></div>
+      <div class="editorial">
+        <h1>
+          Full stack<br /><span class="developer">web developer</span><br
+          /><span class="with">with an</span>
+          <em>Imagination.</em>
+        </h1>
+        <a class="work-link" href="/work/"
+          >Explore my work <span aria-hidden="true">↗</span></a
+        >
+      </div>
+
+      <span class="stack-tag python" aria-hidden="true"
+        ><span>Py</span><small>Python</small></span
+      >
+      <span class="stack-tag typescript" aria-hidden="true"
+        ><span>TS</span><small>TypeScript</small></span
+      >
+      <span class="stack-tag astro" aria-hidden="true"
+        ><span>✳</span><small>Astro</small></span
+      >
+
+      <button
+        id="target"
+        type="button"
+        aria-label="Let the character kick React"
+        disabled
+      >
+        <svg class="fallback-atom" viewBox="0 0 180 160" aria-hidden="true">
+          <g fill="none" stroke="currentColor" stroke-width="11">
+            <ellipse cx="90" cy="75" rx="76" ry="26"></ellipse>
+            <ellipse
+              cx="90"
+              cy="75"
+              rx="76"
+              ry="26"
+              transform="rotate(60 90 75)"></ellipse>
+            <ellipse
+              cx="90"
+              cy="75"
+              rx="76"
+              ry="26"
+              transform="rotate(120 90 75)"></ellipse>
+          </g><circle cx="90" cy="75" r="13" fill="currentColor"></circle>
+        </svg>
+        <span class="target-caption"
+          >React <span aria-hidden="true">↗</span></span
+        >
+        <span class="target-hint">Hover to interact</span>
+      </button>
+
+      <div id="avatar" aria-hidden="true">
+        <svg viewBox="0 0 120 150" role="presentation">
+          <defs>
+            <linearGradient id="shirt" x2="1" y2="1"
+              ><stop stop-color="#fbfbf8"></stop><stop
+                offset="1"
+                stop-color="#d6d5cf"></stop></linearGradient
+            >
+          </defs>
+          <ellipse cx="61" cy="141" rx="30" ry="5" fill="#181818" opacity=".13"
+          ></ellipse>
+          <g class="body">
+            <g class="leg back-leg"
+              ><path
+                d="M47 103 Q34 119 33 132 L52 134 L62 106"
+                fill="#27282c"
+                stroke="#171719"
+                stroke-width="3"
+                stroke-linejoin="round"></path><path
+                d="M33 129 Q21 129 20 137 L52 137 L52 130"
+                fill="#f6f5f0"
+                stroke="#171719"
+                stroke-width="3"></path></g
+            >
+            <g class="leg front-leg"
+              ><path
+                d="M65 103 L72 130 L89 130 L82 101"
+                fill="#27282c"
+                stroke="#171719"
+                stroke-width="3"
+                stroke-linejoin="round"></path><path
+                d="M73 127 L87 128 Q99 128 100 137 L72 137 Z"
+                fill="#f6f5f0"
+                stroke="#171719"
+                stroke-width="3"></path></g
+            >
+            <path
+              d="M43 62 Q59 54 78 64 L87 103 Q66 116 39 104 Z"
+              fill="url(#shirt)"
+              stroke="#171719"
+              stroke-width="3"></path>
+            <g class="arm back-arm"
+              ><path
+                d="M43 70 Q26 77 31 98 Q37 108 44 100"
+                fill="none"
+                stroke="#171719"
+                stroke-width="12"
+                stroke-linecap="round"></path><path
+                d="M43 70 Q26 77 31 98 Q37 108 44 100"
+                fill="none"
+                stroke="#f0efea"
+                stroke-width="7"
+                stroke-linecap="round"></path></g
+            >
+            <g class="arm front-arm"
+              ><path
+                d="M78 69 Q96 76 91 90 L81 92"
+                fill="none"
+                stroke="#171719"
+                stroke-width="12"
+                stroke-linecap="round"></path><path
+                d="M78 69 Q96 76 91 90 L81 92"
+                fill="none"
+                stroke="#f0efea"
+                stroke-width="7"
+                stroke-linecap="round"></path></g
+            >
+            <g class="head">
+              <path
+                d="M49 56 L48 68 Q60 75 68 64 L67 53"
+                fill="#e8e6dd"
+                stroke="#171719"
+                stroke-width="3"></path>
+              <path
+                d="M38 27 Q36 10 59 10 Q84 9 86 31 L81 49 Q77 65 59 63 Q40 62 38 45 Q29 41 33 34 Z"
+                fill="#f0eee5"
+                stroke="#171719"
+                stroke-width="3"></path>
+              <path
+                d="M34 33 Q24 20 37 16 Q32 3 47 8 Q55 -2 63 6 Q78 1 81 13 Q96 14 86 35 L77 30 L76 22 Q59 31 42 24 L42 39 Z"
+                fill="#202124"
+                stroke="#171719"
+                stroke-width="3"
+                stroke-linejoin="round"></path>
+              <path
+                d="M51 37 L55 36 M70 36 L74 37"
+                stroke="#171719"
+                stroke-width="3"
+                stroke-linecap="round"></path>
+              <path
+                d="M64 37 L62 46 L66 46 M54 51 Q62 57 70 50"
+                fill="none"
+                stroke="#171719"
+                stroke-width="2.5"
+                stroke-linecap="round"></path>
+              <path
+                d="M46 44 L53 44 M73 44 L80 44"
+                stroke="#c1bdb2"
+                stroke-width="2"
+                stroke-linecap="round"></path>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <svg id="crack" viewBox="0 0 180 180" aria-hidden="true"
+        ><g fill="none" stroke="#28232f" stroke-linecap="round"
+          ><path
+            d="M90 90 L60 63 L63 32 M90 90 L126 60 L150 57 M90 90 L119 122 L121 155 M90 90 L54 112 L28 108 M90 90 L86 46 L98 23"
+            stroke-width="2"></path><path
+            d="M61 63 L39 67 M126 60 L128 36 M119 122 L148 126 M54 112 L45 142"
+            stroke-width="1"></path></g
+        ></svg
+      >
+      <div class="stage-footer">
+        <span id="scene-status" role="status"
+          >Static artwork ready. Preparing the 3D experiment.</span
+        >
+      </div>
+      <div class="peel-viewport" aria-hidden="true">
+        <div id="peel-cover" hidden>
+          <span>Siva<br /><em>Addanki.</em></span><i></i>
+        </div>
+      </div>
+    </div>
+
+    <aside class="lab-controls" aria-label="Prototype controls">
+      <div class="control-group">
+        <span class="control-label">COMPOSITION</span><div class="segmented">
+          <button type="button" data-layout="a" aria-pressed="true"
+            >A · Editorial</button
+          ><button type="button" data-layout="b" aria-pressed="false"
+            >B · Object stage</button
+          >
+        </div>
+      </div>
+      <div class="control-group">
+        <span class="control-label">PEEL EXPERIMENT</span><div
+          class="segmented"
+        >
+          <button type="button" data-peel-button="css" disabled
+            >Paper peel</button
+          ><button type="button" data-peel-button="mesh" disabled
+            >3D curl</button
+          >
+        </div>
+      </div>
+      <button type="button" id="skip-peel" hidden>Skip reveal ↗</button>
+      <p id="interaction-status" role="status">
+        Character study. Likeness is provisional.
+      </p>
+    </aside>
+  </main>
+  <noscript
+    ><p class="noscript">
+      The artwork is static because JavaScript is off. You can still explore <a
+        href="/work/">the work</a
+      >.
+    </p></noscript
+  >
+</div>
+
+<script>
+  import { mountPrototype } from './controller';
+  const root = document.querySelector<HTMLElement>('#playground');
+  if (root) mountPrototype(root);
+</script>
+
+<style is:global>
+  @font-face {
+    font-family: 'Lab Serif';
+    src: url('/fonts/instrument-serif.woff2') format('woff2');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Lab Sans';
+    src: url('/fonts/space-grotesk.woff2') format('woff2');
+    font-weight: 300 700;
+    font-display: swap;
+  }
+  :root {
+    color-scheme: light;
+    --paper: #f5f4f0;
+    --ink: #242423;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Lab Sans', sans-serif;
+  }
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: default;
+  }
+  :focus-visible {
+    outline: 2px solid #6756a9;
+    outline-offset: 6px;
+  }
+  [hidden] {
+    display: none !important;
+  }
+  .lab-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 48px;
+    padding: 10px 3.5%;
+    border-bottom: 1px solid #dcdad2;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  .lab-bar > a {
+    font-weight: 700;
+  }
+  .lab-badge {
+    padding: 5px 9px;
+    border: 1px solid #d5d3ca;
+    border-radius: 4px;
+    letter-spacing: 0;
+  }
+  .stage {
+    position: relative;
+    max-width: 1720px;
+    height: 100dvh;
+    margin: auto;
+    overflow: visible;
+    isolation: isolate;
+  }
+  .masthead {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 5%;
+  }
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.06em;
+  }
+  .identity-dot {
+    color: #9386c3;
+  }
+  #perch {
+    display: block;
+    width: 72px;
+    height: 72px;
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    font-size: 12px;
+  }
+  nav a {
+    padding-block: 14px;
+  }
+  .editorial {
+    position: absolute;
+    z-index: 2;
+    top: 25%;
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+  }
+  .editorial a {
+    pointer-events: auto;
+  }
+  h1 {
+    margin: 0;
+    font:
+      400 clamp(60px, 6.5vw, 104px)/0.88 'Lab Serif',
+      Georgia,
+      serif;
+    letter-spacing: -0.045em;
+  }
+  .developer {
+    font-size: 1.12em;
+  }
+  .with {
+    font:
+      400 0.3em/1.8 'Lab Sans',
+      sans-serif;
+    letter-spacing: -0.04em;
+    vertical-align: middle;
+    margin-right: 0.12em;
+  }
+  h1 em {
+    font-weight: 400;
+    font-size: 1.1em;
+    letter-spacing: -0.045em;
+  }
+  .work-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 28px;
+    min-height: 46px;
+    margin-top: 24px;
+    padding: 8px 9px 8px 23px;
+    border-radius: 50px;
+    background: var(--ink);
+    color: white;
+    font-size: 11px;
+  }
+  .work-link > span {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #66665e;
+    border-radius: 50%;
+    font-size: 19px;
+  }
+  #scene {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    pointer-events: none;
+  }
+  #scene canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  #target {
+    position: absolute;
+    z-index: 3;
+    width: 180px;
+    height: 200px;
+    right: 5.5%;
+    top: 23%;
+    border: 0;
+    background: transparent;
+    border-radius: 28px;
+    padding: 0;
+  }
+  #target::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: 100px;
+    height: 18px;
+    background: #454052;
+    opacity: 0.16;
+    filter: blur(14px);
+    left: 40px;
+    top: 146px;
+    border-radius: 50%;
+  }
+  .fallback-atom {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 160px;
+    color: #a398d4;
+    filter: drop-shadow(7px 12px 5px #51416f24);
+  }
+  [data-scene='ready'] .fallback-atom {
+    visibility: hidden;
+  }
+  .target-caption {
+    position: absolute;
+    bottom: 18px;
+    left: 0;
+    width: 100%;
+    font-size: 12px;
+  }
+  .target-caption > span {
+    margin-left: 8px;
+  }
+  .target-hint {
+    position: absolute;
+    top: -12px;
+    left: -6px;
+    width: 100%;
+    font-size: 8px;
+    letter-spacing: 0.13em;
+    transform: rotate(-8deg);
+  }
+  .stack-tag {
+    position: absolute;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+  }
+  .stack-tag > span {
+    display: grid;
+    place-items: center;
+    width: 90px;
+    height: 90px;
+    border-radius: 23px;
+    font-size: 35px;
+    font-weight: 600;
+    box-shadow:
+      inset 2px 3px 5px #ffffff9e,
+      inset -5px -5px 8px #0000000f,
+      15px 24px 26px #28201815;
+  }
+  .stack-tag > small {
+    margin-top: 15px;
+    font-size: 10px;
+  }
+  .python {
+    left: 9%;
+    top: 26%;
+    transform: rotate(-13deg);
+  }
+  .python > span {
+    background: #efd78b;
+    color: #806a32;
+  }
+  .typescript {
+    right: 16%;
+    bottom: 13%;
+    transform: rotate(13deg);
+  }
+  .typescript > span {
+    background: #afc9e0;
+    color: #466381;
+    border-radius: 14px;
+  }
+  .astro {
+    left: 16%;
+    bottom: 14%;
+    transform: rotate(14deg);
+  }
+  .astro > span {
+    background: #e8ab94;
+    color: #a4513b;
+    border-radius: 50%;
+    font-size: 78px;
+    line-height: 1;
+  }
+  #avatar {
+    position: absolute;
+    z-index: 6;
+    top: 0;
+    left: 0;
+    width: 76px;
+    height: 95px;
+    pointer-events: none;
+    transform-origin: 50% 65%;
+    filter: drop-shadow(0 8px 5px #1414100c);
+  }
+  #avatar svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  #avatar .body,
+  #avatar .head,
+  #avatar .arm,
+  #avatar .leg {
+    transform-box: fill-box;
+    transform-origin: 50% 10%;
+  }
+  #avatar .body {
+    transform-origin: 50% 65%;
+  }
+  #avatar .front-leg {
+    transform-origin: 20% 10%;
+  }
+  #avatar .front-arm {
+    transform-origin: 15% 5%;
+  }
+  #crack {
+    position: absolute;
+    z-index: 5;
+    width: 160px;
+    height: 160px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .stage-footer {
+    position: absolute;
+    bottom: 22px;
+    left: 5%;
+    right: 5%;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    color: #97938b;
+  }
+  #scene-status {
+    margin-left: auto;
+    text-align: right;
+    max-width: 300px;
+    letter-spacing: 0;
+  }
+  .lab-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+    padding: 16px 22px;
+    border-top: 1px solid #dcdad2;
+    background: #eeede7;
+    min-height: 94px;
+  }
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .control-label {
+    font-size: 8px;
+    letter-spacing: 0.14em;
+    color: #7b786f;
+  }
+  .segmented {
+    display: flex;
+    gap: 3px;
+    padding: 3px;
+    border: 1px solid #d3d0c7;
+    border-radius: 7px;
+  }
+  .segmented button {
+    min-height: 36px;
+    padding: 6px 13px;
+    font-size: 10px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+  }
+  .segmented button[aria-pressed='true'] {
+    background: var(--ink);
+    color: #fff;
+    box-shadow: 0 2px 4px #0002;
+  }
+  .segmented button:disabled {
+    opacity: 0.5;
+  }
+  #interaction-status {
+    font-size: 10px;
+    color: #78746c;
+    max-width: 225px;
+    line-height: 1.6;
+  }
+  #skip-peel {
+    position: fixed;
+    z-index: 12;
+    top: 72px;
+    right: 24px;
+    min-height: 44px;
+    border: 1px solid #aaa49b;
+    padding: 10px 18px;
+    border-radius: 30px;
+    background: #fff;
+    font-size: 11px;
+  }
+  .peel-viewport {
+    position: absolute;
+    z-index: 10;
+    inset: 0;
+    overflow: clip;
+    pointer-events: none;
+  }
+  #peel-cover {
+    position: absolute;
+    z-index: 10;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: #e4d8bd;
+    transform-origin: 0 100%;
+    box-shadow: 0 -20px 45px #342d2930;
+    pointer-events: none;
+  }
+  #peel-cover > span {
+    text-align: center;
+    font:
+      400 70px/0.95 'Lab Serif',
+      Georgia,
+      serif;
+    letter-spacing: -0.04em;
+  }
+  #peel-cover > i {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(
+      135deg,
+      #c1b493 0%,
+      #f9f6eb 49%,
+      #b3a58c 50%,
+      #e4d8bd 90%
+    );
+    clip-path: polygon(0 100%, 100% 0, 100% 100%);
+  }
+  [data-composition='b'] .editorial {
+    top: 19%;
+  }
+  [data-composition='b'] h1 {
+    font-size: clamp(60px, 5.1vw, 82px);
+  }
+  [data-composition='b'] #target {
+    top: auto;
+    bottom: 3%;
+    right: 33%;
+    width: 155px;
+    height: 180px;
+  }
+  [data-composition='b'] .python {
+    top: auto;
+    bottom: 9%;
+    left: 13%;
+  }
+  [data-composition='b'] .typescript {
+    bottom: 9%;
+    right: 13%;
+  }
+  [data-composition='b'] .astro {
+    bottom: 8%;
+    left: 33%;
+  }
+  [data-composition='b'] .target-hint {
+    top: -18px;
+  }
+  .noscript {
+    text-align: center;
+    font-size: 13px;
+    padding: 20px;
+  }
+  .noscript a {
+    text-decoration: underline;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .segmented button:not(:disabled):hover {
+      background: #dad7ce;
+      color: var(--ink);
+    }
+    .work-link:hover {
+      background: #45443d;
+    }
+  }
+  @media (max-width: 1000px) {
+    h1 {
+      font-size: clamp(50px, 8vw, 73px);
+    }
+    #target {
+      right: 2%;
+      width: 145px;
+    }
+    .python {
+      left: 4%;
+    }
+    .stack-tag > span {
+      width: 72px;
+      height: 72px;
+      font-size: 27px;
+    }
+    .astro > span {
+      font-size: 60px;
+    }
+    .masthead {
+      padding-inline: 4%;
+    }
+  }
+  @media (max-width: 650px) {
+    .lab-bar {
+      font-size: 8px;
+      padding-inline: 18px;
+    }
+    .lab-bar > span:not(.lab-badge) {
+      display: none;
+    }
+    .masthead {
+      padding: 15px 20px;
+      align-items: flex-start;
+    }
+    .identity {
+      font-size: 18px;
+      gap: 1px;
+    }
+    #perch {
+      width: 55px;
+      height: 70px;
+    }
+    nav {
+      font-size: 10px;
+      gap: 10px;
+      padding-top: 12px;
+    }
+    nav > a:last-child {
+      display: none;
+    }
+    #avatar {
+      width: 65px;
+      height: 81px;
+    }
+    .editorial,
+    [data-composition='b'] .editorial {
+      top: 20%;
+      padding: 0 15px;
+    }
+    h1,
+    [data-composition='b'] h1 {
+      font-size: clamp(32px, min(12.5vw, 6.5dvh), 77px);
+      line-height: 0.97;
+    }
+    h1 em {
+      display: block;
+      font-size: 1.36em;
+    }
+    .with {
+      display: block;
+      line-height: 1.6;
+      margin-top: 12px;
+      font-size: 0.34em;
+    }
+    .work-link {
+      min-height: 46px;
+    }
+    #target {
+      width: clamp(100px, 18dvh, 124px);
+      height: clamp(120px, 23dvh, 154px);
+      top: auto;
+      bottom: 5%;
+      right: 8%;
+    }
+    #target::after {
+      top: 113px;
+      left: 24px;
+      width: 80px;
+    }
+    .fallback-atom {
+      height: calc(100% - 30px);
+    }
+    .target-caption {
+      bottom: 7px;
+      font-size: 10px;
+    }
+    .target-hint {
+      font-size: 7px;
+      top: -6px;
+    }
+    .stack-tag > span {
+      width: 58px;
+      height: 58px;
+      border-radius: 17px;
+      font-size: 22px;
+    }
+    .stack-tag > small {
+      font-size: 8px;
+      margin-top: 10px;
+    }
+    .python {
+      left: 9%;
+      top: 14%;
+      transform: rotate(-15deg);
+    }
+    .typescript {
+      right: 12%;
+      top: 14%;
+      bottom: auto;
+      transform: rotate(15deg);
+    }
+    .astro {
+      bottom: 9%;
+      left: 14%;
+    }
+    .astro > span {
+      font-size: 50px;
+      border-radius: 50%;
+    }
+    .stage-footer {
+      bottom: 15px;
+      left: 20px;
+      right: 20px;
+      font-size: 6px;
+    }
+    #scene-status {
+      max-width: 140px;
+      font-size: 7px;
+    }
+    .lab-controls {
+      justify-content: flex-start;
+      gap: 14px;
+      padding: 17px 20px;
+    }
+    #interaction-status {
+      max-width: none;
+      margin: 0;
+      width: 100%;
+    }
+    [data-composition='b'] .editorial {
+      top: 17%;
+    }
+    [data-composition='b'] .python {
+      bottom: 8%;
+      left: 5%;
+      top: auto;
+    }
+    [data-composition='b'] .astro {
+      bottom: 7%;
+      left: 29%;
+    }
+    [data-composition='b'] .typescript {
+      bottom: 8%;
+      right: 5%;
+      top: auto;
+    }
+    [data-composition='b'] #target {
+      width: 110px;
+      height: 140px;
+      right: 23%;
+      bottom: 20%;
+    }
+    #peel-cover > span {
+      font-size: 55px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+    }
+  }
+</style>

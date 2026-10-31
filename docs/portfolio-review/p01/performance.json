@@ -1,0 +1,160 @@
+{
+  "browser": "156.0.8078.74",
+  "profile": {
+    "viewport": "1440x1000",
+    "cpuThrottle": 4,
+    "network": "Local preview. No network throttling.",
+    "coldCache": true
+  },
+  "baseURL": "http://127.0.0.1:4323",
+  "baselineURL": "http://127.0.0.1:4324",
+  "runs": [
+    {
+      "run": 1,
+      "revision": "trunk",
+      "headingMs": 1199,
+      "cls": 0,
+      "bytes": 6808
+    },
+    {
+      "run": 1,
+      "revision": "head",
+      "headingMs": 1346,
+      "cls": 0.005256486304012346,
+      "bytes": 6935
+    },
+    {
+      "run": 2,
+      "revision": "trunk",
+      "headingMs": 834,
+      "cls": 0,
+      "bytes": 6808
+    },
+    {
+      "run": 2,
+      "revision": "head",
+      "headingMs": 628,
+      "cls": 0.00003933851453993055,
+      "bytes": 6935
+    },
+    {
+      "run": 3,
+      "revision": "trunk",
+      "headingMs": 746,
+      "cls": 0.00003933851453993055,
+      "bytes": 6808
+    },
+    {
+      "run": 3,
+      "revision": "head",
+      "headingMs": 699,
+      "cls": 0.00003933851453993055,
+      "bytes": 6935
+    },
+    {
+      "run": 4,
+      "revision": "trunk",
+      "headingMs": 794,
+      "cls": 0.00003933851453993055,
+      "bytes": 6808
+    },
+    {
+      "run": 4,
+      "revision": "head",
+      "headingMs": 764,
+      "cls": 0,
+      "bytes": 6935
+    },
+    {
+      "run": 5,
+      "revision": "trunk",
+      "headingMs": 909,
+      "cls": 0.00003933851453993055,
+      "bytes": 6808
+    },
+    {
+      "run": 5,
+      "revision": "head",
+      "headingMs": 964,
+      "cls": 0.00003933851453993055,
+      "bytes": 6935
+    }
+  ],
+  "prototype": {
+    "readyMs": 1523,
+    "documentBytes": 2781,
+    "totalResourceBytes": 194516,
+    "sceneResourceBytes": 131532,
+    "activeP95FrameMs": 17,
+    "kickMs": 1088,
+    "cls": 0.019401081919728974,
+    "idleFrames": 0,
+    "resources": [
+      {
+        "name": "/_astro/portfolio.CX0yliUI.css",
+        "bytes": 3292,
+        "duration": 8.099999964237213
+      },
+      {
+        "name": "/_astro/PortfolioPrototype.astro_astro_type_script_index_0_lang.BLxZl4ln.js",
+        "bytes": 2565,
+        "duration": 6.300000011920929
+      },
+      {
+        "name": "/fonts/space-grotesk.woff2",
+        "bytes": 25872,
+        "duration": 5
+      },
+      {
+        "name": "/fonts/instrument-serif.woff2",
+        "bytes": 26700,
+        "duration": 4.099999964237213
+      },
+      {
+        "name": "/_astro/preload-helper.DHhhL8Zf.js",
+        "bytes": 1152,
+        "duration": 4.199999988079071
+      },
+      {
+        "name": "/_astro/scene.dNnhDNdy.js",
+        "bytes": 131532,
+        "duration": 25.5
+      },
+      {
+        "name": "/favicon.svg",
+        "bytes": 622,
+        "duration": 3.600000023841858
+      }
+    ]
+  },
+  "gates": [
+    {
+      "name": "Homepage heading regression at most 200 ms",
+      "pass": true,
+      "observed": {
+        "trunkMedianMs": 834,
+        "headMedianMs": 764
+      }
+    },
+    {
+      "name": "Lab resources at most 1 MB transferred",
+      "pass": true,
+      "observed": 194516
+    },
+    {
+      "name": "Active p95 frame interval at most 33.4 ms",
+      "pass": true,
+      "observed": 17
+    },
+    {
+      "name": "Kick completes within 2 seconds",
+      "pass": true,
+      "observed": 1088
+    },
+    {
+      "name": "No idle render loop",
+      "pass": true,
+      "observed": 0
+    }
+  ]
+}
