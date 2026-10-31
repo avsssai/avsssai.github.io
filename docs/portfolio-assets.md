@@ -34,6 +34,12 @@ The supporting words within the approved heading retain their smaller treatment.
 
 The production homepage does not import the prototype controller, renderer, or peel experiments. No new animation is introduced by P02.
 
+## P03 stack artwork
+
+P03 adds seven original SVG files under `public/art/portfolio/stack/` and matching procedural meshes. They use abstract tile, paired capsule, star, cloud, orbital, bolt and faceted forms. No logo pack, remote model, Blender asset, paid editor or model service is used. Labels identify technology subjects and do not imply endorsement.
+
+The typed registry in `src/components/portfolio/stack-items.ts` owns labels, colours, geometry kinds, placement anchors and fallback paths. Astro owns the HTML controls and images. The deferred scene replaces only the images after a usable frame. The existing P02 `HeroArtwork.astro` is retained but no longer imported by the homepage.
+
 ## Content limits
 
 The baseline email, location, LinkedIn URL, and project records were placeholders. P02 removes those published claims rather than inventing replacements. The GitHub URL uses this repository's owner, `avsssai`.
