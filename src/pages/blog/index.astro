@@ -9,22 +9,13 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 );
 ---
 
-<BaseLayout
-  title="Writing"
-  description="Technical notes, experiments, and lessons from building software."
->
+<BaseLayout title="Blog" description="Blog posts by Siva Addanki.">
   <Container class="py-20">
-    <p class="terminal-kicker">
-      <span aria-hidden="true">$ </span>cat ./blog/index
-    </p>
     <h1
       class="mt-5 max-w-3xl text-5xl font-semibold tracking-tight sm:text-7xl"
     >
-      Notes from the workbench.
+      Blog
     </h1>
-    <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-      Technical notes, experiments, and lessons from building software.
-    </p>
     <div class="mt-16 border-b border-line">
       {
         posts.map((post) => (

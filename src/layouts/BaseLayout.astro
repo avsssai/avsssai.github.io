@@ -1,34 +1,44 @@
 ---
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
-import PixelCompanion from '../components/PixelCompanion.astro';
 import { site } from '../config/site';
 import '../styles/global.css';
 
 interface Props {
   title?: string;
   description?: string;
+  pageKind?: 'landing' | 'document';
 }
 
-const { title, description = site.description } = Astro.props;
+const {
+  title,
+  description = site.description,
+  pageKind = 'document',
+} = Astro.props;
 const pageTitle = title
   ? `${title} — ${site.name}`
   : `${site.name} — ${site.role}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const showCompanion =
-  Astro.url.pathname !== '/' && !Astro.url.pathname.startsWith('/game/');
-const companionMessage = Astro.url.pathname.startsWith('/work/')
-  ? 'projects loaded. inspect the decisions, not just the screenshots.'
-  : Astro.url.pathname.startsWith('/blog/')
-    ? 'field notes indexed. pick a thread and start reading.'
-    : 'route loaded. everything looks operational.';
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta
+      name="theme-color"
+      content="#f6f5f1"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#191918"
+      media="(prefers-color-scheme: dark)"
+    />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <link rel="canonical" href={canonical} />
@@ -54,16 +64,28 @@ const companionMessage = Astro.url.pathname.startsWith('/work/')
           .matches
           ? 'dark'
           : 'light';
-        document.documentElement.dataset.theme =
-          saved === 'dark' || saved === 'light' ? saved : preferred;
+        const theme = saved === 'dark' || saved === 'light' ? saved : preferred;
+        document.documentElement.dataset.theme = theme;
+        document
+          .querySelectorAll('meta[name="theme-color"]')
+          .forEach((meta) => {
+            meta.setAttribute(
+              'content',
+              theme === 'dark' ? '#191918' : '#f6f5f1',
+            );
+          });
       })();
     </script>
   </head>
-  <body class="min-h-screen font-sans antialiased">
-    <a class="sr-only focus:not-sr-only" href="#main">Skip to content</a>
+  <body
+    class:list={[
+      'min-h-screen font-sans antialiased',
+      { 'page-home': pageKind === 'landing' },
+    ]}
+  >
+    <a class="skip-link" href="#main">Skip to content</a>
     <SiteHeader />
-    <main id="main"><slot /></main>
-    {showCompanion && <PixelCompanion compact message={companionMessage} />}
+    <main id="main" tabindex="-1"><slot /></main>
     <SiteFooter />
   </body>
 </html>

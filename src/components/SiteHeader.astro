@@ -1,57 +1,146 @@
 ---
 import { site } from '../config/site';
 import ThemeSwitcher from './ThemeSwitcher.astro';
-import Container from './ui/Container.astro';
 
 const pathname = Astro.url.pathname;
 const links = [
-  { href: '/', label: 'Home' },
   { href: '/work/', label: 'Work' },
   { href: '/blog/', label: 'Blog' },
   { href: '/game/', label: 'Play' },
 ];
-
-const isActive = (href: string) =>
-  href === '/' ? pathname === '/' : pathname.startsWith(href);
 ---
 
-<header
-  class="sticky top-0 z-50 border-b border-line bg-paper/90 backdrop-blur-md"
->
-  <Container class="flex min-h-16 items-center justify-between gap-4 py-3">
-    <a
-      class="font-mono text-sm font-bold tracking-tight hover:text-accent"
-      href="/"
-      aria-label={`${site.name}, home`}
-    >
-      <span class="text-accent">~/</span>{
-        site.name.toLowerCase().replaceAll(' ', '_')
-      }
+<header class="site-header">
+  <div class="site-shell header-inner">
+    <a class="identity" href="/" aria-label={`${site.name}, home`}>
+      <img src="/art/portfolio/character.svg" width="64" height="80" alt="" />
+      <span
+        >{site.name}<span class="identity-dot" aria-hidden="true">.</span></span
+      >
     </a>
-    <div class="flex items-center gap-3 sm:gap-5">
+    <div class="header-actions">
       <nav aria-label="Primary navigation">
-        <ul class="flex items-center gap-1 font-mono text-xs sm:gap-2">
-          {
-            links.map(({ href, label }) => (
-              <li>
-                <a
-                  class:list={[
-                    'block border border-transparent px-2 py-2 transition hover:border-line hover:text-accent sm:px-3',
-                    isActive(href)
-                      ? 'bg-surface font-bold text-accent'
-                      : 'text-muted',
-                  ]}
-                  href={href}
-                  aria-current={isActive(href) ? 'page' : undefined}
-                >
-                  /{label.toLowerCase()}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+        {
+          links.map(({ href, label }) => (
+            <a
+              href={href}
+              aria-current={pathname.startsWith(href) ? 'page' : undefined}
+            >
+              {label}
+            </a>
+          ))
+        }
+        <a href="#contact">Contact</a>
       </nav>
       <ThemeSwitcher />
     </div>
-  </Container>
+  </div>
 </header>
+
+<style>
+  .site-header {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1rem;
+  }
+  .identity {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.06em;
+    text-decoration: none;
+  }
+  .identity img {
+    width: 3.5rem;
+    height: 4.375rem;
+  }
+  .identity-dot {
+    color: #9386c3;
+  }
+  .header-actions,
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  nav a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    padding-inline: 0.35rem;
+    font-size: 0.8125rem;
+    text-decoration: none;
+  }
+  nav a[aria-current='page'] {
+    text-decoration: underline;
+    text-underline-offset: 0.4em;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    nav a:hover {
+      text-decoration: underline;
+      text-underline-offset: 0.4em;
+    }
+  }
+  @media (max-width: 700px) {
+    .header-inner {
+      flex-wrap: wrap;
+      gap: 0;
+      padding-block: 0.5rem;
+    }
+    .identity {
+      font-size: 1.125rem;
+    }
+    .identity img {
+      width: 2.75rem;
+      height: 3.4375rem;
+    }
+    .header-actions {
+      width: 100%;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    nav {
+      gap: 0.75rem;
+    }
+  }
+  @media (max-height: 500px) {
+    .header-inner {
+      padding-block: 0.25rem;
+    }
+    .identity img {
+      width: 2rem;
+      height: 2.5rem;
+    }
+  }
+  @media (max-height: 500px) and (min-width: 540px) and (max-width: 700px) {
+    .header-inner {
+      flex-wrap: nowrap;
+    }
+    .header-actions {
+      width: auto;
+    }
+    nav {
+      gap: 0.25rem;
+    }
+    .identity {
+      font-size: 1rem;
+    }
+  }
+  @media (max-height: 500px) and (min-width: 701px) {
+    .header-inner {
+      padding-block: 0.375rem;
+    }
+    .identity img {
+      width: 2.25rem;
+      height: 2.8125rem;
+    }
+  }
+</style>
