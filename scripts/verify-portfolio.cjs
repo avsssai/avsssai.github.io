@@ -36,9 +36,9 @@ async function main() {
     const page = await context.newPage();
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
-    const screenshot = async (slug) => {
+    const screenshot = async (slug, fullPage = true) => {
       const file = path.join(folder, `${slug}.png`);
-      await page.screenshot({ path: file, fullPage: true });
+      await page.screenshot({ path: file, fullPage });
       return file;
     };
     const open = async () => {
@@ -236,7 +236,7 @@ async function main() {
             kind,
           );
           await page.waitForTimeout(kind === 'css' ? 700 : 250);
-          await screenshot(`peel-${kind}`);
+          await screenshot(`peel-${kind}`, false);
           assert.equal(
             await page.evaluate(
               () => document.documentElement.scrollWidth > innerWidth,
