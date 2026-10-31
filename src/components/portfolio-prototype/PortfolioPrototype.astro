@@ -1,3 +1,7 @@
+---
+import './viewport.css';
+---
+
 <div class="playground">
   <div class="lab-bar">
     <a href="/">SIVA / DESIGN LAB</a>
@@ -326,9 +330,9 @@
   .stage {
     position: relative;
     max-width: 1720px;
-    height: max(760px, calc(100svh - 142px));
+    height: 100dvh;
     margin: auto;
-    overflow: clip;
+    overflow: visible;
     isolation: isolate;
   }
   .masthead {
@@ -806,10 +810,6 @@
     .lab-bar > span:not(.lab-badge) {
       display: none;
     }
-    .stage {
-      height: 850px;
-      min-height: 0;
-    }
     .masthead {
       padding: 15px 20px;
       align-items: flex-start;
@@ -836,7 +836,7 @@
     }
     .editorial,
     [data-composition='b'] .editorial {
-      top: 23%;
+      top: 20%;
       padding: 0 15px;
     }
     .eyebrow {
@@ -846,7 +846,7 @@
     }
     h1,
     [data-composition='b'] h1 {
-      font-size: clamp(45px, 12.5vw, 77px);
+      font-size: clamp(32px, min(12.5vw, 6.5dvh), 77px);
       line-height: 0.97;
     }
     h1 em {
@@ -868,8 +868,8 @@
       min-height: 46px;
     }
     #target {
-      width: 124px;
-      height: 154px;
+      width: clamp(100px, 18dvh, 124px);
+      height: clamp(120px, 23dvh, 154px);
       top: auto;
       bottom: 5%;
       right: 8%;
@@ -880,7 +880,7 @@
       width: 80px;
     }
     .fallback-atom {
-      height: 120px;
+      height: calc(100% - 30px);
     }
     .target-caption {
       bottom: 7px;
