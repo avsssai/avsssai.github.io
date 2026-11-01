@@ -9,6 +9,7 @@ const output =
 const median = (values) =>
   [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
 async function main() {
+  const activeOnly = process.env.PERF_ACTIVE_ONLY === '1';
   fs.mkdirSync(output, { recursive: true });
   const browser = await chromium.launch({
     headless: true,
@@ -29,6 +30,7 @@ async function main() {
       network: 'local preview; no network throttling',
       baseline: 'verified P03 parent, lacks character interaction',
       coldCache: true,
+      activeOnly,
     },
     samples: [],
     active: null,
@@ -46,7 +48,7 @@ async function main() {
     return { ctx, page };
   };
   try {
-    for (let run = 0; run < 5; run++)
+    for (let run = 0; run < (activeOnly ? 0 : 5); run++)
       for (const [revision, url] of run % 2
         ? [
             ['head', baseURL],
@@ -160,11 +162,15 @@ async function main() {
           .map((s) => s.headingMs),
       );
     report.gates = [
-      {
-        name: 'heading median delta <= 200ms',
-        value: delta,
-        pass: delta <= 200,
-      },
+      ...(!activeOnly
+        ? [
+            {
+              name: 'heading median delta <= 200ms',
+              value: delta,
+              pass: delta <= 200,
+            },
+          ]
+        : []),
       {
         name: 'activation acknowledgment <= 100ms',
         value: report.active.maxAcknowledgmentMs,

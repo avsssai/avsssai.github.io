@@ -37,6 +37,16 @@ Occasional explanatory interaction and feedback; no entrance or idle animation. 
 
 Resize, captured scroll, hidden document, pagehide, reduced-motion change, scene/layout invalidation and disposal cancel the flight and restore the static image. A persisted return starts fresh, never resumes motion. Generation guards prevent old rejected promises from resetting a newer flight. One reusable local crack is hidden after impact; no growing fragment collection, screen shake or flashing layer.
 
+## Added motion accents
+
+After reviewing P04, the operator requested speed strokes, an impact pressure ring, directional squash and a restrained paper-dent illusion. They use the same controller and existing 300 ms travel / 160 ms impact windows; the sequence is not longer.
+
+`Avatar.ts` owns three reusable decorative elements. Strokes ride behind the actor during outbound travel. A low-contrast radial gradient moves beneath the artwork as a paper-dent illusion, behind the HTML copy. It does not warp or duplicate text. A small SVG ellipse expands at contact beside the existing crack. Only transforms and opacity animate; no blur filter, screenshot texture or per-frame layout changes. Each element resets to zero opacity on completion or cancellation and is removed on disposal.
+
+The scene's existing recoil group compresses to at most 0.88 on the hit axis and stretches to 1.08 on the perpendicular axis. It returns to unit scale when the recoil pose clears. P03's base positions, camera projections and control geometry remain unchanged.
+
+The focused browser driver checks visible travel/impact accents, stable heading geometry, reduced-motion suppression, cleanup and repeated actions. `PERF_ACTIVE_ONLY=1` runs just the twenty-action performance probe for visual motion revisions; it does not claim a new cold-heading benchmark.
+
 ## Tradeoffs and open gates
 
 - Reuse the provisional original rig rather than invent an approved likeness.

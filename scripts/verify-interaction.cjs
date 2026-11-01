@@ -41,6 +41,11 @@ async function main() {
   const results = [];
   const errors = [];
   async function run(name, options, check) {
+    if (
+      process.env.VERIFY_CASES &&
+      !process.env.VERIFY_CASES.split(',').includes(name)
+    )
+      return;
     const context = await browser.newContext({
       viewport: { width: 1440, height: 900 },
       ...options,
@@ -199,6 +204,13 @@ async function main() {
     assert.equal((await data(page)).phase, 'idle');
     assert.equal((await data(page)).interactions, '0');
     assert.equal(await page.locator('canvas').count(), 0);
+    for (const effect of ['speed', 'paper', 'pressure'])
+      assert.equal(
+        await page
+          .locator(`[data-motion-effect="${effect}"]`)
+          .evaluate((node) => getComputedStyle(node).opacity),
+        '0',
+      );
     assert.equal(
       await page.locator(button).getAttribute('aria-pressed'),
       'true',
@@ -268,6 +280,63 @@ async function main() {
       'visible',
     );
   });
+  await run('effects', {}, async (page) => {
+    const heading = await page.locator('h1').boundingBox();
+    await page.locator(button).evaluate((node) => node.click());
+    await phase(page, 'travel');
+    await page.locator(hero).evaluate((node) =>
+      node.getAnimations({ subtree: true }).forEach((animation) => {
+        animation.pause();
+        animation.currentTime = 150;
+      }),
+    );
+    for (const effect of ['speed', 'paper']) {
+      assert.ok(
+        (await page
+          .locator(`[data-motion-effect="${effect}"]`)
+          .evaluate((node) => Number(getComputedStyle(node).opacity))) > 0,
+      );
+    }
+    assert.deepEqual(await page.locator('h1').boundingBox(), heading);
+    await page.screenshot({ path: path.join(output, 'travel-effects.png') });
+    await page
+      .locator(hero)
+      .evaluate((node) =>
+        node
+          .getAnimations({ subtree: true })
+          .forEach((animation) => animation.play()),
+      );
+    await phase(page, 'impact');
+    await page.locator(hero).evaluate((node) =>
+      node.getAnimations({ subtree: true }).forEach((animation) => {
+        animation.pause();
+        animation.currentTime = 40;
+      }),
+    );
+    assert.ok(
+      (await page
+        .locator('[data-motion-effect="pressure"]')
+        .evaluate((node) => Number(getComputedStyle(node).opacity))) > 0,
+    );
+    await page.screenshot({ path: path.join(output, 'impact-effects.png') });
+    await page
+      .locator(hero)
+      .evaluate((node) =>
+        node
+          .getAnimations({ subtree: true })
+          .forEach((animation) => animation.play()),
+      );
+    await waitKick(page, 1);
+    for (const effect of ['speed', 'paper', 'pressure']) {
+      assert.equal(
+        await page
+          .locator(`[data-motion-effect="${effect}"]`)
+          .evaluate((node) => getComputedStyle(node).opacity),
+        '0',
+      );
+    }
+    assert.deepEqual(await page.locator('h1').boundingBox(), heading);
+  });
   await run('target-lost', {}, async (page) => {
     await page.locator(button).click();
     await phase(page, 'travel');
@@ -302,6 +371,14 @@ async function main() {
     assert.equal((await data(page)).contacts, '20');
     assert.equal((await data(page)).kicks, '10');
     assert.equal((await data(page)).punches, '10');
+    assert.equal(await page.locator('[data-motion-effect]').count(), 3);
+    for (const effect of ['speed', 'paper', 'pressure'])
+      assert.equal(
+        await page
+          .locator(`[data-motion-effect="${effect}"]`)
+          .evaluate((node) => getComputedStyle(node).opacity),
+        '0',
+      );
     assert.equal(
       await page
         .locator(hero)

@@ -105,6 +105,10 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
       y: strikePoint.y - (home.height * anchor.y) / 150,
     };
     view.avatar.querySelector('svg')!.style.transform = `scaleX(${direction})`;
+    view.trail.style.left = direction > 0 ? '-65%' : '95%';
+    view.trail.style.transform = `scaleX(${direction})`;
+    view.dent.style.left = `${home.width / 2 - 72}px`;
+    view.dent.style.top = `${home.height * 0.8 - 40}px`;
     const from = `translate(${home.x}px,${home.y}px)`;
     const to = `translate(${contact.x}px,${contact.y}px)`;
     const middle = `translate(${(home.x + contact.x) / 2}px,${Math.min(home.y, contact.y) - 32}px) rotate(${-12 * direction}deg)`;
@@ -163,6 +167,26 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
           [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-32deg)' }],
           300,
         ),
+        animate(
+          view.trail,
+          [{ opacity: 0 }, { opacity: 0.55, offset: 0.25 }, { opacity: 0 }],
+          300,
+          MOVE,
+        ),
+        animate(
+          view.dent,
+          [
+            { transform: `${from} scale(.95)`, opacity: 0 },
+            {
+              transform: `${middle} scale(1.12,.86)`,
+              opacity: 0.8,
+              offset: 0.5,
+            },
+            { transform: to, opacity: 0 },
+          ],
+          300,
+          MOVE,
+        ),
       ]);
       view.avatar.style.transform = to;
       advance();
@@ -185,11 +209,27 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
         if (progress < 1) recoilFrame = requestAnimationFrame(recoil);
       };
       recoil();
-      await animate(
-        view.crack,
-        [{ opacity: 0 }, { opacity: 0.7, offset: 0.25 }, { opacity: 0 }],
-        160,
-      );
+      const ringPosition = `translate(${strikePoint.x - 40}px,${strikePoint.y - 40}px)`;
+      await Promise.all([
+        animate(
+          view.crack,
+          [{ opacity: 0 }, { opacity: 0.7, offset: 0.25 }, { opacity: 0 }],
+          160,
+        ),
+        animate(
+          view.ring,
+          [
+            { transform: `${ringPosition} scale(.95)`, opacity: 0 },
+            {
+              transform: `${ringPosition} scale(1.1)`,
+              opacity: 0.45,
+              offset: 0.25,
+            },
+            { transform: `${ringPosition} scale(1.45)`, opacity: 0 },
+          ],
+          160,
+        ),
+      ]);
       cancelAnimationFrame(recoilFrame);
       stack.recoil(null);
       limb.style.transform = '';

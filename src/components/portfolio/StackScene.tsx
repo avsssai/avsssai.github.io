@@ -161,6 +161,8 @@ function Contents({ layout, active, motion, onFrame }: Props) {
       const amount = motion.current?.id === id ? motion.current.amount : 0;
       group.position.x = amount * 0.18;
       group.rotation.z = -amount * 0.12;
+      const compression = Math.abs(amount);
+      group.scale.set(1 - compression * 0.12, 1 + compression * 0.08, 1);
     }
     gl.render(scene, camera);
     if (groups.current.size !== layout.targets.length) return;
