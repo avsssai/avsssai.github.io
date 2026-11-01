@@ -1,0 +1,120 @@
+{
+  "source": "Local uncommitted P05 terrain/walking/surface prototype above checkpoint a2aa474; desktop Chrome, phone viewport is not physical touch hardware; no audio",
+  "recordings": [
+    {
+      "name": "desktop",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "events": [
+        {
+          "kind": "ready",
+          "ms": 1102
+        },
+        {
+          "kind": "outbound",
+          "id": "react",
+          "ms": 4001
+        },
+        {
+          "kind": "return",
+          "id": "react",
+          "ms": 6801
+        },
+        {
+          "kind": "home",
+          "id": "react",
+          "ms": 9401
+        },
+        {
+          "kind": "outbound",
+          "id": "github",
+          "ms": 10750
+        },
+        {
+          "kind": "return",
+          "id": "github",
+          "ms": 13534
+        },
+        {
+          "kind": "home",
+          "id": "github",
+          "ms": 16118
+        },
+        {
+          "kind": "dark",
+          "ms": 17191
+        },
+        {
+          "kind": "outbound",
+          "id": "fastapi",
+          "ms": 19518
+        },
+        {
+          "kind": "return",
+          "id": "fastapi",
+          "ms": 22300
+        },
+        {
+          "kind": "home",
+          "id": "fastapi",
+          "ms": 24884
+        }
+      ],
+      "errors": [],
+      "bytes": 5508456,
+      "wallMs": 27842
+    },
+    {
+      "name": "phone",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "events": [
+        {
+          "kind": "ready",
+          "ms": 760
+        },
+        {
+          "kind": "outbound",
+          "id": "react",
+          "ms": 3449
+        },
+        {
+          "kind": "return",
+          "id": "react",
+          "ms": 4831
+        },
+        {
+          "kind": "home",
+          "id": "react",
+          "ms": 6199
+        },
+        {
+          "kind": "dark",
+          "ms": 7261
+        },
+        {
+          "kind": "outbound",
+          "id": "typescript",
+          "ms": 9332
+        },
+        {
+          "kind": "return",
+          "id": "typescript",
+          "ms": 12132
+        },
+        {
+          "kind": "home",
+          "id": "typescript",
+          "ms": 14715
+        }
+      ],
+      "errors": [],
+      "bytes": 1564745,
+      "wallMs": 17419
+    }
+  ]
+}
