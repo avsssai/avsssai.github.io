@@ -4,7 +4,7 @@ import {
   type LetterBox,
 } from './letter-world';
 import type { Point } from './walking-route';
-import { readProtectedRects } from './copy-obstacles';
+import { readProtectedRects, readHeadlineBoxes } from './copy-obstacles';
 
 export function mountLetterPhysics(root: HTMLElement, onFailure: () => void) {
   const svg = [
@@ -23,6 +23,7 @@ export function mountLetterPhysics(root: HTMLElement, onFailure: () => void) {
   )!;
   let world: ReturnType<typeof createLetterWorld> | undefined;
   let homes: { x: number; y: number; cx: number; cy: number }[] = [];
+  let headlineHomes: ReturnType<typeof readHeadlineBoxes> = [];
   let scale = 1,
     frame = 0,
     last = 0,
@@ -41,6 +42,12 @@ export function mountLetterPhysics(root: HTMLElement, onFailure: () => void) {
     world?.dispose();
     world = undefined;
     groups.forEach((node) => node.removeAttribute('transform'));
+    headlineHomes.forEach(({ node }) => {
+      node.style.removeProperty('transform');
+      node.style.removeProperty('transform-origin');
+    });
+    headlineHomes = [];
+    delete root.dataset.physicalHeadlines;
     transforms.length = 0;
   };
   const reset = () => {
@@ -72,6 +79,7 @@ export function mountLetterPhysics(root: HTMLElement, onFailure: () => void) {
       };
     });
     homes = boxes;
+    headlineHomes = readHeadlineBoxes(root);
     const protectedBoxes: LetterBox[] = readProtectedRects(root).map((b) => ({
       x: b.x + b.width / 2,
       y: b.y + b.height / 2,
@@ -95,7 +103,20 @@ export function mountLetterPhysics(root: HTMLElement, onFailure: () => void) {
         height: Math.max(1, bottom - top),
       },
       protectedBoxes,
+      headlineHomes.map(({ box }) => ({
+        x: box.x + box.width / 2,
+        y: box.y + box.height / 2,
+        width: box.width,
+        height: box.height,
+      })),
     );
+    headlineHomes.forEach(({ node, box }) => {
+      const layout = node.getBoundingClientRect();
+      node.style.transformOrigin = `${box.x + box.width / 2 - layout.x}px ${box.y + box.height / 2 - layout.y}px`;
+    });
+    root.dataset.physicalHeadlines = '';
+    root.dataset.headlineMoved = '0';
+    root.dataset.headlineImpacts = '0';
     root.dataset.letterPhysics = 'ready';
     root.dataset.letterMoved = '0';
     root.dataset.letterImpacts = '0';
@@ -118,6 +139,17 @@ export function mountLetterPhysics(root: HTMLElement, onFailure: () => void) {
         transforms[index] = transform;
       }
     });
+    let headlineMoved = 0;
+    world.headlinePoses.forEach((body, index) => {
+      const { node, box } = headlineHomes[index],
+        dx = body.x - (box.x + box.width / 2),
+        dy = body.y - (box.y + box.height / 2);
+      if (Math.hypot(dx, dy) > 0.2 || Math.abs(body.angle) > 0.001)
+        headlineMoved++;
+      node.style.transform = `translate(${dx}px,${dy}px) rotate(${body.angle}rad)`;
+    });
+    root.dataset.headlineMoved = String(headlineMoved);
+    root.dataset.headlineImpacts = String(world.headlineImpacts);
     root.dataset.letterMoved = String(moved);
     root.dataset.letterImpacts = String(world.impacts);
     root.dataset.letterFrames = String(++frames);

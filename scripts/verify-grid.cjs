@@ -163,7 +163,11 @@ async function main() {
         '1200',
         'a drag away and back must not place an X',
       );
-      await page.getByRole('heading', { level: 1 }).click();
+      // Physical headline blocks are now valid destinations; only the
+      // remaining prose ("with an") stays a fixed click exclusion.
+      await page
+        .locator('[data-copy-obstacle]:not([data-headline-body])')
+        .click();
       assert.equal(
         await page.locator(root).getAttribute('data-destination-x'),
         '1200',

@@ -6,6 +6,16 @@ const base = process.env.BASE_URL || 'http://127.0.0.1:4333';
 const out =
   process.env.VERIFY_OUTPUT || '../portfolio-evidence/letter-physics-final';
 const root = '[data-grid-experience]';
+async function staticHeadlines(page) {
+  assert.equal(await page.locator('[data-physical-headlines]').count(), 0);
+  assert.ok(
+    (
+      await page
+        .locator('[data-headline-body]')
+        .evaluateAll((nodes) => nodes.map((n) => n.style.transform))
+    ).every((t) => !t),
+  );
+}
 async function open(page, physical = true) {
   await page.addInitScript(() =>
     localStorage.setItem('portfolio-reveal-v1', 'seen'),
@@ -196,7 +206,7 @@ async function main() {
           'sleep must stop the physics rAF',
         );
         await page
-          .getByRole('button', { name: 'Reset Imagination letters' })
+          .getByRole('button', { name: 'Reset headline and Imagination' })
           .focus();
         await page.keyboard.press('Enter');
         assert.equal(
@@ -234,6 +244,7 @@ async function main() {
     async (page) => {
       await open(page, false);
       await page.waitForTimeout(200);
+      await staticHeadlines(page);
       assert.equal(await page.locator('[data-physical-letters]').count(), 0);
       assert.equal(
         await page.locator('[data-reset-letters]').isVisible(),
@@ -263,6 +274,7 @@ async function main() {
     );
     assert.equal(await page.locator('[data-physical-letters]').count(), 0);
     assert.equal(await page.locator('[data-reset-letters]').isVisible(), false);
+    await staticHeadlines(page);
     await page.mouse.click(280, 700);
     await idle(page, 280, 700);
     await page.getByRole('link', { name: 'Explore my work' }).click();
@@ -301,6 +313,7 @@ async function main() {
           .letterPhysics === 'reduced',
     );
     assert.equal(await page.locator('[data-physical-letters]').count(), 0);
+    await staticHeadlines(page);
     const frames = await page.locator(root).getAttribute('data-letter-frames');
     await page.waitForTimeout(200);
     assert.equal(

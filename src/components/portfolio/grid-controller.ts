@@ -107,7 +107,10 @@ export function mountGrid(root: HTMLElement) {
       width: innerWidth - 2 * inset,
       height: Math.max(0, bottom - top),
     };
-    const obstacles = readProtectedRects(root, !letters).map((box) => ({
+    const obstacles = readProtectedRects(
+      root,
+      letters ? 'physical' : 'static',
+    ).map((box) => ({
       x: box.x - s.width / 2 - 6,
       y: box.y - 6,
       width: box.width + s.width + 12,
@@ -331,8 +334,13 @@ export function mountGrid(root: HTMLElement) {
       const target = event.target as Element;
       if (
         target.closest(
-          'a,button,input,textarea,select,summary,[role="button"],[data-copy-obstacle],.site-header,.site-footer,[data-reveal-cover],[data-reveal-controls]',
+          'a,button,input,textarea,select,summary,[role="button"],.site-header,.site-footer,[data-reveal-cover],[data-reveal-controls]',
         )
+      )
+        return;
+      if (
+        target.closest('[data-copy-obstacle]') &&
+        !(letters && target.closest('[data-headline-body]'))
       )
         return;
       if (window.getSelection()?.toString()) return;

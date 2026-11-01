@@ -23,6 +23,7 @@ export function createLetterWorld(
   boxes: readonly LetterBox[],
   bounds: LetterBox,
   protectedBoxes: readonly LetterBox[] = [],
+  headlineBoxes: readonly LetterBox[] = [],
 ) {
   const engine = Engine.create({
     enableSleeping: true,
@@ -50,6 +51,18 @@ export function createLetterWorld(
       },
     ),
   );
+  const headlines = headlineBoxes.map((b, index) =>
+    Bodies.rectangle(b.x, b.y, b.width, b.height, {
+      label: `headline-${index}`,
+      density: 0.08,
+      friction: 0.8,
+      frictionAir: 0.22,
+      restitution: 0.02,
+      slop: 0.03,
+      sleepThreshold: 35,
+    }),
+  );
+  const bodies = [...letters, ...headlines];
   const wall = (x: number, y: number, width: number, height: number) =>
     Bodies.rectangle(x, y, width, height, {
       isStatic: true,
@@ -77,15 +90,16 @@ export function createLetterWorld(
       .filter((b) => b.width > 0 && b.height > 0)
       .map((b) => wall(b.x, b.y, b.width + 6, b.height + 6)),
   ];
-  Composite.add(engine.world, [...letters, ...walls]);
-  letters.forEach((body) => Sleeping.set(body, true));
+  Composite.add(engine.world, [...bodies, ...walls]);
+  bodies.forEach((body) => Sleeping.set(body, true));
   let actor: MatterBody | undefined,
     contacts = new Set<number>(),
     impacts = 0,
+    headlineImpacts = 0,
     contactRadius = 18,
     disposed = false;
   const near = (sample: LetterActor) =>
-    letters.some((body) => {
+    bodies.some((body) => {
       const dx = Math.max(
           body.bounds.min.x - sample.x,
           0,
@@ -122,13 +136,16 @@ export function createLetterWorld(
           y: (sample.vy * factor) / 60,
         });
         const next = new Set<number>();
-        for (const collision of Query.collides(actor, letters)) {
+        for (const collision of Query.collides(actor, bodies)) {
           const body =
             collision.bodyA === actor ? collision.bodyB : collision.bodyA;
           next.add(body.id);
           if (speed > 5) {
             Sleeping.set(body, false);
-            if (!contacts.has(body.id)) impacts++;
+            if (!contacts.has(body.id)) {
+              if (letters.includes(body)) impacts++;
+              else headlineImpacts++;
+            }
           }
         }
         contacts = next;
@@ -155,6 +172,49 @@ export function createLetterWorld(
             Math.sign(body.angularVelocity) * maxSpin,
           );
       }
+      // Heavy, locally constrained blocks: nudged, never scattered. These
+      // vertical/tilt limits preserve the separation of the two readable lines.
+      headlines.forEach((body, index) => {
+        const home = headlineBoxes[index],
+          maxX = Math.min(12, home.height * 0.18),
+          maxY = Math.min(3, home.height * 0.025);
+        const dx = body.position.x - home.x,
+          dy = body.position.y - home.y;
+        const x = Math.max(-maxX, Math.min(maxX, dx)),
+          y = Math.max(-maxY, Math.min(maxY, dy));
+        if (x !== dx || y !== dy)
+          Body.setPosition(body, { x: home.x + x, y: home.y + y });
+        let vx = x !== dx && body.velocity.x * dx > 0 ? 0 : body.velocity.x;
+        let vy = y !== dy && body.velocity.y * dy > 0 ? 0 : body.velocity.y;
+        const speed = Math.hypot(vx, vy),
+          cap = (contactRadius * 1.8) / 60;
+        if (speed > cap) {
+          vx *= cap / speed;
+          vy *= cap / speed;
+        }
+        Body.setVelocity(body, { x: vx, y: vy });
+        const angle = Math.max(-0.012, Math.min(0.012, body.angle));
+        let spin = Math.max(
+          -0.16 / 60,
+          Math.min(0.16 / 60, body.angularVelocity),
+        );
+        if (angle !== body.angle) {
+          if (spin * body.angle > 0) spin = 0;
+          Body.setAngle(body, angle);
+        }
+        Body.setAngularVelocity(body, spin);
+      });
+    },
+    get headlinePoses() {
+      return headlines.map((b) => ({
+        x: b.position.x,
+        y: b.position.y,
+        angle: b.angle,
+        sleeping: b.isSleeping,
+      }));
+    },
+    get headlineImpacts() {
+      return headlineImpacts;
     },
     get poses() {
       return letters.map((b) => ({
@@ -167,7 +227,7 @@ export function createLetterWorld(
       }));
     },
     get awake() {
-      return letters.some((b) => !b.isSleeping);
+      return bodies.some((b) => !b.isSleeping);
     },
     get impacts() {
       return impacts;
