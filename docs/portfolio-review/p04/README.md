@@ -1,14 +1,26 @@
 # P04 character review
 
-Each accepted hover, tap or keyboard activation randomly selects a kick or punch. Nothing attacks while the page is idle. Both moves return to the header perch, drop busy requests and cancel when the page geometry or scene changes. Reduced motion keeps selection without the travel or impact.
+Each accepted hover, tap or keyboard activation randomly selects a kick or punch. Nothing attacks while the page is idle. The character returns to the header perch, drops busy requests and cancels when the page geometry or scene changes. Reduced motion keeps selection without travel or impact.
 
-Artwork likeness and timing need Siva's review. The character is an original provisional SVG, not an approved portrait.
+The latest revision adds speed strokes, a subtle paper-dent illusion along outbound travel, a pressure ring at contact and directional object squash. The paper effect is shading behind the content, not actual text distortion. The heading and controls do not move.
+
+Artwork likeness and the latest effects need Siva's review. The character remains an original provisional SVG, not an approved portrait.
 
 ## Preview
 
 [Play or download the 34-second walkthrough](https://raw.githubusercontent.com/avsssai/avsssai.github.io/poteto/portfolio-p04/docs/portfolio-review/p04/review.webm)
 
-The recording shows naturally random desktop actions, a narrow viewport, reduced motion and context-loss fallback. The narrow segment uses a resized desktop browser, not a touch device. Phone taps were checked separately in the browser suite. This is a 960×600 compressed preview, 875,772 bytes. The full 1440×900 recording remains outside the repository in `portfolio-evidence/P04/recording/review.webm`. Browser media inspection measured 33.72 seconds for the source and 33.686 seconds for the preview. Video review used decoded frames rather than a continuous watch.
+This updated recording includes the motion accents. It shows naturally random desktop actions, a narrow viewport, reduced motion and context-loss fallback. The narrow segment uses a resized desktop browser, not a touch device. Phone taps were checked separately in the browser suite.
+
+The compressed preview is 960×600, 881,430 bytes and 33.548 seconds. The 1440×900 original is 33.56 seconds and remains outside the repository in `portfolio-evidence/P04/effects-recording/review.webm`. Browser media metadata and decoded frames were inspected, not a continuous watch.
+
+### Travel strokes and paper dent
+
+![Short speed strokes and a faint paper dent follow the character](travel-effects.png)
+
+### Pressure ring at contact
+
+![A local pressure ring beside the struck object](impact-effects.png)
 
 ### Header perch
 
@@ -32,13 +44,14 @@ The recording shows naturally random desktop actions, a narrow viewport, reduced
 
 ## Checks and limits
 
-Reviewed application `443786e979e9f5dfd315318e1bb3076b044a3c12`, based on P03 `054c9edd7b7d600e37d80226a545576248b85565`. Later gallery/recorder changes do not alter application source.
+Current application is `117ac4c946be3cb34d43f8cf36214b5635ea9983`, based on P03 `054c9edd7b7d600e37d80226a545576248b85565`. Later gallery/recorder changes do not alter application source. The unchanged perch/fallback/reduced images remain from the preceding P04 review; motion images and video are updated.
 
-- 13 pure tests passed. Build/type checks passed with no errors or warnings and one script typing hint.
-- The compact browser suite passed 11 cases without page errors. It covers hover contact, busy requests, phone tap/punch contact, keyboard focus, reduced motion, resize/scroll/motion-change cancellation, route return, context loss, missing target and twenty alternating moves. The twenty-action check observed one avatar, one reusable hidden crack, no retained WAAPI animations and no DOM growth.
-- Fresh independent read-only review returned PASS+NOTES at the application SHA. The reviewer ran frozen install, 13 tests, type checks and all 11 browser cases. It audited the owner performance receipt rather than rerunning it. Same-model fresh CLI review, not a cross-family panel.
-- Five interleaved cold loads per revision used Chrome 156, 1440×900, 4× CPU and an unthrottled local network. Compared with the verified P03 parent, median observed heading readiness changed by +11.7 ms. Maximum activation acknowledgment was 7.3 ms; active rAF p95 was 17 ms; settled DOM growth was zero. These are local automation proxies, not field paint metrics or an original-trunk rerun.
-- Native hidden-tab and persisted-pagehide interaction cancellation were source-reviewed, not newly browser-probed. Actual-device, non-Chromium, likeness and timing approval remain open. P03's earlier lifecycle measurements are not claimed as P04 interaction tests.
+- 13 pure tests, build/type checks and the compact 12-case browser suite passed. No page errors. The added case checks visible travel/impact effects, unchanged heading bounds and effect cleanup. Existing cases cover contact, busy requests, phone tap, keyboard focus, reduced motion, cancellation, route return, context loss, target removal and twenty alternating actions.
+- A fresh read-only effects review returned PASS+NOTES at the current application SHA. It ran the 13 tests, type checks and five affected browser cases: effects, touch, cancellation, reduced motion and repetition. It found no blockers. Type checks have no errors or warnings; three nonblocking script typing hints remain.
+- The current active-only performance probe ran twenty alternating actions at 4× CPU. Maximum acknowledgment was 9.7 ms, active rAF p95 was 16.9 ms, settled DOM growth was zero and no WAAPI animations remained. All four active gates passed. Cold-heading measurements were not rerun for this visual revision.
+- Earlier five-interleaved-cold-load measurements at `443786e` compared with the verified P03 parent: heading median delta +11.7 ms. Those remain historical evidence, not a benchmark of the new effects. All performance results are local automation proxies, not field paint metrics.
+- The earlier full independent review at `443786e` passed 11 browser cases and audited the original performance receipt. The current review covers only the effects revision. Both used fresh same-model CLI sessions, not cross-family panels.
+- Native hidden-tab and persisted-pagehide interaction cancellation were source-reviewed, not newly browser-probed. Actual-device, non-Chromium, likeness and latest-effect approval remain open. Dark-mode effect colours were checked in source, not a new browser pass.
 - No game redesign or dedicated game checks. No merge or deployment.
 
-Receipts remain outside the published site at `portfolio-evidence/P04/verified-live`, `verified-perf`, `review` and the build/unit logs. This gallery is for operator review, not release approval.
+Receipts remain outside the published site at `portfolio-evidence/P04/effects-live`, `effects-perf`, `effects-review` and the build/unit logs. The prior review receipts are preserved. This gallery is for operator review, not release approval.

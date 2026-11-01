@@ -44,7 +44,7 @@ The typed registry in `src/components/portfolio/stack-items.ts` owns labels, col
 
 P04 reuses the original provisional character source in both the static header image and an inline SVG animation view. A small fist circle was added to the existing front arm. Hair, face, clothes, arms, legs and proportions remain editable SVG paths. The kick and punch use separate joint transforms. This does not establish an approved likeness of Siva.
 
-The local crack is original inline SVG in `src/components/portfolio/Avatar.ts`. It is one reusable decorative mark, not a downloaded effect or a growing fragment collection. WAAPI and the existing scene renderer handle movement; P04 adds no animation dependency.
+The local crack, speed strokes and pressure ring are original inline SVG in `src/components/portfolio/Avatar.ts`. The paper-dent illusion uses a low-contrast radial gradient behind the content, not a texture or a capture of the page. Each effect reuses one element and disappears on cancellation. WAAPI and the existing scene renderer handle movement; P04 adds no animation dependency.
 
 ## Content limits
 

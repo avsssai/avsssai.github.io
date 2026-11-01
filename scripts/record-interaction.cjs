@@ -85,7 +85,7 @@ const { chromium } = require('playwright');
         moves,
         selection:
           'natural random choice per activation; desktop, narrow viewport, reduced motion and context-loss fallback',
-        source: '443786e',
+        source: process.env.HEAD_SHA || 'working-tree',
         encodedDuration: 'inspect separately',
       },
       null,

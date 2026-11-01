@@ -1,24 +1,24 @@
 {
-  "wallMs": 33513,
+  "wallMs": 33512,
   "moves": [
     "kick",
     "punch",
-    "kick",
+    "punch",
     "punch",
     "kick",
+    "punch",
+    "punch",
     "kick",
-    "kick",
-    "kick",
-    "kick",
+    "punch",
     "punch",
     "kick"
   ],
   "selection": "natural random choice per activation; desktop, narrow viewport, reduced motion and context-loss fallback",
-  "source": "443786e",
-  "originalDurationSeconds": 33.72,
-  "previewDurationSeconds": 33.68646,
+  "source": "117ac4c",
+  "originalDurationSeconds": 33.56,
+  "previewDurationSeconds": 33.548183,
   "previewWidth": 960,
   "previewHeight": 600,
-  "previewBytes": 875772,
-  "reviewMethod": "Browser media metadata and decoded frames at 7, 20 and 32 seconds; not a continuous watch"
+  "previewBytes": 881430,
+  "reviewMethod": "Browser media metadata and decoded frames at 4 and 18 seconds; not a continuous watch"
 }
