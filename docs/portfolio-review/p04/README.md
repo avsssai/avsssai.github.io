@@ -1,57 +1,59 @@
-# P04 character review
+# P04 cartoon character review
 
-Each accepted hover, tap or keyboard activation randomly selects a kick or punch. Nothing attacks while the page is idle. The character returns to the header perch, drops busy requests and cancels when the page geometry or scene changes. Reduced motion keeps selection without travel or impact.
+Each accepted hover, tap or keyboard activation randomly selects a kick or punch. Nothing attacks while idle. Busy requests are dropped; geometry or scene changes cancel the sequence. Reduced motion keeps selection without choreography.
 
-The latest revision adds speed strokes, a subtle paper-dent illusion along outbound travel, a pressure ring at contact and directional object squash. The paper effect is shading behind the content, not actual text distortion. The heading and controls do not move.
-
-Artwork likeness and the latest effects need Siva's review. The character remains an original provisional SVG, not an approved portrait.
+The cartoon revision adds `POOF!` at takeoff, `KACHOW!` for kicks, `KAPOW!` for punches, longer curved jump/return trails, a stronger local pressure ring and directional object squash. The paper dent is shading behind content, not actual text distortion. No audio, screen shake or flashing page. Impact lasts 240 ms; the nominal sequence is 1,080 ms. Artwork likeness and cartoon timing still need operator approval.
 
 ## Preview
 
-[Play or download the 34-second walkthrough](https://raw.githubusercontent.com/avsssai/avsssai.github.io/poteto/portfolio-p04/docs/portfolio-review/p04/review.webm)
+[Play or download the current 34-second cartoon walkthrough](https://raw.githubusercontent.com/avsssai/avsssai.github.io/poteto/portfolio-p04/docs/portfolio-review/p04/review.webm)
 
-This updated recording includes the motion accents. It shows naturally random desktop actions, a narrow viewport, reduced motion and context-loss fallback. The narrow segment uses a resized desktop browser, not a touch device. Phone taps were checked separately in the browser suite.
+Recorded from application `ff141ef30dfa309aa08520c6178b028962fe8897`, after the viewport-clipping fix. It shows naturally random desktop actions, a narrow viewport, reduced motion and context-loss fallback. The narrow segment is resized desktop, not touch hardware.
 
-The compressed preview is 960×600, 881,430 bytes and 33.548 seconds. The 1440×900 original is 33.56 seconds and remains outside the repository in `portfolio-evidence/P04/effects-recording/review.webm`. Browser media metadata and decoded frames were inspected, not a continuous watch.
+The compressed preview is 960×600, 1,045,289 bytes and 33.571 seconds. The full original remains outside the repository in `portfolio-evidence/P04/comic-clip-recording/review.webm`. Browser metadata and decoded frames were inspected, including desktop KACHOW and narrow KAPOW; this was not a continuous watch.
+
+### Takeoff cloud and curved trail at 320 px
+
+![POOF cloud and curved jump trail on a narrow phone viewport](jump-mobile.png)
 
 ### Travel strokes and paper dent
 
-![Short speed strokes and a faint paper dent follow the character](travel-effects.png)
+![Curved speed strokes and local paper shading during travel](travel-effects.png)
 
-### Pressure ring at contact
+### Cartoon impact
 
-![A local pressure ring beside the struck object](impact-effects.png)
+![Yellow comic burst and local pressure ring at contact](impact-effects.png)
 
-### Header perch
+### Centered desktop hero at 1920 px
+
+![Kick and KACHOW burst beside React in the centered desktop hero](kick.png)
+
+### Phone punch, light and dark
+
+![KAPOW punch at 390 px in light mode](punch-mobile.png)
+
+![KAPOW punch at 390 px in dark mode](punch-mobile-dark.png)
+
+### Unchanged static states
+
+Perch, fallback and reduced-motion images are retained from the preceding P04 review; they are not new cartoon captures.
 
 ![Character beside the name](perch.png)
 
-### Desktop kick contact
+![Static scene after context loss](fallback.png)
 
-![Kick at the React object](kick.png)
+![Static artwork with reduced motion](reduced.png)
 
-### Phone punch contact
+## Focused verification and limits
 
-![Punch at 390 px](punch-mobile.png)
+Verified application: `ff141ef30dfa309aa08520c6178b028962fe8897`, based on P03 `054c9edd7b7d600e37d80226a545576248b85565`. Subsequent gallery changes do not change application or test drivers.
 
-### Scene failure
+- 20 pure tests and build/type check passed: 0 errors, 0 warnings, 3 existing script typing hints. Existing deferred-chunk size notice remains.
+- Five affected browser cases passed with no page errors: effects, comic-responsive, cancellation, reduced motion and twenty-action repetition. Responsive coverage includes both moves at 320/390 px light, 390 px dark and 1920 px light. It checks readable cloud/burst windows, no annotation overlap with heading glyphs/navigation/actor, stable heading bounds, cleanup and no horizontal overflow at takeoff/impact/edge-target return.
+- The earlier return-trail probe genuinely failed at FastAPI (320→360 px and 390→422 px scroll width). Horizontal viewport frames now clip the long swoosh/paper dent while retaining vertical overflow for the header perch. The focused rerun passed, including the centered wide-hero origin. The failed receipt is preserved.
+- Active-only performance at this application SHA: 20 alternating actions, Chrome 156, 1440×900, 4× CPU, local network. Max acknowledgment 15.5 ms, active rAF p95 17 ms, settled DOM growth 0, retained WAAPI animations 0. All four active gates passed. These are local automation proxies, not field FPS/paint metrics.
+- No new cold benchmark, broad-suite rerun or independent cartoon review. Earlier independent PASS+NOTES reports at `117ac4c` and `443786e` predate the cartoon revision and are historical, not current-head verdicts. The earlier +11.7 ms cold-heading delta is historical at `443786e`.
+- Native hidden-tab/persisted-pagehide interaction cancellation remains source-reviewed rather than newly browser-probed. Actual touch hardware, non-Chromium, likeness and final cartoon visual approval remain open.
+- No game work, merge or deployment. P05 has not started.
 
-![Static scene and restored character after context loss](fallback.png)
-
-### Reduced motion
-
-![Static artwork and usable controls with reduced motion](reduced.png)
-
-## Checks and limits
-
-Current application is `117ac4c946be3cb34d43f8cf36214b5635ea9983`, based on P03 `054c9edd7b7d600e37d80226a545576248b85565`. Later gallery/recorder changes do not alter application source. The unchanged perch/fallback/reduced images remain from the preceding P04 review; motion images and video are updated.
-
-- 13 pure tests, build/type checks and the compact 12-case browser suite passed. No page errors. The added case checks visible travel/impact effects, unchanged heading bounds and effect cleanup. Existing cases cover contact, busy requests, phone tap, keyboard focus, reduced motion, cancellation, route return, context loss, target removal and twenty alternating actions.
-- A fresh read-only effects review returned PASS+NOTES at the current application SHA. It ran the 13 tests, type checks and five affected browser cases: effects, touch, cancellation, reduced motion and repetition. It found no blockers. Type checks have no errors or warnings; three nonblocking script typing hints remain.
-- The current active-only performance probe ran twenty alternating actions at 4× CPU. Maximum acknowledgment was 9.7 ms, active rAF p95 was 16.9 ms, settled DOM growth was zero and no WAAPI animations remained. All four active gates passed. Cold-heading measurements were not rerun for this visual revision.
-- Earlier five-interleaved-cold-load measurements at `443786e` compared with the verified P03 parent: heading median delta +11.7 ms. Those remain historical evidence, not a benchmark of the new effects. All performance results are local automation proxies, not field paint metrics.
-- The earlier full independent review at `443786e` passed 11 browser cases and audited the original performance receipt. The current review covers only the effects revision. Both used fresh same-model CLI sessions, not cross-family panels.
-- Native hidden-tab and persisted-pagehide interaction cancellation were source-reviewed, not newly browser-probed. Actual-device, non-Chromium, likeness and latest-effect approval remain open. Dark-mode effect colours were checked in source, not a new browser pass.
-- No game redesign or dedicated game checks. No merge or deployment.
-
-Receipts remain outside the published site at `portfolio-evidence/P04/effects-live`, `effects-perf`, `effects-review` and the build/unit logs. The prior review receipts are preserved. This gallery is for operator review, not release approval.
+Receipts: local `portfolio-evidence/P04/comic-clip-{final,perf,recording}`, `comic-clip-unit.log`, `comic-clip-build.log` and preserved `comic-return-overflow-before-fix.json`. This gallery is for operator review, not release approval.
