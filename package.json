@@ -12,6 +12,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
     "test:stack": "node --experimental-strip-types --test tests/stack.test.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

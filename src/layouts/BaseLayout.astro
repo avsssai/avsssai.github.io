@@ -19,6 +19,10 @@ const pageTitle = title
   ? `${title} — ${site.name}`
   : `${site.name} — ${site.role}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const themeColours =
+  pageKind === 'landing'
+    ? { light: '#e5deed', dark: '#282534' }
+    : { light: '#f6f5f1', dark: '#191918' };
 ---
 
 <!doctype html>
@@ -31,12 +35,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     />
     <meta
       name="theme-color"
-      content="#f6f5f1"
+      content={themeColours.light}
+      data-theme-light={themeColours.light}
+      data-theme-dark={themeColours.dark}
       media="(prefers-color-scheme: light)"
     />
     <meta
       name="theme-color"
-      content="#191918"
+      content={themeColours.dark}
       media="(prefers-color-scheme: dark)"
     />
     <meta name="description" content={description} />
@@ -66,13 +72,15 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
           : 'light';
         const theme = saved === 'dark' || saved === 'light' ? saved : preferred;
         document.documentElement.dataset.theme = theme;
+        const palette = document.querySelector('meta[name="theme-color"]');
+        const colour =
+          palette?.getAttribute(
+            theme === 'dark' ? 'data-theme-dark' : 'data-theme-light',
+          ) || (theme === 'dark' ? '#191918' : '#f6f5f1');
         document
           .querySelectorAll('meta[name="theme-color"]')
           .forEach((meta) => {
-            meta.setAttribute(
-              'content',
-              theme === 'dark' ? '#191918' : '#f6f5f1',
-            );
+            meta.setAttribute('content', colour);
           });
       })();
     </script>

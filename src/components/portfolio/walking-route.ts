@@ -3,6 +3,56 @@ export type Rect = Point & { width: number; height: number };
 export type Route = { points: Point[]; length: number; distances: number[] };
 
 const distance = (a: Point, b: Point) => Math.hypot(b.x - a.x, b.y - a.y);
+const NEIGHBOURS = [
+  [1, 0],
+  [-1, 0],
+  [0, 1],
+  [0, -1],
+  [1, 1],
+  [-1, 1],
+  [1, -1],
+  [-1, -1],
+] as const;
+type FrontierNode = { id: number; score: number; order: number };
+const earlier = (a: FrontierNode, b: FrontierNode) =>
+  a.score < b.score || (a.score === b.score && a.order < b.order);
+/** Stable priority queue preserves the previous Set insertion-order tie-break
+ * while avoiding a full frontier scan on every A* expansion. */
+class Frontier {
+  private nodes: FrontierNode[] = [];
+  push(node: FrontierNode) {
+    let i = this.nodes.length;
+    this.nodes.push(node);
+    while (i > 0) {
+      const parent = (i - 1) >> 1;
+      if (!earlier(node, this.nodes[parent])) break;
+      this.nodes[i] = this.nodes[parent];
+      i = parent;
+    }
+    this.nodes[i] = node;
+  }
+  pop(): FrontierNode | undefined {
+    if (!this.nodes.length) return;
+    const first = this.nodes[0],
+      last = this.nodes.pop()!;
+    if (this.nodes.length) {
+      let i = 0;
+      while (i * 2 + 1 < this.nodes.length) {
+        let child = i * 2 + 1;
+        if (
+          child + 1 < this.nodes.length &&
+          earlier(this.nodes[child + 1], this.nodes[child])
+        )
+          child++;
+        if (!earlier(this.nodes[child], last)) break;
+        this.nodes[i] = this.nodes[child];
+        i = child;
+      }
+      this.nodes[i] = last;
+    }
+    return first;
+  }
+}
 export function routeAt(route: Route, progress: number): Point {
   const d = Math.max(0, Math.min(1, progress)) * route.length;
   let i = 1;
@@ -29,10 +79,12 @@ export function walkingRoute(
   const step = bounds.width < 500 ? 8 : 18;
   const cols = Math.max(2, Math.ceil(bounds.width / step));
   const rows = Math.max(2, Math.ceil(bounds.height / step));
-  const point = (id: number): Point => ({
-    x: bounds.x + ((id % cols) * bounds.width) / (cols - 1),
-    y: bounds.y + (Math.floor(id / cols) * bounds.height) / (rows - 1),
-  });
+  const cells = new Array<Point | undefined>(cols * rows);
+  const point = (id: number): Point =>
+    (cells[id] ??= {
+      x: bounds.x + ((id % cols) * bounds.width) / (cols - 1),
+      y: bounds.y + (Math.floor(id / cols) * bounds.height) / (rows - 1),
+    });
   const index = (p: Point) =>
     Math.max(
       0,
@@ -61,33 +113,37 @@ export function walkingRoute(
     );
   const clear = (a: Point, b: Point) => {
     if (!inside(a) || !inside(b)) return false;
-    // Exact segment/rectangle slab test. Point sampling can miss a thin corner
-    // crossing on a long shortcut, even when the grid path itself was safe.
+    // Exact slab intersection, without allocating nested coordinate arrays in
+    // this hot loop. Tangency to an inflated obstacle edge remains allowed.
+    const dx = b.x - a.x,
+      dy = b.y - a.y;
     for (const rect of obstacles) {
+      const right = rect.x + rect.width,
+        bottom = rect.y + rect.height;
+      if (
+        (a.x <= rect.x && b.x <= rect.x) ||
+        (a.x >= right && b.x >= right) ||
+        (a.y <= rect.y && b.y <= rect.y) ||
+        (a.y >= bottom && b.y >= bottom)
+      )
+        continue;
       let enter = 0,
-        leave = 1,
-        hit = true;
-      for (const [origin, delta, min, max] of [
-        [a.x, b.x - a.x, rect.x, rect.x + rect.width],
-        [a.y, b.y - a.y, rect.y, rect.y + rect.height],
-      ]) {
-        if (Math.abs(delta) < 1e-9) {
-          if (origin <= min || origin >= max) {
-            hit = false;
-            break;
-          }
-        } else {
-          const t1 = (min - origin) / delta,
-            t2 = (max - origin) / delta;
-          enter = Math.max(enter, Math.min(t1, t2));
-          leave = Math.min(leave, Math.max(t1, t2));
-          if (enter >= leave) {
-            hit = false;
-            break;
-          }
-        }
-      }
-      if (hit && leave > 0 && enter < 1) return false;
+        leave = 1;
+      if (Math.abs(dx) >= 1e-9) {
+        const t1 = (rect.x - a.x) / dx,
+          t2 = (right - a.x) / dx;
+        enter = Math.max(enter, Math.min(t1, t2));
+        leave = Math.min(leave, Math.max(t1, t2));
+        if (enter >= leave) continue;
+      } else if (a.x <= rect.x || a.x >= right) continue;
+      if (Math.abs(dy) >= 1e-9) {
+        const t1 = (rect.y - a.y) / dy,
+          t2 = (bottom - a.y) / dy;
+        enter = Math.max(enter, Math.min(t1, t2));
+        leave = Math.min(leave, Math.max(t1, t2));
+        if (enter >= leave) continue;
+      } else if (a.y <= rect.y || a.y >= bottom) continue;
+      if (leave > 0 && enter < 1) return false;
     }
     return true;
   };
@@ -97,6 +153,10 @@ export function walkingRoute(
     last = index(end);
   if (!clear(start, point(first)) || !clear(point(last), end)) return null;
   const open = new Set([first]);
+  const frontier = new Frontier();
+  const order = new Map([[first, 0]]);
+  let nextOrder = 1;
+  frontier.push({ id: first, score: distance(start, end), order: 0 });
   const cost = new Map([[first, 0]]),
     score = new Map([[first, distance(start, end)]]),
     parent = new Map<number, number>();
@@ -130,13 +190,16 @@ export function walkingRoute(
   }
   let found = false;
   while (open.size) {
-    let current = -1,
-      best = Infinity;
-    for (const id of open)
-      if (score.get(id)! < best) {
-        current = id;
-        best = score.get(id)!;
-      }
+    let entry = frontier.pop();
+    while (
+      entry &&
+      (!open.has(entry.id) ||
+        entry.score !== score.get(entry.id) ||
+        entry.order !== order.get(entry.id))
+    )
+      entry = frontier.pop();
+    if (!entry) break;
+    const current = entry.id;
     if (current === last) {
       found = true;
       break;
@@ -145,16 +208,7 @@ export function walkingRoute(
     const a = point(current),
       col = current % cols,
       row = Math.floor(current / cols);
-    for (const [dx, dy] of [
-      [1, 0],
-      [-1, 0],
-      [0, 1],
-      [0, -1],
-      [1, 1],
-      [-1, 1],
-      [1, -1],
-      [-1, -1],
-    ]) {
+    for (const [dx, dy] of NEIGHBOURS) {
       if (col + dx < 0 || col + dx >= cols || row + dy < 0 || row + dy >= rows)
         continue;
       const next = current + dx + dy * cols,
@@ -166,7 +220,13 @@ export function walkingRoute(
       parent.set(next, current);
       cost.set(next, value);
       score.set(next, value + distance(b, end));
+      if (!open.has(next)) order.set(next, nextOrder++);
       open.add(next);
+      frontier.push({
+        id: next,
+        score: score.get(next)!,
+        order: order.get(next)!,
+      });
     }
   }
   if (!found) return null;
