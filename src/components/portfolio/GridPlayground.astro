@@ -4,6 +4,12 @@
   <button type="button" data-grid-controls aria-describedby="grid-help"
     >Click the grid. I’ll meet you there.</button
   >
+  <button
+    type="button"
+    data-reset-letters
+    hidden
+    aria-label="Reset headline and Imagination">Reset text ↺</button
+  >
   <p id="grid-help" class="grid-readable">
     Use the arrow keys to choose a clear spot, then Enter or Space to move
     there. Escape stops the character.
@@ -43,9 +49,19 @@
     transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    white-space: nowrap;
+    gap: 0.25rem 0.5rem;
+    width: max-content;
+    max-width: calc(100% - 2rem);
+    flex-wrap: wrap;
+    justify-content: center;
     z-index: 2;
+  }
+  .grid-instructions button[hidden] {
+    display: none;
+  }
+  .grid-instructions [data-reset-letters] {
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
   .grid-instructions[hidden] {
     display: none;

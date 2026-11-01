@@ -18,6 +18,16 @@ test('colour lettering has eleven distinct flat faces, with the original comic i
   assert.equal(new Set(faces).size, 11);
   assert.match(artwork, /transform="translate\(8 10\)" fill="#292923"/);
 });
+test('the coloured word provides independently grouped glyphs and punctuation', () => {
+  const bodies = [...artwork.matchAll(/data-letter-body="(\d+)"/g)].map(
+    (match) => Number(match[1]),
+  );
+  assert.deepEqual(
+    bodies,
+    Array.from({ length: 12 }, (_, i) => i),
+  );
+  assert.match(artwork, /data-letter="\."/);
+});
 test('custom finger is a small local SVG cursor with no external resources', () => {
   const cursor = readFileSync(
     new URL('../public/art/portfolio/pointing-finger.svg', import.meta.url),

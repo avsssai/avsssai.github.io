@@ -16,8 +16,15 @@ const { lettering = 'colour' } = Astro.props;
 >
   <div class="hero-copy">
     <h1 id="hero-heading">
-      Full stack<br /><span class="developer">web developer</span><br />
-      <span class="with">with an</span>{' '}
+      <span class="headline-block" data-copy-obstacle data-headline-body
+        >Full stack</span
+      ><br />
+      <span
+        class="headline-block developer"
+        data-copy-obstacle
+        data-headline-body>web developer</span
+      ><br />
+      <span class="with" data-copy-obstacle>with an</span>{' '}
       <em><StaticLettering variant={lettering} /></em>
     </h1>
     <a class="work-link" href="/work/"
@@ -49,6 +56,10 @@ const { lettering = 'colour' } = Astro.props;
     margin: 0;
     font: 400 clamp(48px, 6.5vw, 104px)/0.9 var(--font-serif);
     letter-spacing: -0.045em;
+  }
+  .headline-block {
+    display: inline-block;
+    transform-origin: center;
   }
   .developer {
     font-size: 1.12em;

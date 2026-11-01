@@ -55,11 +55,17 @@ jobs:
             sleep 1
           done
           BASE_URL=http://127.0.0.1:4331 VERIFY_OUTPUT=artifacts/grid-release node scripts/verify-grid.cjs
+          BASE_URL=http://127.0.0.1:4331 VERIFY_OUTPUT=artifacts/letter-physics node scripts/verify-letter-physics.cjs
+          BASE_URL=http://127.0.0.1:4331 VERIFY_OUTPUT=artifacts/headline-physics/chromium node scripts/verify-headline-physics.cjs
+          BASE_URL=http://127.0.0.1:4331 VERIFY_ENGINE=firefox VERIFY_OUTPUT=artifacts/headline-physics/firefox node scripts/verify-headline-physics.cjs
 
       - name: Upload browser evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: grid-release-browser
-          path: artifacts/grid-release/
+          path: |
+            artifacts/grid-release/
+            artifacts/letter-physics/
+            artifacts/headline-physics/
           if-no-files-found: ignore

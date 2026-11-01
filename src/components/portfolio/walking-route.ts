@@ -149,9 +149,35 @@ export function walkingRoute(
   };
   if (!inside(start) || !inside(end) || blocked(start) || blocked(end))
     return null;
-  const first = index(start),
-    last = index(end);
-  if (!clear(start, point(first)) || !clear(point(last), end)) return null;
+  // A legal point can round into an occupied grid cell at the edge of text.
+  // Connect it to the nearest visible free neighbour rather than treating
+  // that quantization artifact as an unreachable destination.
+  const connector = (p: Point) => {
+    const closest = index(p);
+    if (clear(p, point(closest))) return closest;
+    const col = closest % cols,
+      row = Math.floor(closest / cols);
+    let best = -1,
+      nearest = Infinity;
+    for (let y = Math.max(0, row - 2); y <= Math.min(rows - 1, row + 2); y++)
+      for (
+        let x = Math.max(0, col - 2);
+        x <= Math.min(cols - 1, col + 2);
+        x++
+      ) {
+        const id = y * cols + x,
+          candidate = point(id),
+          length = distance(p, candidate);
+        if (length < nearest && clear(p, candidate)) {
+          nearest = length;
+          best = id;
+        }
+      }
+    return best;
+  };
+  const first = connector(start),
+    last = connector(end);
+  if (first < 0 || last < 0) return null;
   const open = new Set([first]);
   const frontier = new Frontier();
   const order = new Map([[first, 0]]);

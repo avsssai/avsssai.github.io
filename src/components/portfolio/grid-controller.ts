@@ -4,6 +4,8 @@ import { walkingRoute, type Point, type Rect } from './walking-route';
 import { mountReveal } from './reveal';
 import type { SceneReadiness } from './reveal-state';
 import type { createGridRenderer } from './grid-renderer';
+import type { mountLetterPhysics } from './letter-physics';
+import { readProtectedRects } from './copy-obstacles';
 
 const mounted = new WeakMap<HTMLElement, { dispose(): void }>();
 export function mountGrid(root: HTMLElement) {
@@ -19,6 +21,11 @@ export function mountGrid(root: HTMLElement) {
     '[data-grid-controls]',
   )!;
   const status = root.querySelector<HTMLOutputElement>('[data-grid-status]')!;
+  const resetLetters = root.querySelector<HTMLButtonElement>(
+    '[data-reset-letters]',
+  )!;
+  let letters: ReturnType<typeof mountLetterPhysics>;
+  let lettersLoading = false;
   const instructions = root.querySelector<HTMLElement>(
     '[data-grid-instructions]',
   )!;
@@ -100,37 +107,15 @@ export function mountGrid(root: HTMLElement) {
       width: innerWidth - 2 * inset,
       height: Math.max(0, bottom - top),
     };
-    const obstacles = [
-      ...root.querySelectorAll<HTMLElement>(
-        'h1,.work-link,[data-grid-controls]',
-      ),
-    ].map((node) => {
-      const range = document.createRange();
-      range.selectNodeContents(node);
-      const boxes =
-        node.tagName === 'H1'
-          ? [
-              range.getBoundingClientRect(),
-              ...[...node.querySelectorAll('svg')]
-                .map((svg) => {
-                  const ink = document.createRange();
-                  ink.selectNodeContents(svg);
-                  return ink.getBoundingClientRect();
-                })
-                .filter((box) => box.width && box.height),
-            ]
-          : [node.getBoundingClientRect()];
-      const left = Math.min(...boxes.map((box) => box.left)),
-        top = Math.min(...boxes.map((box) => box.top));
-      const right = Math.max(...boxes.map((box) => box.right)),
-        bottom = Math.max(...boxes.map((box) => box.bottom));
-      return {
-        x: left - s.width / 2 - 6,
-        y: top - 6,
-        width: right - left + s.width + 12,
-        height: bottom - top + s.height * 0.94 + 12,
-      };
-    });
+    const obstacles = readProtectedRects(
+      root,
+      letters ? 'physical' : 'static',
+    ).map((box) => ({
+      x: box.x - s.width / 2 - 6,
+      y: box.y - 6,
+      width: box.width + s.width + 12,
+      height: box.height + s.height * 0.94 + 12,
+    }));
     return { bounds, obstacles };
   };
   const defaultSpot = () => {
@@ -153,6 +138,7 @@ export function mountGrid(root: HTMLElement) {
   };
   const stop = () => {
     serial++;
+    letters?.stop();
     walking.cancel();
     root.dataset.gridPhase = 'idle';
   };
@@ -189,20 +175,34 @@ export function mountGrid(root: HTMLElement) {
     const arrive = () => {
       if (own !== serial || disposed) return;
       position(point);
+      letters?.stop();
       root.dataset.gridPhase = 'idle';
       status.textContent = 'Made it. Pick another spot when you like.';
     };
     if (instant || reduce.matches || !route) {
+      letters?.releaseCharacter();
       arrive();
       return;
     }
     root.dataset.gridPhase = 'walking';
     status.textContent = 'On my way to the red X.';
     void walking
-      .travel(route, 0, size(), () => {
-        if (disposed || own !== serial || document.hidden)
-          throw new Error('grid-trip-cancelled');
-      })
+      .travel(
+        route,
+        0,
+        size(),
+        () => {
+          if (disposed || own !== serial || document.hidden)
+            throw new Error('grid-trip-cancelled');
+        },
+        (point, now) => {
+          try {
+            letters?.sample(point, size(), now);
+          } catch {
+            disableLetters();
+          }
+        },
+      )
       .then(arrive)
       .catch(() => {});
   };
@@ -233,11 +233,53 @@ export function mountGrid(root: HTMLElement) {
       loading = false;
     }
   };
+  const disableLetters = () => {
+    letters?.dispose();
+    letters = undefined;
+    resetLetters.hidden = true;
+    root.dataset.letterPhysics = 'failed';
+    stop();
+    avatar.style.visibility = 'hidden';
+    perch.style.visibility = '';
+    marker.hidden = true;
+  };
+  const startLetters = async () => {
+    if (disposed || reduce.matches || letters || lettersLoading) return;
+    lettersLoading = true;
+    root.dataset.letterPhysics = 'loading';
+    try {
+      await document.fonts.ready;
+      const { mountLetterPhysics } = await import('./letter-physics');
+      if (disposed || reduce.matches) return;
+      letters = mountLetterPhysics(root, disableLetters);
+      if (!letters) root.dataset.letterPhysics = 'static';
+    } catch {
+      disableLetters();
+    } finally {
+      lettersLoading = false;
+    }
+  };
   root.dataset.gridPhase = 'idle';
   instructions.hidden = false;
   const reveal = mountReveal(root, subscribe);
   if (reduce.matches) notify('reduced');
-  else void startRenderer();
+  else {
+    void startRenderer();
+    void startLetters();
+  }
+  resetLetters.addEventListener(
+    'click',
+    () => {
+      stop();
+      try {
+        letters?.reset();
+        status.textContent = 'Word reset. Walk through it again.';
+      } catch {
+        disableLetters();
+      }
+    },
+    { signal },
+  );
   let gesture:
     | { x: number; y: number; scroll: number; id: number; travel: number }
     | undefined;
@@ -292,8 +334,13 @@ export function mountGrid(root: HTMLElement) {
       const target = event.target as Element;
       if (
         target.closest(
-          'a,button,input,textarea,select,summary,[role="button"],.hero-copy,.site-header,.site-footer,[data-reveal-cover],[data-reveal-controls]',
+          'a,button,input,textarea,select,summary,[role="button"],.site-header,.site-footer,[data-reveal-cover],[data-reveal-controls]',
         )
+      )
+        return;
+      if (
+        target.closest('[data-copy-obstacle]') &&
+        !(letters && target.closest('[data-headline-body]'))
       )
         return;
       if (window.getSelection()?.toString()) return;
@@ -355,6 +402,11 @@ export function mountGrid(root: HTMLElement) {
     avatar.style.visibility = 'hidden';
     perch.style.visibility = '';
     status.textContent = 'Pick a spot on the grid.';
+    try {
+      letters?.reset();
+    } catch {
+      disableLetters();
+    }
   };
   window.addEventListener(
     'resize',
@@ -388,6 +440,7 @@ export function mountGrid(root: HTMLElement) {
     () => {
       if (document.hidden) {
         stop();
+        letters?.pause();
         marker.hidden = true;
         destination = undefined;
       }
@@ -398,10 +451,16 @@ export function mountGrid(root: HTMLElement) {
     'change',
     () => {
       if (reduce.matches) {
-        if (destination) choose(destination, true);
+        reset();
+        letters?.dispose();
+        letters = undefined;
+        root.dataset.letterPhysics = 'reduced';
         notify('reduced');
-      } else if (renderer) notify('ready');
-      else void startRenderer();
+      } else {
+        if (renderer) notify('ready');
+        else void startRenderer();
+        void startLetters();
+      }
     },
     { signal },
   );
@@ -413,6 +472,7 @@ export function mountGrid(root: HTMLElement) {
       stop();
       reveal.dispose();
       renderer?.dispose();
+      letters?.dispose();
       walking.dispose();
       layer.remove();
       perch.style.visibility = '';
