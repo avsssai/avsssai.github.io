@@ -76,7 +76,7 @@ test('server markup retains complete natural word and no cover or glyph tab stop
   );
   assert.match(word, /class="lettering-readable">Imagination\.<\/span>/);
   assert.match(word, /aria-hidden="true"/);
-  assert.match(hero, /lettering = 'comic'/);
+  assert.match(hero, /lettering = 'colour'/);
   assert.doesNotMatch(hero, /data-letter-demo|ImaginationLetters/);
   assert.doesNotMatch(word, /tabindex/);
   assert.doesNotMatch(hero, /data-reveal-cover/);

@@ -44,7 +44,7 @@ jobs:
       - name: Install browser engines
         run: pnpm exec playwright install --with-deps chromium firefox
 
-      - name: Verify P05 production preview
+      - name: Verify grid production preview
         shell: bash
         run: |
           pnpm exec astro preview --host 127.0.0.1 --port 4331 > /tmp/portfolio-preview.log 2>&1 &
@@ -54,12 +54,12 @@ jobs:
             if curl --fail --silent http://127.0.0.1:4331/ > /dev/null; then break; fi
             sleep 1
           done
-          BASE_URL=http://127.0.0.1:4331 VERIFY_OUTPUT=artifacts/p05-release node scripts/verify-p05-release.cjs
+          BASE_URL=http://127.0.0.1:4331 VERIFY_OUTPUT=artifacts/grid-release node scripts/verify-grid.cjs
 
       - name: Upload browser evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: p05-release-browser
-          path: artifacts/p05-release/
+          name: grid-release-browser
+          path: artifacts/grid-release/
           if-no-files-found: ignore

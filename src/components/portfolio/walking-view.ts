@@ -38,7 +38,7 @@ export function mountWalking(avatar: HTMLElement) {
   };
   return {
     trail,
-    prepare(routes: Route[]) {
+    prepare(routes: Route[], preview = false) {
       cancel();
       trail.style.opacity = '1';
       dots = routes.map((route, index) => {
@@ -54,7 +54,7 @@ export function mountWalking(avatar: HTMLElement) {
           dot.setAttribute('cy', String(point.y));
           dot.setAttribute('r', index ? '1.5' : '1.8');
           dot.setAttribute('fill', 'currentColor');
-          dot.style.visibility = 'hidden';
+          dot.style.visibility = preview ? 'visible' : 'hidden';
           group.append(dot);
           return dot;
         });
