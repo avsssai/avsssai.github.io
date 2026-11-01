@@ -28,9 +28,12 @@ import { stackItems } from './stack-items';
 
 <script>
   import { mountStackExperience } from './stack-bridge';
-  document
-    .querySelectorAll<HTMLElement>('[data-stack-experience]')
-    .forEach(mountStackExperience);
+  const mount = () =>
+    document
+      .querySelectorAll<HTMLElement>('[data-stack-experience]')
+      .forEach(mountStackExperience);
+  mount();
+  document.addEventListener('astro:page-load', mount);
 </script>
 
 <style>

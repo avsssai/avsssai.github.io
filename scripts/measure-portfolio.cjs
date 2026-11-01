@@ -212,11 +212,13 @@ async function main() {
 }
 
 const run =
-  process.env.PORTFOLIO_TICKET === 'P04'
-    ? require('./measure-interaction.cjs').main
-    : process.env.PORTFOLIO_TICKET === 'P03'
-      ? require('./measure-stack.cjs').main
-      : main;
+  process.env.PORTFOLIO_TICKET === 'P05'
+    ? require('./measure-presentation.cjs').main
+    : process.env.PORTFOLIO_TICKET === 'P04'
+      ? require('./measure-interaction.cjs').main
+      : process.env.PORTFOLIO_TICKET === 'P03'
+        ? require('./measure-stack.cjs').main
+        : main;
 run().catch((error) => {
   console.error(error);
   process.exitCode = 1;

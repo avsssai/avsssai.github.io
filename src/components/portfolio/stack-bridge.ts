@@ -7,6 +7,9 @@ import {
 } from './stack-items';
 import type { SceneSession, SceneReport, Recoil } from './StackExperience';
 import { mountInteraction } from './interaction';
+import { mountReveal } from './reveal';
+import { mountLetters } from './letters';
+import type { SceneReadiness } from './reveal-state';
 
 type StackEvent =
   { kind: 'activation'; id: StackId } | { kind: 'layout' | 'mode' };
@@ -23,6 +26,7 @@ export interface StackExperience {
   target(id: StackId): Target;
   subscribe(listener: (event: StackEvent) => void): () => void;
   recoil(value: Recoil | null): void;
+  subscribeReadiness(listener: (state: SceneReadiness) => void): () => void;
   dispose(): void;
 }
 const mounted = new WeakMap<HTMLElement, StackExperience>();
@@ -38,6 +42,7 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const lifetime = new AbortController();
   const subscribers = new Set<(event: StackEvent) => void>();
+  const readinessListeners = new Set<(state: SceneReadiness) => void>();
   let session: SceneSession | undefined;
   let layout: SceneLayout | undefined;
   let projected: SceneReport | undefined;
@@ -73,10 +78,21 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
     intersecting &&
     !reduce.matches &&
     !failed;
+  const readiness = (): SceneReadiness =>
+    disposed || failed
+      ? 'failed'
+      : reduce.matches
+        ? 'reduced'
+        : root.dataset.stackScene === 'ready'
+          ? 'ready'
+          : 'pending';
+  const notifyReadiness = () =>
+    readinessListeners.forEach((listener) => listener(readiness()));
   const mode = (value: string) => {
     if (root.dataset.stackScene === value) return;
     root.dataset.stackScene = value;
     emit({ kind: 'mode' });
+    notifyReadiness();
   };
   const restore = () => {
     projected = undefined;
@@ -96,6 +112,7 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
     root.dataset.stackFailure = reason;
     failed = true;
     release();
+    notifyReadiness();
   };
   const readLayout = (): SceneLayout | undefined => {
     const box = root.getBoundingClientRect();
@@ -230,6 +247,7 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
     () => {
       if (reduce.matches) release();
       else schedule();
+      notifyReadiness();
     },
     { signal: lifetime.signal },
   );
@@ -306,8 +324,17 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
     recoil(value) {
       session?.recoil(value);
     },
+    subscribeReadiness(listener) {
+      readinessListeners.add(listener);
+      listener(readiness());
+      return () => {
+        readinessListeners.delete(listener);
+      };
+    },
     dispose() {
       if (disposed) return;
+      reveal.dispose();
+      letters.dispose();
       character.dispose();
       disposed = true;
       release();
@@ -316,6 +343,7 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
       intersection.disconnect();
       cancelAnimationFrame(scheduled);
       subscribers.clear();
+      readinessListeners.clear();
       controls.forEach((control) => {
         control.disabled = true;
       });
@@ -323,6 +351,11 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
     },
   };
   const character = mountInteraction(root, handle);
+  const letters = mountLetters(root);
+  const reveal = mountReveal(root, handle.subscribeReadiness);
+  document.addEventListener('astro:before-swap', () => handle.dispose(), {
+    signal: lifetime.signal,
+  });
   mounted.set(root, handle);
   root.dataset.stackFrames = '0';
   observe();

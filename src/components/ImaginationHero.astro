@@ -1,5 +1,7 @@
 ---
 import StackFallback from './portfolio/StackFallback.astro';
+import ImaginationLetters from './portfolio/ImaginationLetters.astro';
+import './portfolio/presentation.css';
 ---
 
 <section
@@ -11,11 +13,18 @@ import StackFallback from './portfolio/StackFallback.astro';
   <div class="hero-copy">
     <h1 id="hero-heading">
       Full stack<br /><span class="developer">web developer</span><br />
-      <span class="with">with an</span>
-      <em>Imagination.</em>
+      <span class="with">with an</span>{' '}
+      <em><ImaginationLetters /></em>
     </h1>
     <a class="work-link" href="/work/"
       >Explore my work <span aria-hidden="true">↗</span></a
+    >
+    <button
+      class="letter-demo"
+      type="button"
+      data-letter-demo
+      aria-pressed="false"
+      hidden>Animate Imagination</button
     >
   </div>
   <StackFallback />

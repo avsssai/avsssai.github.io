@@ -1,0 +1,120 @@
+.imagination-word {
+  position: relative;
+  white-space: nowrap;
+}
+.letter-decoration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.letter-decoration > span {
+  position: absolute;
+  display: block;
+  opacity: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: 1;
+  transform-origin: 50% 75%;
+  pointer-events: none;
+}
+.letter-decoration [data-letter-effect='ink-offset'] {
+  color: var(--color-ink);
+}
+.letter-decoration [data-letter-effect='outline'] {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--color-ink);
+}
+.letter-decoration [data-letter-effect='colour-burst'] {
+  color: #ae6b25;
+}
+[data-theme='dark'] .letter-decoration [data-letter-effect='colour-burst'] {
+  color: #ebc67c;
+}
+.letter-demo {
+  position: absolute;
+  bottom: -52px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 44px;
+  max-width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--color-muted);
+  font: 500 11px var(--font-sans);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.letter-demo[hidden] {
+  display: none;
+}
+.letter-demo:disabled {
+  cursor: default;
+  text-decoration: none;
+}
+.reveal-viewport {
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  overflow: clip;
+  pointer-events: none;
+  animation: reveal-safety 1ms 4800ms forwards;
+}
+.reveal-paper {
+  position: absolute;
+  inset: 0;
+  background: var(--color-paper);
+  transform-origin: 0 100%;
+  box-shadow: 0 -20px 45px #342d2920;
+}
+.reveal-paper::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(
+    135deg,
+    transparent 49%,
+    color-mix(in srgb, var(--color-ink) 12%, var(--color-paper)) 50%,
+    var(--color-paper) 80%
+  );
+}
+.reveal-controls {
+  position: absolute;
+  z-index: 11;
+  inset: 16px 16px auto;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+  font: 500 12px var(--font-sans);
+  animation: reveal-safety 1ms 4800ms forwards;
+}
+.reveal-controls button {
+  pointer-events: auto;
+  min-height: 44px;
+  border: 1px solid var(--color-line);
+  padding: 8px 16px;
+  border-radius: 99px;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+@keyframes reveal-safety {
+  to {
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-viewport,
+  .reveal-controls,
+  .letter-decoration {
+    display: none;
+  }
+}
