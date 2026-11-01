@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 150" role="presentation">
+          <defs>
+            <linearGradient id="shirt" x2="1" y2="1"
+              ><stop stop-color="#fbfbf8"></stop><stop
+                offset="1"
+                stop-color="#d6d5cf"></stop></linearGradient
+            >
+          </defs>
+          <ellipse cx="61" cy="141" rx="30" ry="5" fill="#181818" opacity=".13"
+          ></ellipse>
+          <g class="body">
+            <g class="leg back-leg"
+              ><path
+                d="M47 103 Q34 119 33 132 L52 134 L62 106"
+                fill="#27282c"
+                stroke="#171719"
+                stroke-width="3"
+                stroke-linejoin="round"></path><path
+                d="M33 129 Q21 129 20 137 L52 137 L52 130"
+                fill="#f6f5f0"
+                stroke="#171719"
+                stroke-width="3"></path></g
+            >
+            <g class="leg front-leg"
+              ><path
+                d="M65 103 L72 130 L89 130 L82 101"
+                fill="#27282c"
+                stroke="#171719"
+                stroke-width="3"
+                stroke-linejoin="round"></path><path
+                d="M73 127 L87 128 Q99 128 100 137 L72 137 Z"
+                fill="#f6f5f0"
+                stroke="#171719"
+                stroke-width="3"></path></g
+            >
+            <path
+              d="M43 62 Q59 54 78 64 L87 103 Q66 116 39 104 Z"
+              fill="url(#shirt)"
+              stroke="#171719"
+              stroke-width="3"></path>
+            <g class="arm back-arm"
+              ><path
+                d="M43 70 Q26 77 31 98 Q37 108 44 100"
+                fill="none"
+                stroke="#171719"
+                stroke-width="12"
+                stroke-linecap="round"></path><path
+                d="M43 70 Q26 77 31 98 Q37 108 44 100"
+                fill="none"
+                stroke="#f0efea"
+                stroke-width="7"
+                stroke-linecap="round"></path></g
+            >
+            <g class="arm front-arm"
+              ><path
+                d="M78 69 Q96 76 91 90 L81 92"
+                fill="none"
+                stroke="#171719"
+                stroke-width="12"
+                stroke-linecap="round"></path><path
+                d="M78 69 Q96 76 91 90 L81 92"
+                fill="none"
+                stroke="#f0efea"
+                stroke-width="7"
+                stroke-linecap="round"></path><circle cx="81" cy="92" r="4" fill="#f0efea" stroke="#171719" stroke-width="2"></circle></g
+            >
+            <g class="head">
+              <path
+                d="M49 56 L48 68 Q60 75 68 64 L67 53"
+                fill="#e8e6dd"
+                stroke="#171719"
+                stroke-width="3"></path>
+              <path
+                d="M38 27 Q36 10 59 10 Q84 9 86 31 L81 49 Q77 65 59 63 Q40 62 38 45 Q29 41 33 34 Z"
+                fill="#f0eee5"
+                stroke="#171719"
+                stroke-width="3"></path>
+              <path
+                d="M34 33 Q24 20 37 16 Q32 3 47 8 Q55 -2 63 6 Q78 1 81 13 Q96 14 86 35 L77 30 L76 22 Q59 31 42 24 L42 39 Z"
+                fill="#202124"
+                stroke="#171719"
+                stroke-width="3"
+                stroke-linejoin="round"></path>
+              <path
+                d="M51 37 L55 36 M70 36 L74 37"
+                stroke="#171719"
+                stroke-width="3"
+                stroke-linecap="round"></path>
+              <path
+                d="M64 37 L62 46 L66 46 M54 51 Q62 57 70 50"
+                fill="none"
+                stroke="#171719"
+                stroke-width="2.5"
+                stroke-linecap="round"></path>
+              <path
+                d="M46 44 L53 44 M73 44 L80 44"
+                stroke="#c1bdb2"
+                stroke-width="2"
+                stroke-linecap="round"></path>
+            </g>
+          </g>
+        </svg>

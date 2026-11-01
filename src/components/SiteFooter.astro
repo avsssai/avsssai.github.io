@@ -1,20 +1,48 @@
 ---
 import { site } from '../config/site';
-import Container from './ui/Container.astro';
 ---
 
-<footer class="mt-24 border-t border-line bg-surface/60 py-8">
-  <Container
-    class="flex flex-col gap-3 text-sm text-muted sm:flex-row sm:items-center sm:justify-between"
-  >
-    <p class="font-mono text-xs">
-      <span class="text-accent">$</span> © {new Date().getFullYear()}
-      {site.name}
-    </p>
-    <div class="flex gap-5">
-      <a class="hover:text-cyan" href={site.social.github}>GitHub</a>
-      <a class="hover:text-cyan" href={site.social.linkedin}>LinkedIn</a>
-      <a class="hover:text-ink" href="/rss.xml">RSS</a>
-    </div>
-  </Container>
+<footer id="contact" class="site-footer">
+  <div class="site-shell footer-inner">
+    <p>© {new Date().getFullYear()} {site.name}</p>
+    <nav aria-label="Contact and feeds">
+      <a href={site.social.github}>GitHub ↗</a>
+      <a href="/rss.xml">RSS</a>
+    </nav>
+  </div>
 </footer>
+
+<style>
+  .site-footer {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding-block: 0.5rem;
+    color: var(--color-muted);
+    font-size: 0.6875rem;
+  }
+  p {
+    margin: 0;
+  }
+  nav {
+    display: flex;
+    gap: 1.25rem;
+  }
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    a:hover {
+      text-decoration: underline;
+      text-underline-offset: 0.3em;
+    }
+  }
+</style>

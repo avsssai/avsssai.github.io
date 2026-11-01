@@ -1,0 +1,67 @@
+---
+import sculpted from '../../../public/art/portfolio/lettering/sculpted.svg?raw';
+import sculptedDark from '../../../public/art/portfolio/lettering/sculpted-dark.svg?raw';
+import objects from '../../../public/art/portfolio/lettering/objects.svg?raw';
+import objectsDark from '../../../public/art/portfolio/lettering/objects-dark.svg?raw';
+import comic from '../../../public/art/portfolio/lettering/comic.svg?raw';
+import comicDark from '../../../public/art/portfolio/lettering/comic-dark.svg?raw';
+interface Props {
+  variant: 'sculpted' | 'objects' | 'comic';
+}
+const { variant } = Astro.props;
+const artwork = {
+  sculpted: { light: sculpted, dark: sculptedDark },
+  objects: { light: objects, dark: objectsDark },
+  comic: { light: comic, dark: comicDark },
+}[variant];
+const namespace = (svg: string, theme: string) =>
+  svg
+    .replace(
+      /\bid="([^"]+)"/g,
+      (_, id) => `id="lettering-${variant}-${theme}-${id}"`,
+    )
+    .replace(
+      /url\(#([^)]+)\)/g,
+      (_, id) => `url(#lettering-${variant}-${theme}-${id})`,
+    );
+---
+
+<span class="static-lettering" data-static-lettering={variant}>
+  <span class="lettering-readable">Imagination.</span>
+  <span class="light-art" aria-hidden="true"
+    ><Fragment set:html={namespace(artwork.light, 'light')} /></span
+  >
+  <span class="dark-art" aria-hidden="true"
+    ><Fragment set:html={namespace(artwork.dark, 'dark')} /></span
+  >
+</span>
+
+<style>
+  .static-lettering {
+    position: relative;
+    display: inline-block;
+    margin-inline: 0.08em;
+  }
+  .lettering-readable {
+    opacity: 0;
+  }
+  .dark-art {
+    display: none;
+  }
+  :global([data-theme='dark']) .light-art {
+    display: none;
+  }
+  :global([data-theme='dark']) .dark-art {
+    display: inline;
+  }
+  .static-lettering :global(svg) {
+    position: absolute;
+    width: 116%;
+    max-width: none;
+    height: auto;
+    left: -6%;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+</style>

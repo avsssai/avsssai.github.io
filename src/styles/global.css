@@ -1,98 +1,183 @@
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('/fonts/space-grotesk.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url('/fonts/instrument-serif.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 @theme inline {
-  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'Berkeley Mono', 'SFMono-Regular', Consolas, monospace;
+  --font-sans: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Consolas, monospace;
   --color-ink: var(--theme-ink);
   --color-paper: var(--theme-paper);
   --color-surface: var(--theme-surface);
   --color-accent: var(--theme-accent);
-  --color-cyan: var(--theme-cyan);
-  --color-magenta: var(--theme-magenta);
+  --color-cyan: var(--theme-accent);
+  --color-magenta: var(--theme-muted);
   --color-muted: var(--theme-muted);
   --color-line: var(--theme-line);
 }
 
 :root {
-  --theme-paper: #f2f6ec;
+  --theme-paper: #f6f5f1;
   --theme-surface: #ffffff;
-  --theme-ink: #122019;
-  --theme-muted: #5c7063;
-  --theme-accent: #087a42;
-  --theme-cyan: #006d7c;
-  --theme-magenta: #a82178;
-  --theme-line: #cbd8ce;
-  --grid-color: rgb(18 32 25 / 7%);
-  --scanline-color: rgb(18 32 25 / 2.5%);
-  --pixel-shadow: #9ab2a0;
+  --theme-ink: #252523;
+  --theme-muted: #68665f;
+  --theme-accent: #252523;
+  --theme-line: #d8d6ce;
+  --pixel-shadow: #25252312;
+  --site-gutter: clamp(1rem, 5vw, 5rem);
   color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
 
 :root[data-theme='dark'] {
-  --theme-paper: #070a09;
-  --theme-surface: #0d1310;
-  --theme-ink: #e2f7e9;
-  --theme-muted: #82998a;
-  --theme-accent: #48ff91;
-  --theme-cyan: #45e6ff;
-  --theme-magenta: #ff55cf;
-  --theme-line: #24372b;
-  --grid-color: rgb(72 255 145 / 7%);
-  --scanline-color: rgb(226 247 233 / 2.5%);
-  --pixel-shadow: #173822;
+  --theme-paper: #191918;
+  --theme-surface: #242422;
+  --theme-ink: #f1efe8;
+  --theme-muted: #b3b0a7;
+  --theme-accent: #f1efe8;
+  --theme-line: #41413b;
+  --pixel-shadow: #00000030;
   color-scheme: dark;
 }
 
 html {
-  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100dvh;
   margin: 0;
-  background:
-    linear-gradient(var(--scanline-color) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
-    var(--color-paper);
-  background-size:
-    4px 4px,
-    32px 32px,
-    auto;
+  background: var(--color-paper);
   color: var(--color-ink);
-  transition:
-    background-color 160ms ease,
-    color 160ms ease;
+}
+
+body.page-home {
+  --color-paper: #e5deed;
+  --theme-paper: #e5deed;
+  display: grid;
+  grid-template-rows: auto minmax(min-content, 1fr) auto;
+  min-height: 100dvh;
+  background-color: var(--color-paper);
+  background-image: none;
+}
+
+:root[data-theme='dark'] body.page-home {
+  --color-paper: #282534;
+  --theme-paper: #282534;
+}
+
+/* Static paper-cut artwork keeps the same composition before WebGL readiness,
+   under reduced motion, with no JS, and after a renderer failure. */
+.page-home .imagination-hero {
+  background-image: url('/art/portfolio/paper-stage-light.svg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+:root[data-theme='dark'] .page-home .imagination-hero {
+  background-image: url('/art/portfolio/paper-stage-dark.svg');
+}
+.page-home .imagination-hero[data-stack-scene='ready'] {
+  background-image: none;
+}
+@media (max-width: 700px) {
+  .page-home .imagination-hero {
+    background-image: url('/art/portfolio/paper-stage-phone-light.svg');
+  }
+  :root[data-theme='dark'] .page-home .imagination-hero {
+    background-image: url('/art/portfolio/paper-stage-phone-dark.svg');
+  }
+  .page-home .imagination-hero[data-stack-scene='ready'] {
+    background-image: none;
+  }
+}
+
+.page-home #main {
+  display: grid;
+  min-width: 0;
 }
 
 ::selection {
-  background: var(--color-accent);
+  background: var(--color-ink);
   color: var(--color-paper);
 }
 
 a,
 button {
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button {
+  user-select: none;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 4px;
+  outline: 2px solid var(--color-ink);
+  outline-offset: 5px;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+.site-shell {
+  width: min(100% - 2 * var(--site-gutter), 1440px);
+  margin-inline: auto;
 }
 
 .prose {
   max-width: 68ch;
   font-size: 1.075rem;
   line-height: 1.8;
+  overflow-wrap: anywhere;
 }
 
 .prose :where(h2, h3) {
   margin-block: 2.5em 0.7em;
+  font-size: 1.5rem;
+  font-weight: 500;
   line-height: 1.15;
 }
 
+.prose :where(p, ul, ol, blockquote) {
+  margin-block: 1.25em;
+}
+
+.prose :where(ul, ol) {
+  padding-left: 1.5em;
+  list-style: revert;
+}
+
 .prose :where(a) {
-  color: var(--color-accent);
+  text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
@@ -102,34 +187,29 @@ button {
   border: 1px solid var(--color-line);
   background: var(--color-surface);
   padding: 1rem;
-  box-shadow: 4px 4px 0 var(--pixel-shadow);
 }
 
 .pixel-panel {
   border: 1px solid var(--color-line);
+  border-radius: 0.75rem;
   background: var(--color-surface);
-  background: color-mix(in srgb, var(--color-surface) 94%, transparent);
-  box-shadow: 4px 4px 0 var(--pixel-shadow);
+  box-shadow: 0 8px 24px var(--pixel-shadow);
 }
 
 .terminal-kicker {
-  color: var(--color-accent);
-  font-family: var(--font-mono);
+  color: var(--color-muted);
+  font-family: var(--font-sans);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
   *,
   *::before,
   *::after {
     scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: 0ms !important;
   }
 }

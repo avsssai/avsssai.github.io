@@ -1,0 +1,211 @@
+---
+import { stackItems } from './stack-items';
+---
+
+<div class="stack-canvas" data-stack-canvas aria-hidden="true"></div>
+<ul class="stack-targets" aria-label="Technology stack">
+  {
+    stackItems.map((item) => (
+      <li
+        style={`--desktop-x:${item.desktopAnchor.x * 100}%;--desktop-y:${item.desktopAnchor.y * 100}%;--desktop-scale:${item.desktopAnchor.scale};--desktop-tilt:${item.desktopAnchor.tilt}deg;--mobile-x:${item.mobileAnchor.x * 100}%;--mobile-y:${item.mobileAnchor.y * 100}%;--mobile-scale:${item.mobileAnchor.scale};--mobile-tilt:${item.mobileAnchor.tilt}deg`}
+      >
+        <button
+          type="button"
+          data-stack-target={item.id}
+          aria-pressed="false"
+          disabled
+        >
+          <span class="stack-anchor" data-stack-anchor>
+            <img src={item.fallbackAsset} alt="" width="160" height="170" />
+          </span>
+          <span class="stack-label">{item.label}</span>
+        </button>
+      </li>
+    ))
+  }
+</ul>
+<output class="stack-status" data-stack-status aria-live="polite"></output>
+
+<script>
+  import { mountStackExperience } from './stack-bridge';
+  const mount = () =>
+    document
+      .querySelectorAll<HTMLElement>('[data-stack-experience]')
+      .forEach(mountStackExperience);
+  mount();
+  document.addEventListener('astro:page-load', mount);
+</script>
+
+<style>
+  .stack-canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+  }
+  .stack-canvas :global(canvas) {
+    display: block;
+  }
+  .stack-targets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .stack-targets li {
+    --stack-x: var(--desktop-x);
+    --stack-y: var(--desktop-y);
+    --stack-scale: var(--desktop-scale);
+    --stack-tilt: var(--desktop-tilt);
+    position: absolute;
+    left: var(--stack-x);
+    top: var(--stack-y);
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+  .stack-targets button {
+    display: grid;
+    justify-items: center;
+    gap: 3px;
+    border: 0;
+    padding: 3px;
+    min-width: 64px;
+    min-height: 44px;
+    color: var(--color-ink);
+    background: transparent;
+    border-radius: 8px;
+    font: inherit;
+    cursor: pointer;
+  }
+  .stack-targets button:disabled {
+    cursor: default;
+    opacity: 1;
+  }
+  .stack-targets button[aria-pressed='true'] .stack-label {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .stack-anchor {
+    position: relative;
+    isolation: isolate;
+    display: block;
+    width: calc(clamp(64px, 7vw, 100px) * var(--stack-scale));
+    aspect-ratio: 160 / 170;
+    pointer-events: none;
+  }
+  .stack-anchor::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: -20% -27% -34%;
+    border: 1px solid rgb(78 58 84 / 12%);
+    border-radius: 9% 7% 12% 6% / 5% 8% 9% 7%;
+    background: #d9cce9;
+    box-shadow:
+      -3px 4px 0 #fff4dc,
+      1px 7px 8px rgb(34 23 37 / 12%);
+    transform: rotate(-5deg);
+  }
+  .stack-targets li:nth-child(2) .stack-anchor::before {
+    background: #f5e2a5;
+  }
+  .stack-targets li:nth-child(4) .stack-anchor::before,
+  .stack-targets li:nth-child(6) .stack-anchor::before {
+    background: #bddbe1;
+  }
+  .stack-targets li:nth-child(3) .stack-anchor::before,
+  .stack-targets li:nth-child(7) .stack-anchor::before {
+    background: #f0c4b4;
+  }
+  :global([data-theme='dark']) .stack-anchor::before {
+    background: #514560;
+    box-shadow:
+      -3px 4px 0 #393443,
+      1px 7px 8px rgb(0 0 0 / 25%);
+  }
+  :global([data-theme='dark'])
+    .stack-targets
+    li:nth-child(2)
+    .stack-anchor::before {
+    background: #746746;
+  }
+  :global([data-theme='dark'])
+    .stack-targets
+    li:nth-child(4)
+    .stack-anchor::before,
+  :global([data-theme='dark'])
+    .stack-targets
+    li:nth-child(6)
+    .stack-anchor::before {
+    background: #35535d;
+  }
+  :global([data-theme='dark'])
+    .stack-targets
+    li:nth-child(3)
+    .stack-anchor::before,
+  :global([data-theme='dark'])
+    .stack-targets
+    li:nth-child(7)
+    .stack-anchor::before {
+    background: #76534e;
+  }
+  :global([data-stack-scene='ready']) .stack-anchor::before {
+    visibility: hidden;
+  }
+  .stack-anchor img {
+    width: 100%;
+    height: 100%;
+    transform: rotate(var(--stack-tilt));
+  }
+  .stack-label {
+    font-size: 10px;
+    line-height: 1.6;
+    color: var(--color-ink);
+  }
+  :global([data-stack-scene='ready']) .stack-anchor img {
+    opacity: 0;
+  }
+  :global([data-stack-scene='ready']) .stack-canvas {
+    opacity: 1;
+  }
+  .stack-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  @media (max-width: 1000px), (max-height: 550px) {
+    .stack-targets {
+      position: relative;
+      width: min(100%, 480px);
+      height: 270px;
+      margin: 2rem auto 0;
+    }
+    .stack-targets li {
+      --stack-x: var(--mobile-x);
+      --stack-y: var(--mobile-y);
+      --stack-scale: var(--mobile-scale);
+      --stack-tilt: var(--mobile-tilt);
+    }
+    .stack-anchor {
+      width: calc(60px * var(--stack-scale));
+    }
+  }
+  @media (max-width: 700px) {
+    .stack-targets {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+    .stack-targets button {
+      min-width: 44px;
+    }
+    .stack-anchor {
+      width: calc(clamp(48px, 15.4vw, 60px) * var(--stack-scale));
+    }
+  }
+</style>

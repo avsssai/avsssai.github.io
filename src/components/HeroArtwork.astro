@@ -1,0 +1,139 @@
+<div class="hero-artwork" aria-hidden="true">
+  <div class="object python"><span>Py</span><small>Python</small></div>
+  <div class="object react">
+    <svg viewBox="0 0 180 160">
+      <g fill="none" stroke="currentColor" stroke-width="11">
+        <ellipse cx="90" cy="75" rx="76" ry="26"></ellipse>
+        <ellipse cx="90" cy="75" rx="76" ry="26" transform="rotate(60 90 75)"
+        ></ellipse>
+        <ellipse cx="90" cy="75" rx="76" ry="26" transform="rotate(120 90 75)"
+        ></ellipse>
+      </g>
+      <circle cx="90" cy="75" r="13" fill="currentColor"></circle>
+    </svg>
+    <small>React</small>
+  </div>
+  <div class="object astro"><span>✳</span><small>Astro</small></div>
+  <div class="object typescript"><span>TS</span><small>TypeScript</small></div>
+</div>
+
+<style>
+  .hero-artwork {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .object {
+    position: absolute;
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+    width: clamp(64px, 7vw, 100px);
+  }
+  .object > span {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 25%;
+    font-size: clamp(24px, 2.5vw, 36px);
+    font-weight: 600;
+    box-shadow:
+      inset 3px 4px 7px #ffffff80,
+      inset -3px -4px 10px #0000000d,
+      8px 18px 22px #0000000a;
+  }
+  small {
+    font-size: 0.625rem;
+    color: var(--color-ink);
+  }
+  .python {
+    top: 20%;
+    left: 7%;
+    transform: rotate(-12deg);
+  }
+  .python > span {
+    background: #eed785;
+    color: #7a682e;
+  }
+  .react {
+    top: 13%;
+    right: 5%;
+    width: clamp(100px, 12vw, 170px);
+    color: #a196d2;
+  }
+  .react svg {
+    width: 100%;
+    filter: drop-shadow(5px 12px 5px #00000014);
+  }
+  .astro {
+    bottom: 12%;
+    left: 16%;
+    transform: rotate(12deg);
+  }
+  .astro > span {
+    border-radius: 50%;
+    background: #e7aa93;
+    color: #a4533b;
+    font-size: clamp(48px, 5vw, 72px);
+  }
+  .typescript {
+    bottom: 10%;
+    right: 15%;
+    transform: rotate(12deg);
+  }
+  .typescript > span {
+    background: #aac9dc;
+    color: #466880;
+  }
+  @media (max-width: 700px) {
+    .object {
+      width: 54px;
+      gap: 0.4rem;
+    }
+    .object > span {
+      font-size: 22px;
+    }
+    .python {
+      top: 5%;
+      left: 3%;
+    }
+    .react {
+      top: 2%;
+      right: 3%;
+      width: 80px;
+    }
+    .astro {
+      bottom: 4%;
+      left: 7%;
+    }
+    .astro > span {
+      font-size: 44px;
+    }
+    .typescript {
+      bottom: 3%;
+      right: 7%;
+    }
+  }
+  @media (max-height: 650px) and (max-width: 700px) {
+    .python,
+    .astro,
+    .typescript {
+      display: none;
+    }
+    .react {
+      top: auto;
+      bottom: 1%;
+      right: 3%;
+      width: 64px;
+    }
+  }
+  @media (max-height: 500px) and (min-width: 701px) {
+    .object {
+      width: 54px;
+    }
+    .react {
+      width: 92px;
+    }
+  }
+</style>

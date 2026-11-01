@@ -20,9 +20,9 @@ const { Content } = await render(post);
   <Container class="py-20">
     <article>
       <header class="mx-auto max-w-4xl border-b border-line pb-12">
-        <p class="terminal-kicker">[{post.data.tags.join('] [')}]</p>
+        <p class="text-xs text-muted">{post.data.tags.join(' · ')}</p>
         <h1
-          class="mt-5 text-5xl font-semibold leading-tight tracking-tight sm:text-7xl"
+          class="mt-5 text-5xl font-medium leading-tight tracking-tight sm:text-7xl"
         >
           {post.data.title}
         </h1>
@@ -30,7 +30,7 @@ const { Content } = await render(post);
           {post.data.description}
         </p>
         <time
-          class="mt-8 block font-mono text-xs text-muted"
+          class="mt-8 block text-xs text-muted"
           datetime={post.data.publishedAt.toISOString()}
         >
           {

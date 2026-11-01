@@ -1,46 +1,20 @@
 ---
-import ProjectCard from '../components/ProjectCard.astro';
+import { site } from '../config/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Container from '../components/ui/Container.astro';
-
-const projects = [
-  {
-    title: 'Project one',
-    description:
-      'Describe the real problem, your technical contribution, and the outcome in one or two sentences.',
-    tags: ['TypeScript', 'Astro', 'Product'],
-  },
-  {
-    title: 'Project two',
-    description:
-      'Use this space for another substantial project, open source contribution, or technical case study.',
-    tags: ['Systems', 'API', 'Infrastructure'],
-  },
-];
 ---
 
-<BaseLayout
-  title="Work"
-  description="Selected development work and case studies."
->
-  <Container class="py-20">
+<BaseLayout title="Work" description="Siva Addanki's development work.">
+  <Container class="py-16 sm:py-24">
     <header class="max-w-4xl">
-      <p class="terminal-kicker"><span aria-hidden="true">$ </span>ls ./work</p>
-      <h1 class="mt-5 text-5xl font-semibold tracking-tight sm:text-7xl">
-        Things I have shipped.
-      </h1>
-      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-        Selected products, systems, and experiments. Each entry focuses on the
-        problem, the decisions, and the result.
-      </p>
+      <h1 class="text-5xl font-normal tracking-tight sm:text-7xl">Work</h1>
     </header>
-
-    <div class="mt-16 grid gap-7 md:grid-cols-2">
-      {
-        projects.map((project, index) => (
-          <ProjectCard index={index + 1} {...project} />
-        ))
-      }
+    <div class="mt-12 border-t border-line py-8">
+      <p class="text-muted">Case studies are not published yet.</p>
+      <a
+        class="mt-6 inline-flex min-h-11 items-center underline underline-offset-4"
+        href={site.social.github}>View repositories on GitHub ↗</a
+      >
     </div>
   </Container>
 </BaseLayout>
