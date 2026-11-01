@@ -9,6 +9,22 @@ const bounds = { x: 0, y: 0, width: 600, height: 600 };
 const start = { x: 40, y: 40 },
   end = { x: 520, y: 520 };
 const obstacle = { x: 180, y: 120, width: 230, height: 300 };
+test('a legal endpoint next to prose connects even when its rounded grid cell is occupied', () => {
+  const box = { x: 40, y: 40, width: 20, height: 20 };
+  const end = { x: 39.9, y: 50 };
+  const route = walkingRoute(
+    { x: 10, y: 50 },
+    end,
+    { x: 0, y: 0, width: 100, height: 100 },
+    [box],
+  );
+  assert.ok(route);
+  assert.deepEqual(routeAt(route, 1), end);
+  for (let i = 0; i <= 500; i++) {
+    const p = routeAt(route, i / 500);
+    assert.ok(!(p.x > 40 && p.x < 60 && p.y > 40 && p.y < 60));
+  }
+});
 test('walking routes preserve endpoints and finite arc-length sampling', () => {
   const route = walkingRoute(start, end, bounds, [obstacle])!;
   assert.ok(route);

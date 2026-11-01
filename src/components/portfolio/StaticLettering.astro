@@ -33,9 +33,13 @@ const namespace = (svg: string, theme: string) =>
   <span class="light-art" aria-hidden="true"
     ><Fragment set:html={namespace(artwork.light, 'light')} /></span
   >
-  <span class="dark-art" aria-hidden="true"
-    ><Fragment set:html={namespace(artwork.dark, 'dark')} /></span
-  >
+  {
+    variant !== 'colour' && (
+      <span class="dark-art" aria-hidden="true">
+        <Fragment set:html={namespace(artwork.dark, 'dark')} />
+      </span>
+    )
+  }
 </span>
 
 <style>
@@ -53,8 +57,18 @@ const namespace = (svg: string, theme: string) =>
   :global([data-theme='dark']) .light-art {
     display: none;
   }
+  /* The white-grid artwork is identical in both saved themes. Keep a single
+     physical SVG instead of switching the solver onto a hidden duplicate. */
+  :global([data-theme='dark'])
+    .static-lettering[data-static-lettering='colour']
+    .light-art {
+    display: inline;
+  }
   :global([data-theme='dark']) .dark-art {
     display: inline;
+  }
+  .static-lettering[data-physical-letters] :global(svg) {
+    overflow: visible;
   }
   .static-lettering :global(svg) {
     position: absolute;

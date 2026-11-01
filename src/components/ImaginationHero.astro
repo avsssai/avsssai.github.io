@@ -16,8 +16,10 @@ const { lettering = 'colour' } = Astro.props;
 >
   <div class="hero-copy">
     <h1 id="hero-heading">
-      Full stack<br /><span class="developer">web developer</span><br />
-      <span class="with">with an</span>{' '}
+      <span data-copy-obstacle
+        >Full stack<br /><span class="developer">web developer</span></span
+      ><br />
+      <span class="with" data-copy-obstacle>with an</span>{' '}
       <em><StaticLettering variant={lettering} /></em>
     </h1>
     <a class="work-link" href="/work/"

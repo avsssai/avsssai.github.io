@@ -1,4 +1,4 @@
-import { routeAt, type Route } from './walking-route';
+import { routeAt, type Route, type Point } from './walking-route';
 
 /** Owns only trip visuals and a single active frame loop; selection and the
  * interaction state machine remain owned by the existing controller. */
@@ -65,6 +65,7 @@ export function mountWalking(avatar: HTMLElement) {
       index: number,
       size: { width: number; height: number },
       valid: () => void,
+      onStep?: (point: Point, now: number) => void,
     ) {
       return new Promise<void>((resolve, reject) => {
         rejectTravel = reject;
@@ -99,6 +100,7 @@ export function mountWalking(avatar: HTMLElement) {
           backLeg.style.transform = `rotate(${-swing}deg)`;
           frontArm.style.transform = `rotate(${-swing * 0.65}deg)`;
           backArm.style.transform = `rotate(${swing * 0.65}deg)`;
+          onStep?.(point, now);
           const count = Math.floor(progress * (dots[index]?.length ?? 0));
           while (shown < count)
             dots[index][shown++].style.visibility = 'visible';
