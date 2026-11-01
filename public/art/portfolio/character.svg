@@ -62,7 +62,7 @@
                 fill="none"
                 stroke="#f0efea"
                 stroke-width="7"
-                stroke-linecap="round"></path></g
+                stroke-linecap="round"></path><circle cx="81" cy="92" r="4" fill="#f0efea" stroke="#171719" stroke-width="2"></circle></g
             >
             <g class="head">
               <path

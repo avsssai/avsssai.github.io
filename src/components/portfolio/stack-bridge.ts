@@ -5,7 +5,8 @@ import {
   type SceneLayout,
   type StackId,
 } from './stack-items';
-import type { SceneSession, SceneReport } from './StackExperience';
+import type { SceneSession, SceneReport, Recoil } from './StackExperience';
+import { mountInteraction } from './interaction';
 
 type StackEvent =
   { kind: 'activation'; id: StackId } | { kind: 'layout' | 'mode' };
@@ -21,6 +22,7 @@ type Target =
 export interface StackExperience {
   target(id: StackId): Target;
   subscribe(listener: (event: StackEvent) => void): () => void;
+  recoil(value: Recoil | null): void;
   dispose(): void;
 }
 const mounted = new WeakMap<HTMLElement, StackExperience>();
@@ -269,7 +271,7 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
     target(id) {
       if (disposed) return { kind: 'unavailable', reason: 'disposed' };
       const index = stackItems.findIndex((item) => item.id === id);
-      if (index < 0 || !root.isConnected)
+      if (index < 0 || !root.isConnected || !controls[index].isConnected)
         return { kind: 'unavailable', reason: 'unmeasured' };
       if (projected && projected.revision === layout?.revision && active())
         return {
@@ -301,8 +303,12 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
         subscribers.delete(listener);
       };
     },
+    recoil(value) {
+      session?.recoil(value);
+    },
     dispose() {
       if (disposed) return;
+      character.dispose();
       disposed = true;
       release();
       lifetime.abort();
@@ -316,6 +322,7 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
       mounted.delete(root);
     },
   };
+  const character = mountInteraction(root, handle);
   mounted.set(root, handle);
   root.dataset.stackFrames = '0';
   observe();
