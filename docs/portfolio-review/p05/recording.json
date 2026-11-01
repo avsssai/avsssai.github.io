@@ -1,0 +1,11 @@
+{
+  "source": "3819fdf84606b9bbdc2a116dda42b2e955b1142f",
+  "wallMs": 34513,
+  "encodedSeconds": 34.56505,
+  "previewBytes": 1117563,
+  "previewWidth": 960,
+  "previewHeight": 600,
+  "inspection": "Browser metadata and decoded frames, not continuous watch",
+  "scenes": "first-visit peel, selected static comic lettering, cartoon kick, repeat load, resized narrow static lettering, reduced motion, delayed scene keyboard skip, work navigation",
+  "note": "Narrow segment is resized desktop, not touch hardware"
+}

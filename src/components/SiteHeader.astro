@@ -71,6 +71,14 @@ const links = [
   .identity-dot {
     color: #9386c3;
   }
+  /* A paper shelf: the travelling character may pass behind navigation, but
+     never paints over its labels or intercepts their native hit targets. */
+  .identity > span,
+  .header-actions {
+    position: relative;
+    z-index: 6;
+    background: var(--color-paper);
+  }
   .header-actions,
   nav {
     display: flex;

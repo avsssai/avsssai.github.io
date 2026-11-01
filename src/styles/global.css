@@ -69,9 +69,43 @@ body {
 }
 
 body.page-home {
+  --color-paper: #e5deed;
+  --theme-paper: #e5deed;
   display: grid;
   grid-template-rows: auto minmax(min-content, 1fr) auto;
   min-height: 100dvh;
+  background-color: var(--color-paper);
+  background-image: none;
+}
+
+:root[data-theme='dark'] body.page-home {
+  --color-paper: #282534;
+  --theme-paper: #282534;
+}
+
+/* Static paper-cut artwork keeps the same composition before WebGL readiness,
+   under reduced motion, with no JS, and after a renderer failure. */
+.page-home .imagination-hero {
+  background-image: url('/art/portfolio/paper-stage-light.svg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+:root[data-theme='dark'] .page-home .imagination-hero {
+  background-image: url('/art/portfolio/paper-stage-dark.svg');
+}
+.page-home .imagination-hero[data-stack-scene='ready'] {
+  background-image: none;
+}
+@media (max-width: 700px) {
+  .page-home .imagination-hero {
+    background-image: url('/art/portfolio/paper-stage-phone-light.svg');
+  }
+  :root[data-theme='dark'] .page-home .imagination-hero {
+    background-image: url('/art/portfolio/paper-stage-phone-dark.svg');
+  }
+  .page-home .imagination-hero[data-stack-scene='ready'] {
+    background-image: none;
+  }
 }
 
 .page-home #main {

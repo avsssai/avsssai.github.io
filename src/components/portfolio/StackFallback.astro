@@ -28,9 +28,12 @@ import { stackItems } from './stack-items';
 
 <script>
   import { mountStackExperience } from './stack-bridge';
-  document
-    .querySelectorAll<HTMLElement>('[data-stack-experience]')
-    .forEach(mountStackExperience);
+  const mount = () =>
+    document
+      .querySelectorAll<HTMLElement>('[data-stack-experience]')
+      .forEach(mountStackExperience);
+  mount();
+  document.addEventListener('astro:page-load', mount);
 </script>
 
 <style>
@@ -82,10 +85,71 @@ import { stackItems } from './stack-items';
     text-underline-offset: 4px;
   }
   .stack-anchor {
+    position: relative;
+    isolation: isolate;
     display: block;
     width: calc(clamp(64px, 7vw, 100px) * var(--stack-scale));
     aspect-ratio: 160 / 170;
     pointer-events: none;
+  }
+  .stack-anchor::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: -20% -27% -34%;
+    border: 1px solid rgb(78 58 84 / 12%);
+    border-radius: 9% 7% 12% 6% / 5% 8% 9% 7%;
+    background: #d9cce9;
+    box-shadow:
+      -3px 4px 0 #fff4dc,
+      1px 7px 8px rgb(34 23 37 / 12%);
+    transform: rotate(-5deg);
+  }
+  .stack-targets li:nth-child(2) .stack-anchor::before {
+    background: #f5e2a5;
+  }
+  .stack-targets li:nth-child(4) .stack-anchor::before,
+  .stack-targets li:nth-child(6) .stack-anchor::before {
+    background: #bddbe1;
+  }
+  .stack-targets li:nth-child(3) .stack-anchor::before,
+  .stack-targets li:nth-child(7) .stack-anchor::before {
+    background: #f0c4b4;
+  }
+  :global([data-theme='dark']) .stack-anchor::before {
+    background: #514560;
+    box-shadow:
+      -3px 4px 0 #393443,
+      1px 7px 8px rgb(0 0 0 / 25%);
+  }
+  :global([data-theme='dark'])
+    .stack-targets
+    li:nth-child(2)
+    .stack-anchor::before {
+    background: #746746;
+  }
+  :global([data-theme='dark'])
+    .stack-targets
+    li:nth-child(4)
+    .stack-anchor::before,
+  :global([data-theme='dark'])
+    .stack-targets
+    li:nth-child(6)
+    .stack-anchor::before {
+    background: #35535d;
+  }
+  :global([data-theme='dark'])
+    .stack-targets
+    li:nth-child(3)
+    .stack-anchor::before,
+  :global([data-theme='dark'])
+    .stack-targets
+    li:nth-child(7)
+    .stack-anchor::before {
+    background: #76534e;
+  }
+  :global([data-stack-scene='ready']) .stack-anchor::before {
+    visibility: hidden;
   }
   .stack-anchor img {
     width: 100%;
@@ -95,7 +159,7 @@ import { stackItems } from './stack-items';
   .stack-label {
     font-size: 10px;
     line-height: 1.6;
-    color: var(--color-muted);
+    color: var(--color-ink);
   }
   :global([data-stack-scene='ready']) .stack-anchor img {
     opacity: 0;

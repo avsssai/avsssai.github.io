@@ -46,6 +46,12 @@ P04 reuses the original provisional character source in both the static header i
 
 The local crack, speed strokes and pressure ring are original inline SVG in `src/components/portfolio/Avatar.ts`. The paper-dent illusion uses a low-contrast radial gradient behind the content, not a texture or a capture of the page. Each effect reuses one element and disappears on cancellation. WAAPI and the existing scene renderer handle movement; P04 adds no animation dependency.
 
+## P05 static lettering studies
+
+The three studies in `public/art/portfolio/lettering/` use outlines derived from the existing licensed Instrument Serif Italic and Space Grotesk Bold files. Their OFL notices remain in `public/fonts/`; no new font, remote service or runtime dependency is added. Paper folds, ribbon details, pencil accents, stars, shading and extrusion are locally drawn SVG elements. Light and dark versions are static artwork, not WebGL scenes or animation.
+
+`scripts/generate-lettering-studies.py` regenerates the six SVGs from the local WOFF2 files using Python fontTools and its WOFF2 support. This is an authoring tool, not part of the site build. `StaticLettering.astro` preserves a complete natural heading text node and marks the vector artwork decorative. The operator selected the comic-title direction for the homepage. It embeds local SVG markup directly, so the word needs neither JavaScript, font loading nor a separate artwork request. Light/dark SVG gradient IDs are namespaced to avoid cross-theme collisions. Other directions remain available under `/lab/lettering/` as historical comparison studies. The earlier animated letter registry, controller and demo button have been removed.
+
 ## Content limits
 
 The baseline email, location, LinkedIn URL, and project records were placeholders. P02 removes those published claims rather than inventing replacements. The GitHub URL uses this repository's owner, `avsssai`.

@@ -103,6 +103,7 @@ export function mountAvatar(root: HTMLElement, perch: HTMLImageElement) {
       perch.style.visibility = 'hidden';
     },
     reset() {
+      home();
       avatar.style.visibility = 'hidden';
       perch.style.visibility = '';
       crack.style.opacity = '0';
