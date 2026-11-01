@@ -1,4 +1,6 @@
-# Paper-world homepage — video preview
+# Previous map-surface preview — rejected
+
+**Superseded:** the operator rejected this surface and selected the layered paper-cut stage. **[Watch the new C preview instead](../paper-cut/README.md).** The videos below are retained only for comparison and are not current.
 
 Current **local prototype**, recorded after the request for a page surface that feels unlike plain white. Warm textured paper, shallow topographic relief, raised contour lettering, and a walking character leaving a dotted trail and taking a different route home.
 

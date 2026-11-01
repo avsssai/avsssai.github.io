@@ -1,0 +1,24 @@
+[
+  {
+    "name": "phone",
+    "encoded": {
+      "sourceDuration": 17.08,
+      "width": 390,
+      "height": 844,
+      "bytes": 295905,
+      "mime": "video/mp4"
+    },
+    "decoded": {
+      "duration": 17.076867,
+      "width": 390,
+      "height": 844,
+      "frames": [
+        3,
+        5,
+        10,
+        13,
+        16
+      ]
+    }
+  }
+]
