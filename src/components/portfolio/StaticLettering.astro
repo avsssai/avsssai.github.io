@@ -5,14 +5,16 @@ import objects from '../../../public/art/portfolio/lettering/objects.svg?raw';
 import objectsDark from '../../../public/art/portfolio/lettering/objects-dark.svg?raw';
 import comic from '../../../public/art/portfolio/lettering/comic.svg?raw';
 import comicDark from '../../../public/art/portfolio/lettering/comic-dark.svg?raw';
+import colour from '../../../public/art/portfolio/lettering/comic-colour.svg?raw';
 interface Props {
-  variant: 'sculpted' | 'objects' | 'comic';
+  variant: 'sculpted' | 'objects' | 'comic' | 'colour';
 }
 const { variant } = Astro.props;
 const artwork = {
   sculpted: { light: sculpted, dark: sculptedDark },
   objects: { light: objects, dark: objectsDark },
   comic: { light: comic, dark: comicDark },
+  colour: { light: colour, dark: colour },
 }[variant];
 const namespace = (svg: string, theme: string) =>
   svg

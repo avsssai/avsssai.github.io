@@ -68,43 +68,44 @@ body {
   color: var(--color-ink);
 }
 
+/* The playground is deliberately white in either saved document theme. The
+   CSS grid remains available without JS/WebGL; Three.js replaces it on ready. */
 body.page-home {
-  --color-paper: #e5deed;
-  --theme-paper: #e5deed;
+  --color-paper: #ffffff;
+  --theme-paper: #ffffff;
+  --color-ink: #252523;
+  --color-surface: #ffffff;
+  --color-muted: #68665f;
+  --color-line: #d8dce2;
+  color-scheme: light;
   display: grid;
   grid-template-rows: auto minmax(min-content, 1fr) auto;
   min-height: 100dvh;
-  background-color: var(--color-paper);
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(#dce2e9a6 1px, transparent 1px),
+    linear-gradient(90deg, #dce2e9a6 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-attachment: fixed;
+}
+body.page-home[data-grid-renderer='ready'] {
   background-image: none;
 }
-
-:root[data-theme='dark'] body.page-home {
-  --color-paper: #282534;
-  --theme-paper: #282534;
+.page-home .site-header {
+  position: relative;
+  z-index: 6;
 }
-
-/* Static paper-cut artwork keeps the same composition before WebGL readiness,
-   under reduced motion, with no JS, and after a renderer failure. */
-.page-home .imagination-hero {
-  background-image: url('/art/portfolio/paper-stage-light.svg');
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
+.page-home .site-footer {
+  position: relative;
+  z-index: 6;
 }
-:root[data-theme='dark'] .page-home .imagination-hero {
-  background-image: url('/art/portfolio/paper-stage-dark.svg');
-}
-.page-home .imagination-hero[data-stack-scene='ready'] {
-  background-image: none;
-}
-@media (max-width: 700px) {
-  .page-home .imagination-hero {
-    background-image: url('/art/portfolio/paper-stage-phone-light.svg');
-  }
-  :root[data-theme='dark'] .page-home .imagination-hero {
-    background-image: url('/art/portfolio/paper-stage-phone-dark.svg');
-  }
-  .page-home .imagination-hero[data-stack-scene='ready'] {
-    background-image: none;
+@media (hover: hover) and (pointer: fine) {
+  .page-home,
+  .page-home a,
+  .page-home button {
+    cursor:
+      url('/art/portfolio/pointing-finger.svg') 11 3,
+      pointer;
   }
 }
 
