@@ -113,14 +113,21 @@ async function main() {
     await page.screenshot({ path: path.join(output, 'skip.png') });
   });
   await run('keyboard-skip', {}, async (page) => {
-    await page.route(sceneChunk, (route) => route.abort());
-    await page.goto(base, { waitUntil: 'domcontentloaded' });
+    await page.route(sceneChunk, async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 6000));
+      await route.abort();
+    });
+    await opened(page);
     const skip = page.locator('[data-reveal-skip]');
-    if (await skip.count()) {
-      await skip.focus();
-      await skip.press('Enter');
-    }
+    await skip.focus();
+    await skip.press('Enter');
     await dismissed(page);
+    assert.equal(
+      await page
+        .locator('.work-link')
+        .evaluate((node) => node === document.activeElement),
+      true,
+    );
     await page.locator('.work-link').focus();
     await page.keyboard.press('Enter');
     await page.waitForURL('**/work/');

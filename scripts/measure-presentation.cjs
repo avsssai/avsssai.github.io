@@ -147,6 +147,12 @@ async function main() {
   );
   await active.page.goto(base);
   await active.page.evaluate(() => document.fonts.ready);
+  await active.page.waitForFunction(
+    () =>
+      document.querySelector('[data-stack-experience]')?.dataset.stackScene ===
+      'ready',
+  );
+  await active.page.waitForTimeout(500);
   const trace = await active.page.evaluate(async () => {
     const button = document.querySelector('[data-letter-demo]');
     const root = document.querySelector('[data-stack-experience]');
