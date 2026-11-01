@@ -129,4 +129,19 @@ import { stackItems } from './stack-items';
       width: calc(60px * var(--stack-scale));
     }
   }
+  @media (max-width: 700px) {
+    .stack-targets {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+    .stack-targets button {
+      min-width: 44px;
+    }
+    .stack-anchor {
+      width: calc(clamp(48px, 15.4vw, 60px) * var(--stack-scale));
+    }
+  }
 </style>

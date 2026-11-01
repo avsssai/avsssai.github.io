@@ -25,7 +25,7 @@ export const stackItems = [
     colour: '#aac9dc',
     geometry: 'tile',
     desktopAnchor: { x: 0.81, y: 0.76, scale: 1.25, tilt: 12 },
-    mobileAnchor: { x: 0.19, y: 0.59, scale: 1.1, tilt: 10 },
+    mobileAnchor: { x: 0.8, y: 0.82, scale: 1.15, tilt: 10 },
     fallbackAsset: '/art/portfolio/stack/typescript.svg',
   },
   {
@@ -34,7 +34,7 @@ export const stackItems = [
     colour: '#eed785',
     geometry: 'paired',
     desktopAnchor: { x: 0.17, y: 0.2, scale: 1.2, tilt: -18 },
-    mobileAnchor: { x: 0.17, y: 0.15, scale: 1.2, tilt: -18 },
+    mobileAnchor: { x: 0.17, y: 0.14, scale: 1.1, tilt: -18 },
     fallbackAsset: '/art/portfolio/stack/python.svg',
   },
   {
@@ -43,7 +43,7 @@ export const stackItems = [
     colour: '#e7aa93',
     geometry: 'star',
     desktopAnchor: { x: 0.25, y: 0.77, scale: 1.15, tilt: -15 },
-    mobileAnchor: { x: 0.51, y: 0.5, scale: 1.12, tilt: -14 },
+    mobileAnchor: { x: 0.21, y: 0.8, scale: 0.95, tilt: -14 },
     fallbackAsset: '/art/portfolio/stack/astro.svg',
   },
   {
@@ -52,7 +52,7 @@ export const stackItems = [
     colour: '#c8d4b0',
     geometry: 'cloud',
     desktopAnchor: { x: 0.065, y: 0.52, scale: 0.7, tilt: 8 },
-    mobileAnchor: { x: 0.14, y: 0.9, scale: 0.72, tilt: 6 },
+    mobileAnchor: { x: 0.075, y: 0.43, scale: 0.5, tilt: 6 },
     fallbackAsset: '/art/portfolio/stack/gcp.svg',
   },
   {
@@ -61,7 +61,7 @@ export const stackItems = [
     colour: '#a196d2',
     geometry: 'atom',
     desktopAnchor: { x: 0.85, y: 0.16, scale: 1.65, tilt: -16 },
-    mobileAnchor: { x: 0.79, y: 0.18, scale: 1.5, tilt: -16 },
+    mobileAnchor: { x: 0.79, y: 0.13, scale: 1.3, tilt: -16 },
     fallbackAsset: '/art/portfolio/stack/react.svg',
   },
   {
@@ -70,7 +70,7 @@ export const stackItems = [
     colour: '#9abfb1',
     geometry: 'bolt',
     desktopAnchor: { x: 0.945, y: 0.48, scale: 0.72, tilt: 14 },
-    mobileAnchor: { x: 0.85, y: 0.64, scale: 0.8, tilt: 16 },
+    mobileAnchor: { x: 0.925, y: 0.43, scale: 0.52, tilt: 16 },
     fallbackAsset: '/art/portfolio/stack/fastapi.svg',
   },
   {
@@ -79,7 +79,7 @@ export const stackItems = [
     colour: '#b6b3c5',
     geometry: 'gem',
     desktopAnchor: { x: 0.49, y: 0.9, scale: 0.65, tilt: -12 },
-    mobileAnchor: { x: 0.64, y: 0.88, scale: 0.75, tilt: -14 },
+    mobileAnchor: { x: 0.51, y: 0.94, scale: 0.6, tilt: -14 },
     fallbackAsset: '/art/portfolio/stack/github.svg',
   },
 ] as const satisfies readonly StackItem[];

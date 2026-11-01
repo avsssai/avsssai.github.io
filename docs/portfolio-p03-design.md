@@ -35,7 +35,7 @@ Grafts from B: explicit unavailable target results and separate attachment/rende
 
 ## Placement revision after operator feedback
 
-The operator rejected the two-column arrangement as too simple. Desktop objects now use uneven anchors, different scales and individual tilts around the heading. React is the largest object; TypeScript, Python and Astro support it, while GCP, FastAPI and GitHub are smaller accents. Mobile uses a compact asymmetric arrangement below the copy instead of a uniform icon grid.
+The operator rejected the two-column arrangement as too simple. Desktop objects now use uneven anchors, different scales and individual tilts around the heading. React is the largest object; TypeScript, Python and Astro support it, while GCP, FastAPI and GitHub are smaller accents. A second operator request asked mobile to match the desktop composition. At phone widths, objects now surround the headline: larger forms above, small accents beside the text and supporting forms below the work link. The hero reserves room for the artwork. At 320 px the objects shrink rather than overlap copy or controls. Wider compact layouts keep an asymmetric arrangement.
 
 Both layouts come from the same registry. CSS controls anchor size and tilt; the scene reads those values and keeps its projected centres aligned. Labels remain horizontal HTML. Build, pure tests and the existing desktop/mobile/resize checks cover this change. No new animation, renderer or dependency is added. The earlier independent review and cold benchmark predate this placement revision.
 
