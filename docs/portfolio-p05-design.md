@@ -1,5 +1,17 @@
 # P05 static comic lettering and paper reveal
 
+## Next-session priority: replace the rejected reveal
+
+Latest operator feedback: "I dont like the paper reveal I want it like a peeling efffect". The comic/cartoon lettering remains selected. The current paper motion is **not visually approved**, even though its functional checks pass.
+
+The current implementation rotates/translates a flat rectangular cover, with a static folded-corner decoration. It does not visibly bend or curl as the sheet separates. The next revision should explore a convincing paper peel: a lifting edge/corner, visible curl or folded underside, and local shadow/highlight that communicates separation while revealing the page underneath. This is the working interpretation of "peeling effect", not approval of a particular corner, direction, renderer or implementation. Settle the look in a small real-hero prototype before expanding it. Do not merely slow the existing panel or rename it a peel.
+
+Keep the selected static comic word, P04 character interaction and existing content. Preserve immediate skip, fail-open/no-JS/reduced/error behavior, real readiness, repeat-visit handling, keyboard focus and bounded dismissal. Retain the existing 1400ms preference and safety bounds unless the operator changes them; do not sacrifice usability to achieve the curl. No new library or WebGL reveal is preapproved.
+
+Resume in `reveal.ts`, `presentation.css` and their `reveal-state.ts`/bridge integration; update affected browser/recording drivers only as needed. Keep verification essential-only: touched formatting, pure tests, build/type check, actual desktop/phone peel inspection and focused skip/reduced/failure/cancellation checks. Do not redo P01-P04, redesign the word or begin P06. The current screenshots/video show the rejected flat-panel motion and are historical visual evidence, not the requested finished effect.
+
+This handoff update changes documentation only. No new peel has been implemented or tested. P05 remains unmerged and undeployed.
+
 ## Selected direction
 
 The operator rejected the original animated letters, reviewed three static studies and selected the comic/cartoon title. The homepage now defaults to `StaticLettering` with the comic variant: cream/gold letter faces, chunky ink extrusion, uneven letter angles, stars and a small halftone accent. No word animation or demo control remains. The readable source word still forms one complete accessible heading.

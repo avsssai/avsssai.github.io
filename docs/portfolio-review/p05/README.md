@@ -1,5 +1,7 @@
 # P05 selected comic lettering and paper reveal
 
+**Latest feedback:** the comic lettering is selected, but the operator rejected the current paper reveal and requested a peeling effect. The video below shows the current flat-panel lift, not an approved curling/peeling replacement. That revision is pending for the next session; this update changes documentation only.
+
 The operator selected the comic/cartoon direction. **Imagination is now static illustrated lettering on the homepage**, with cream/gold faces, chunky ink extrusion, uneven letter angles, stars and a small halftone accent. The earlier animated glyph treatment and Animate Imagination button are removed.
 
 The complete word remains natural accessible heading text. Decorative vector artwork is embedded in the HTML, so it needs no JavaScript, font loading or separate image request. Light and dark versions use distinct gradient IDs. Paper reveal and the character's kick/punch interactions are unchanged.
