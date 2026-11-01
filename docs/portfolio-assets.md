@@ -40,6 +40,12 @@ P03 adds seven original SVG files under `public/art/portfolio/stack/` and matchi
 
 The typed registry in `src/components/portfolio/stack-items.ts` owns labels, colours, geometry kinds, placement anchors and fallback paths. Astro owns the HTML controls and images. The deferred scene replaces only the images after a usable frame. The existing P02 `HeroArtwork.astro` is retained but no longer imported by the homepage.
 
+## P04 character rig
+
+P04 reuses the original provisional character source in both the static header image and an inline SVG animation view. A small fist circle was added to the existing front arm. Hair, face, clothes, arms, legs and proportions remain editable SVG paths. The kick and punch use separate joint transforms. This does not establish an approved likeness of Siva.
+
+The local crack is original inline SVG in `src/components/portfolio/Avatar.ts`. It is one reusable decorative mark, not a downloaded effect or a growing fragment collection. WAAPI and the existing scene renderer handle movement; P04 adds no animation dependency.
+
 ## Content limits
 
 The baseline email, location, LinkedIn URL, and project records were placeholders. P02 removes those published claims rather than inventing replacements. The GitHub URL uses this repository's owner, `avsssai`.

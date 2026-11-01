@@ -1,0 +1,24 @@
+{
+  "wallMs": 33513,
+  "moves": [
+    "kick",
+    "punch",
+    "kick",
+    "punch",
+    "kick",
+    "kick",
+    "kick",
+    "kick",
+    "kick",
+    "punch",
+    "kick"
+  ],
+  "selection": "natural random choice per activation; desktop, narrow viewport, reduced motion and context-loss fallback",
+  "source": "443786e",
+  "originalDurationSeconds": 33.72,
+  "previewDurationSeconds": 33.68646,
+  "previewWidth": 960,
+  "previewHeight": 600,
+  "previewBytes": 875772,
+  "reviewMethod": "Browser media metadata and decoded frames at 7, 20 and 32 seconds; not a continuous watch"
+}
