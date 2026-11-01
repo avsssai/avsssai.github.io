@@ -1,4 +1,6 @@
 import { mountAvatar } from './Avatar';
+import { walkingRoute, routeSeparation } from './walking-route';
+import { mountWalking } from './walking-view';
 import {
   chooseMove,
   transition,
@@ -9,12 +11,12 @@ import type { StackExperience } from './stack-bridge';
 import type { StackId } from './stack-items';
 
 const OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
-const MOVE = 'cubic-bezier(0.77, 0, 0.175, 1)';
 
 export function mountInteraction(root: HTMLElement, stack: StackExperience) {
   const perch = document.querySelector<HTMLImageElement>('[data-avatar-perch]');
   if (!perch || !Element.prototype.animate) return { dispose() {} };
   const view = mountAvatar(root, perch);
+  const walking = mountWalking(view.avatar);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
   const lifetime = new AbortController();
@@ -37,6 +39,7 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
     generation++;
     clearTimeout(dwell);
     cancelAnimationFrame(recoilFrame);
+    walking.cancel();
     animations.forEach((animation) => animation.cancel());
     animations.clear();
     stack.recoil(null);
@@ -91,6 +94,15 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
     const own = ++generation;
     const started = performance.now();
     const home = view.home();
+    if (innerWidth <= 700) {
+      const ratio = Math.min(1, 32 / home.width);
+      home.x += (home.width * (1 - ratio)) / 2;
+      home.y += home.height * (1 - ratio) * 0.94;
+      home.width *= ratio;
+      home.height *= ratio;
+      view.avatar.style.width = `${home.width}px`;
+      view.avatar.style.height = `${home.height}px`;
+    }
     const direction = target.point.x >= home.x + home.width / 2 ? 1 : -1;
     const size = root
       .querySelector(`[data-stack-target="${id}"] [data-stack-anchor]`)!
@@ -120,7 +132,9 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
       height: innerHeight,
     };
     const protectedRects = [
-      ...document.querySelectorAll('.work-link, .identity, .header-actions'),
+      ...document.querySelectorAll(
+        '.work-link, .identity, .header-actions a, .header-actions button',
+      ),
     ].map((element) => element.getBoundingClientRect());
     const heading = root.querySelector('h1')!;
     const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
@@ -169,13 +183,69 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
     );
     view.burst.querySelector('[data-comic-word]')!.textContent =
       impactWord(move);
-    const puffPosition = locateComic(
-      view.puff,
-      { x: home.x + home.width / 2, y: home.y + home.height },
-      104,
-      74,
+    const feet = (point: { x: number; y: number }) => ({
+      x: point.x + home.width / 2,
+      y: point.y + home.height * 0.94,
+    });
+    const startFeet = feet(home);
+    const endFeet = feet(contact);
+    const terrainBox = root
+      .querySelector('.static-lettering')
+      ?.getBoundingClientRect();
+    // Header labels sit on an opaque foreground shelf; the actor walks behind
+    // that shelf on departure rather than treating a phone's full nav row as
+    // an impassable wall. Hero content remains a genuine routing obstacle.
+    const protectedWalking = obstacles.filter((box) => box.y + box.height > 0);
+    if (terrainBox)
+      protectedWalking.push({
+        x: terrainBox.x - heroBox.x - terrainBox.width * 0.08,
+        y: terrainBox.y - heroBox.y,
+        width: terrainBox.width * 1.16,
+        height: terrainBox.height,
+      });
+    const routeObstacles = protectedWalking.map((box) => ({
+      x: box.x - home.width * 0.35 - 2,
+      y: box.y - 4,
+      width: box.width + home.width * 0.7 + 4,
+      height: box.height + home.height * 0.94 + 8,
+    }));
+    const routeBounds = {
+      x: viewport.x + home.width / 2 + 2,
+      y: viewport.y + home.height * 0.94 + 4,
+      width: viewport.width - home.width - 4,
+      height: viewport.height - home.height * 0.94 - 12,
+    };
+    const outbound = walkingRoute(
+      startFeet,
+      endFeet,
+      routeBounds,
+      routeObstacles,
     );
-    const middle = `translate(${(home.x + contact.x) / 2}px,${Math.max(viewport.y + 8, Math.min(home.y, contact.y) - 48)}px) rotate(${-12 * direction}deg)`;
+    const inbound =
+      outbound &&
+      walkingRoute(
+        endFeet,
+        startFeet,
+        routeBounds,
+        routeObstacles,
+        true,
+        outbound,
+      );
+    // If the full actor cannot safely fit, keep native selection without
+    // sending him through readable content or outside the viewport.
+    if (!outbound || !inbound) {
+      root.dataset.walkingUnavailable = id;
+      root.dataset.walkingReason = outbound
+        ? 'no-distinct-return'
+        : 'no-clear-route';
+      return;
+    }
+    delete root.dataset.walkingUnavailable;
+    delete root.dataset.walkingReason;
+    root.dataset.routeSeparation = String(routeSeparation(outbound, inbound));
+    root.dataset.outboundLength = String(outbound.length);
+    root.dataset.returnLength = String(inbound.length);
+    walking.prepare([outbound, inbound]);
     const valid = () => {
       const current = stack.target(id);
       if (
@@ -215,73 +285,10 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
         110,
       );
       advance();
-      await Promise.all([
-        animate(
-          view.avatar,
-          [
-            { transform: from },
-            { transform: middle, offset: 0.5 },
-            { transform: to },
-          ],
-          300,
-          MOVE,
-        ),
-        animate(
-          view.arm,
-          [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-32deg)' }],
-          300,
-        ),
-        animate(
-          view.trail,
-          [
-            { opacity: 0 },
-            { opacity: 0.95, offset: 0.2 },
-            { opacity: 0.85, offset: 0.7 },
-            { opacity: 0 },
-          ],
-          300,
-          MOVE,
-        ),
-        animate(
-          view.puff,
-          [
-            {
-              transform: `${puffPosition} scale(.95)`,
-              opacity: 0,
-              easing: OUT,
-            },
-            {
-              transform: `${puffPosition} scale(1.05)`,
-              opacity: 1,
-              offset: 0.15,
-            },
-            {
-              transform: `${puffPosition} scale(1.1)`,
-              opacity: 1,
-              offset: 0.65,
-              easing: OUT,
-            },
-            { transform: `${puffPosition} scale(1.12)`, opacity: 0 },
-          ],
-          300,
-          'linear',
-        ),
-        animate(
-          view.dent,
-          [
-            { transform: `${from} scale(.95)`, opacity: 0 },
-            {
-              transform: `${middle} scale(1.12,.86)`,
-              opacity: 0.8,
-              offset: 0.5,
-            },
-            { transform: to, opacity: 0 },
-          ],
-          300,
-          MOVE,
-        ),
-      ]);
+      await walking.travel(outbound, 0, home, valid);
       view.avatar.style.transform = to;
+      view.avatar.querySelector('svg')!.style.transform =
+        `scaleX(${direction})`;
       advance();
       await animate(
         limb,
@@ -351,26 +358,8 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
       stack.recoil(null);
       limb.style.transform = '';
       advance();
-      view.trail.style.left = direction > 0 ? '95%' : '-165%';
-      view.trail.style.transform = `scaleX(${-direction})`;
-      await Promise.all([
-        animate(
-          view.avatar,
-          [
-            { transform: to },
-            { transform: middle, offset: 0.5 },
-            { transform: from },
-          ],
-          300,
-          MOVE,
-        ),
-        animate(
-          view.trail,
-          [{ opacity: 0 }, { opacity: 0.85, offset: 0.25 }, { opacity: 0 }],
-          300,
-          MOVE,
-        ),
-      ]);
+      await walking.travel(inbound, 1, home, valid);
+      await animate(walking.trail, [{ opacity: 1 }, { opacity: 0 }], 180);
       valid();
       completed++;
       root.dataset.interactions = String(completed);
@@ -441,6 +430,7 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
       unsubscribe();
       lifetime.abort();
       observer.disconnect();
+      walking.dispose();
       view.dispose();
     },
   };

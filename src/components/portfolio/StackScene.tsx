@@ -8,6 +8,7 @@ import {
   type SceneLayout,
 } from './stack-items';
 import type { SceneReport, RecoilChannel } from './StackExperience';
+import { PaperSurface } from './PaperSurface';
 
 const extrusion = {
   depth: 0.25,
@@ -187,6 +188,7 @@ function Contents({ layout, active, motion, onFrame }: Props) {
   }, 1);
   return (
     <>
+      <PaperSurface layout={layout} />
       <ambientLight intensity={1.8} />
       <directionalLight
         position={[-300, 500, 800]}
