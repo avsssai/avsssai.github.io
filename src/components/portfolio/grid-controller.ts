@@ -13,6 +13,7 @@ export function mountGrid(root: HTMLElement) {
   const lifetime = new AbortController(),
     signal = lifetime.signal;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const documentMode = root.hasAttribute('data-character-document');
   const perch = document.querySelector<HTMLImageElement>(
     '[data-avatar-perch]',
   )!;
@@ -107,10 +108,16 @@ export function mountGrid(root: HTMLElement) {
       width: innerWidth - 2 * inset,
       height: Math.max(0, bottom - top),
     };
-    const obstacles = readProtectedRects(
-      root,
-      letters ? 'physical' : 'static',
-    ).map((box) => ({
+    const protectedRects = documentMode
+      ? [
+          ...root.querySelectorAll<HTMLElement>(
+            'h1,h2,h3,h4,p,li,pre,blockquote,img,a,button,table,figure',
+          ),
+        ]
+          .filter((node) => node.getClientRects().length)
+          .map((node) => node.getBoundingClientRect())
+      : readProtectedRects(root, letters ? 'physical' : 'static');
+    const obstacles = protectedRects.map((box) => ({
       x: box.x - s.width / 2 - 6,
       y: box.y - 6,
       width: box.width + s.width + 12,
@@ -151,7 +158,7 @@ export function mountGrid(root: HTMLElement) {
       return;
     const { bounds, obstacles } = geometry();
     if (!legal(point, bounds, obstacles)) {
-      status.textContent = 'Pick a clear spot on the grid, away from the text.';
+      status.textContent = 'Pick a clear spot, away from the text.';
       return;
     }
     const start = current();
@@ -261,8 +268,10 @@ export function mountGrid(root: HTMLElement) {
   };
   root.dataset.gridPhase = 'idle';
   instructions.hidden = false;
-  const reveal = mountReveal(root, subscribe);
-  if (reduce.matches) notify('reduced');
+  const reveal = documentMode ? undefined : mountReveal(root, subscribe);
+  if (documentMode) {
+    root.dataset.gridRenderer = 'fallback';
+  } else if (reduce.matches) notify('reduced');
   else {
     void startRenderer();
     void startLetters();
@@ -450,6 +459,10 @@ export function mountGrid(root: HTMLElement) {
   reduce.addEventListener(
     'change',
     () => {
+      if (documentMode) {
+        reset();
+        return;
+      }
       if (reduce.matches) {
         reset();
         letters?.dispose();
@@ -470,7 +483,7 @@ export function mountGrid(root: HTMLElement) {
       disposed = true;
       lifetime.abort();
       stop();
-      reveal.dispose();
+      reveal?.dispose();
       renderer?.dispose();
       letters?.dispose();
       walking.dispose();

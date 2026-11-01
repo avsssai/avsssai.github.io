@@ -13,9 +13,9 @@ import { paperLayout } from '../src/components/portfolio/peel-paper.ts';
 
 test('paper decoration uses responsive insets and leaves the monogram inside the seal', () => {
   for (const [width, height, inset] of [
-    [1440, 900, 20],
-    [390, 844, 12],
-    [320, 568, 12],
+    [1440, 900, 40],
+    [390, 844, 24],
+    [320, 568, 24],
   ]) {
     const layout = paperLayout(width, height);
     assert.equal(layout.inset, inset);

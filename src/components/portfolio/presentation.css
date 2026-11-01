@@ -1,10 +1,24 @@
+:root {
+  --peel-paper: #fff0cc;
+  --peel-control: #faf8f0ed;
+  --peel-ink: #494638;
+  --peel-tab: linear-gradient(100deg, #f5dfb2, #fff6df 48%, #eed3a0);
+  --peel-highlight: #fff9e8;
+}
+:root[data-theme='dark'] {
+  --peel-paper: #2b2b29;
+  --peel-control: #34332fed;
+  --peel-ink: #ddd0ac;
+  --peel-tab: linear-gradient(100deg, #3b3932, #5a5548 48%, #35332d);
+  --peel-highlight: #8c8268;
+}
 .reveal-viewport {
   position: fixed;
   z-index: 100;
   inset: 0;
   overflow: clip;
   pointer-events: none;
-  background: #fff0cc;
+  background: var(--peel-paper);
   animation: reveal-safety 1ms var(--reveal-cover-limit, 8000ms) forwards;
 }
 .reveal-viewport.is-interactive {
@@ -42,10 +56,10 @@
   height: 43px;
   border: 1px solid #c5a86c88;
   border-radius: 3px 3px 12px 12px;
-  background: linear-gradient(100deg, #f5dfb2, #fff6df 48%, #eed3a0);
+  background: var(--peel-tab);
   box-shadow:
     2px 5px 7px #60461926,
-    inset 1px 0 0 #fff9e8;
+    inset 1px 0 0 var(--peel-highlight);
   transform-origin: 50% 0;
   transform: rotate(-9deg);
   pointer-events: none;
@@ -68,7 +82,7 @@
     #b2925a55 0 1px,
     transparent 1px 4px
   );
-  border-bottom: 1px solid #fff9e8;
+  border-bottom: 1px solid var(--peel-highlight);
 }
 .is-interactive .reveal-tab {
   /* One settling swing teaches that the tab is loose; no idle animation loop. */
@@ -96,7 +110,7 @@
 }
 .reveal-grip:focus-visible,
 .reveal-controls :focus-visible {
-  outline: 3px solid #8c671f;
+  outline: 3px solid var(--peel-ink);
   outline-offset: 4px;
 }
 .reveal-controls {
@@ -125,8 +139,8 @@
   display: block;
   padding: 8px 12px;
   border-radius: 99px;
-  background: #faf8f0ed;
-  color: #494638;
+  background: var(--peel-control);
+  color: var(--peel-ink);
 }
 .is-interactive .reveal-range-label {
   display: flex;
@@ -135,14 +149,14 @@
   min-height: 44px;
   padding: 0 12px;
   border-radius: 99px;
-  background: #faf8f0ed;
-  color: #494638;
+  background: var(--peel-control);
+  color: var(--peel-ink);
   pointer-events: auto;
 }
 .reveal-range-label input {
   width: 100px;
   min-height: 44px;
-  accent-color: #494638;
+  accent-color: var(--peel-ink);
   touch-action: manipulation;
 }
 .reveal-controls button {
