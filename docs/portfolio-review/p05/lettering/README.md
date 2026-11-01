@@ -1,6 +1,6 @@
 # Static Imagination lettering studies
 
-Three static directions, shown in the existing hero. No hover effect, word animation or demo button on these review pages. The scene, character and paper reveal are unchanged. None of these directions has replaced the homepage yet.
+Three static directions, shown in the existing hero. No hover effect, word animation or demo button on these review pages. The scene, character and paper reveal are unchanged. The operator selected03, the comic title; it is now the homepage default. These captures remain the earlier comparison studies. [See the current homepage gallery](../README.md).
 
 ## Compare the lettering
 
@@ -47,4 +47,4 @@ These are visual studies, not a newly independently reviewed P05 application or 
 
 Outlines derive from the existing OFL Instrument Serif and Space Grotesk assets, with locally drawn folds, stars, pencil details and shading. Provenance and regeneration are recorded in `docs/portfolio-assets.md` and `scripts/generate-lettering-studies.py`. No new dependency, invented portfolio copy, game work, merge or deployment.
 
-Choose01,02or03, or identify details to combine. The chosen direction can then replace the rejected interactive lettering on the same unmerged P05 PR11. Actual-device, non-Chromium and final visual approval remain open.
+Direction03 has replaced the rejected interactive lettering on the same unmerged P05 PR11. The comparison routes remain for reference. Actual-device, non-Chromium and final visual approval remain open.

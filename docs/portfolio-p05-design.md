@@ -1,4 +1,18 @@
-# P05 letter playground and paper reveal
+# P05 static comic lettering and paper reveal
+
+## Selected direction
+
+The operator rejected the original animated letters, reviewed three static studies and selected the comic/cartoon title. The homepage now defaults to `StaticLettering` with the comic variant: cream/gold letter faces, chunky ink extrusion, uneven letter angles, stars and a small halftone accent. No word animation or demo control remains. The readable source word still forms one complete accessible heading.
+
+`StaticLettering.astro` embeds the local licensed-font-derived SVG outlines at build time. It does not wait for JavaScript, font downloads or an image request to render the artwork. Light/dark gradient IDs are namespaced; an initial dark-theme screenshot exposed duplicate-ID paint failure, fixed before the final captures. The inline vector markup has no animation. Its existing natural text reserve keeps the heading layout stable.
+
+Removed `ImaginationLetters.astro`, `letters.ts`, `letter-effects.ts`, bridge mount/dispose calls, orphaned letter CSS and demo-specific driver code. No dependency was removed. The 1400ms paper reveal, its skip/deadlines and P04 character choreography were deliberately kept unchanged. Prior architecture/design comparisons below describe the original animated version, not current letter ownership.
+
+Current source verification at3819fdf:28puretests,build/typecheck,7affectedP05cases,2additionalpeel/skipcaptures and1inheritedcharactereffectcase passed. No page errors. A one-pair4xCPU smoke probe passed reveal/CLS/skip/static-word gates; it is not a new five-run benchmark. Earlier independent review/performance receipts predate this selected static implementation. Actual-device/non-Chromium/final integrated visual review remain open.
+
+## Earlier animated implementation design
+
+The following is retained as historical rationale. Its letter-controller references are superseded by the selected direction above.
 
 ## Problem
 
