@@ -1,0 +1,11 @@
+{
+  "source": "934a6b6b249862cfebd93e9ef74c4a4ff018ba55",
+  "wallMs": 34507,
+  "encodedSeconds": 34.432867,
+  "previewBytes": 1082819,
+  "previewWidth": 960,
+  "previewHeight": 600,
+  "inspection": "Browser metadata and decoded frames, not continuous watch",
+  "scenes": "first-visit peel, letter demo, cartoon kick, repeat load, resized narrow demo, reduced motion, delayed scene keyboard skip, work navigation",
+  "note": "Narrow segment is resized desktop, not touch hardware"
+}
