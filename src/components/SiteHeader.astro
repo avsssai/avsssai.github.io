@@ -13,7 +13,13 @@ const links = [
 <header class="site-header">
   <div class="site-shell header-inner">
     <a class="identity" href="/" aria-label={`${site.name}, home`}>
-      <img src="/art/portfolio/character.svg" width="64" height="80" alt="" />
+      <img
+        data-avatar-perch
+        src="/art/portfolio/character.svg"
+        width="64"
+        height="80"
+        alt=""
+      />
       <span
         >{site.name}<span class="identity-dot" aria-hidden="true">.</span></span
       >
@@ -64,6 +70,14 @@ const links = [
   }
   .identity-dot {
     color: #9386c3;
+  }
+  /* A paper shelf: the travelling character may pass behind navigation, but
+     never paints over its labels or intercepts their native hit targets. */
+  .identity > span,
+  .header-actions {
+    position: relative;
+    z-index: 6;
+    background: var(--color-paper);
   }
   .header-actions,
   nav {

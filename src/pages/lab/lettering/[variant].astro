@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ImaginationHero from '../../../components/ImaginationHero.astro';
+
+export function getStaticPaths() {
+  return ['sculpted', 'objects', 'comic'].map((variant) => ({
+    params: { variant },
+  }));
+}
+const variant = Astro.params.variant as 'sculpted' | 'objects' | 'comic';
+const studies = [
+  { id: 'sculpted', label: '01 Sculpted serif' },
+  { id: 'objects', label: '02 Object letters' },
+  { id: 'comic', label: '03 Comic title' },
+];
+---
+
+<BaseLayout title="Lettering study" pageKind="landing">
+  <ImaginationHero lettering={variant} />
+  <nav class="study-nav" aria-label="Lettering studies">
+    {
+      studies.map((study) => (
+        <a
+          href={`/lab/lettering/${study.id}/`}
+          aria-current={study.id === variant ? 'page' : undefined}
+        >
+          {study.label}
+        </a>
+      ))
+    }
+  </nav>
+</BaseLayout>
+
+<style>
+  .study-nav {
+    position: fixed;
+    z-index: 20;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 4px;
+    width: max-content;
+    max-width: calc(100% - 24px);
+    padding: 5px;
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    background: var(--color-paper);
+    box-shadow: 0 4px 20px #0000000a;
+  }
+  .study-nav a {
+    padding: 8px 10px;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    border-radius: 7px;
+    font: 500 10px var(--font-sans);
+    color: var(--color-muted);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .study-nav a[aria-current='page'] {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  @media (max-width: 700px) {
+    .study-nav {
+      display: none;
+    }
+  }
+  @media (max-width: 400px) {
+    .study-nav a {
+      padding-inline: 7px;
+      font-size: 9px;
+    }
+  }
+</style>

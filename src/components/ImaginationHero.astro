@@ -1,19 +1,31 @@
 ---
-import HeroArtwork from './HeroArtwork.astro';
+import StackFallback from './portfolio/StackFallback.astro';
+import StaticLettering from './portfolio/StaticLettering.astro';
+import './portfolio/presentation.css';
+
+interface Props {
+  lettering?: 'sculpted' | 'objects' | 'comic';
+}
+const { lettering = 'comic' } = Astro.props;
 ---
 
-<section class="imagination-hero" aria-labelledby="hero-heading">
-  <HeroArtwork />
+<section
+  class="imagination-hero"
+  data-stack-experience
+  data-stack-scene="static"
+  aria-labelledby="hero-heading"
+>
   <div class="hero-copy">
     <h1 id="hero-heading">
       Full stack<br /><span class="developer">web developer</span><br />
-      <span class="with">with an</span>
-      <em>Imagination.</em>
+      <span class="with">with an</span>{' '}
+      <em><StaticLettering variant={lettering} /></em>
     </h1>
     <a class="work-link" href="/work/"
       >Explore my work <span aria-hidden="true">↗</span></a
     >
   </div>
+  <StackFallback />
 </section>
 
 <style>
@@ -21,7 +33,7 @@ import HeroArtwork from './HeroArtwork.astro';
     position: relative;
     display: grid;
     align-items: center;
-    min-height: 360px;
+    min-height: 460px;
     width: min(100%, 1720px);
     margin-inline: auto;
     padding: 2rem 1rem 3rem;
@@ -128,6 +140,18 @@ import HeroArtwork from './HeroArtwork.astro';
     }
     .work-link {
       margin-top: 1rem;
+    }
+  }
+  @media (max-width: 1000px), (max-height: 550px) {
+    .imagination-hero {
+      align-content: center;
+      min-height: 0;
+      padding-block: 1.5rem;
+    }
+  }
+  @media (max-width: 700px) {
+    .imagination-hero {
+      padding-block: 9rem;
     }
   }
 </style>

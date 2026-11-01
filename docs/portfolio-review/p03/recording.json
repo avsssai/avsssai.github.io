@@ -1,0 +1,16 @@
+{
+  "baseURL": "http://127.0.0.1:4328",
+  "applicationSHA": "85e40e70ba76ba288f3a7a98d92190924f5c140c",
+  "browser": "156.0.8078.74",
+  "durationWallMs": 34764,
+  "bytes": 2234208,
+  "scenes": [
+    "desktop light",
+    "desktop dark",
+    "HTML keyboard selection",
+    "mobile 390x844",
+    "real WebGL context loss fallback",
+    "reduced motion static"
+  ],
+  "videoSize": "1440x900"
+}

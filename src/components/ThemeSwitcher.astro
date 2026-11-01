@@ -24,8 +24,12 @@
       `Switch to ${isDark ? 'light' : 'dark'} theme`,
     );
     toggle?.setAttribute('aria-pressed', String(isDark));
+    const palette = document.querySelector('meta[name="theme-color"]');
+    const colour =
+      palette?.getAttribute(isDark ? 'data-theme-dark' : 'data-theme-light') ||
+      (isDark ? '#191918' : '#f6f5f1');
     document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
-      meta.setAttribute('content', isDark ? '#191918' : '#f6f5f1');
+      meta.setAttribute('content', colour);
     });
   };
 

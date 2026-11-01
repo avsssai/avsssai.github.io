@@ -580,7 +580,15 @@ async function main() {
   if (results.some((result) => result.status !== 'PASS')) process.exitCode = 1;
 }
 
-main().catch((error) => {
+const run =
+  process.env.PORTFOLIO_TICKET === 'P05'
+    ? require('./verify-presentation.cjs').main
+    : process.env.PORTFOLIO_TICKET === 'P04'
+      ? require('./verify-interaction.cjs').main
+      : process.env.PORTFOLIO_TICKET === 'P03'
+        ? require('./verify-stack.cjs').main
+        : main;
+run().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });

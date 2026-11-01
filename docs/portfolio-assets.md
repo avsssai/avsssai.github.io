@@ -34,6 +34,24 @@ The supporting words within the approved heading retain their smaller treatment.
 
 The production homepage does not import the prototype controller, renderer, or peel experiments. No new animation is introduced by P02.
 
+## P03 stack artwork
+
+P03 adds seven original SVG files under `public/art/portfolio/stack/` and matching procedural meshes. They use abstract tile, paired capsule, star, cloud, orbital, bolt and faceted forms. No logo pack, remote model, Blender asset, paid editor or model service is used. Labels identify technology subjects and do not imply endorsement.
+
+The typed registry in `src/components/portfolio/stack-items.ts` owns labels, colours, geometry kinds, placement anchors and fallback paths. Astro owns the HTML controls and images. The deferred scene replaces only the images after a usable frame. The existing P02 `HeroArtwork.astro` is retained but no longer imported by the homepage.
+
+## P04 character rig
+
+P04 reuses the original provisional character source in both the static header image and an inline SVG animation view. A small fist circle was added to the existing front arm. Hair, face, clothes, arms, legs and proportions remain editable SVG paths. The kick and punch use separate joint transforms. This does not establish an approved likeness of Siva.
+
+The local crack, speed strokes and pressure ring are original inline SVG in `src/components/portfolio/Avatar.ts`. The paper-dent illusion uses a low-contrast radial gradient behind the content, not a texture or a capture of the page. Each effect reuses one element and disappears on cancellation. WAAPI and the existing scene renderer handle movement; P04 adds no animation dependency.
+
+## P05 static lettering studies
+
+The three studies in `public/art/portfolio/lettering/` use outlines derived from the existing licensed Instrument Serif Italic and Space Grotesk Bold files. Their OFL notices remain in `public/fonts/`; no new font, remote service or runtime dependency is added. Paper folds, ribbon details, pencil accents, stars, shading and extrusion are locally drawn SVG elements. Light and dark versions are static artwork, not WebGL scenes or animation.
+
+`scripts/generate-lettering-studies.py` regenerates the six SVGs from the local WOFF2 files using Python fontTools and its WOFF2 support. This is an authoring tool, not part of the site build. `StaticLettering.astro` preserves a complete natural heading text node and marks the vector artwork decorative. The operator selected the comic-title direction for the homepage. It embeds local SVG markup directly, so the word needs neither JavaScript, font loading nor a separate artwork request. Light/dark SVG gradient IDs are namespaced to avoid cross-theme collisions. Other directions remain available under `/lab/lettering/` as historical comparison studies. The earlier animated letter registry, controller and demo button have been removed.
+
 ## Content limits
 
 The baseline email, location, LinkedIn URL, and project records were placeholders. P02 removes those published claims rather than inventing replacements. The GitHub URL uses this repository's owner, `avsssai`.
