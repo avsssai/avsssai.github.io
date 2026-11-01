@@ -5,7 +5,6 @@ import {
   transitionReveal,
   hasSeenReveal,
   rememberReveal,
-  PEEL_MS,
   COVER_LIMIT_MS,
 } from '../src/components/portfolio/reveal-state.ts';
 
@@ -14,8 +13,7 @@ test('readiness starts one peel and completes', () => {
   assert.equal(transitionReveal('ready', 'peel'), 'revealing');
   assert.equal(transitionReveal('revealing', 'scene-ready'), 'revealing');
   assert.equal(transitionReveal('revealing', 'finish'), 'complete');
-  assert.equal(PEEL_MS, 1400);
-  assert.ok(COVER_LIMIT_MS < 5000);
+  assert.equal(COVER_LIMIT_MS, 8000);
 });
 for (const state of ['loading', 'ready', 'revealing'] as const) {
   test(`${state}: skip, deadline and error fail open`, () => {

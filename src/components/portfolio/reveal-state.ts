@@ -3,8 +3,8 @@ export type RevealState =
   'loading' | 'ready' | 'revealing' | 'complete' | 'failed';
 export type RevealEvent =
   'scene-ready' | 'peel' | 'finish' | 'skip' | 'deadline' | 'failure';
-export const PEEL_MS = 1400;
-export const COVER_LIMIT_MS = 4800;
+// Bound only loading/admission. Once interactive, a partial peel can stay put.
+export const COVER_LIMIT_MS = 8000;
 export const REPEAT_KEY = 'portfolio-reveal-v1';
 
 export function transitionReveal(
