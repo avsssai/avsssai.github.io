@@ -39,13 +39,23 @@ Resize, captured scroll, hidden document, pagehide, reduced-motion change, scene
 
 ## Added motion accents
 
-After reviewing P04, the operator requested speed strokes, an impact pressure ring, directional squash and a restrained paper-dent illusion. They use the same controller and existing 300 ms travel / 160 ms impact windows; the sequence is not longer.
+After reviewing P04, the operator requested speed strokes, an impact pressure ring, directional squash and a restrained paper-dent illusion. The first accent revision used the same controller and existing 300 ms travel / 160 ms impact windows. The later comic revision below extends only impact so the words can be read.
 
 `Avatar.ts` owns three reusable decorative elements. Strokes ride behind the actor during outbound travel. A low-contrast radial gradient moves beneath the artwork as a paper-dent illusion, behind the HTML copy. It does not warp or duplicate text. A small SVG ellipse expands at contact beside the existing crack. Only transforms and opacity animate; no blur filter, screenshot texture or per-frame layout changes. Each element resets to zero opacity on completion or cancellation and is removed on disposal.
 
 The scene's existing recoil group compresses to at most 0.88 on the hit axis and stretches to 1.08 on the perpendicular axis. It returns to unit scale when the recoil pose clears. P03's base positions, camera projections and control geometry remain unchanged.
 
 The focused browser driver checks visible travel/impact accents, stable heading geometry, reduced-motion suppression, cleanup and repeated actions. `PERF_ACTIVE_ONLY=1` runs just the twenty-action performance probe for visual motion revisions; it does not claim a new cold-heading benchmark.
+
+## Comic edition
+
+The operator requested more pronounced cartoon effects: `POOF!` at takeoff, `KACHOW!` for kicks and `KAPOW!` for punches. These are decorative comic words, not audio. Two additional reusable SVG elements provide the cloud and yellow ink-outlined burst. Strokes are now longer curved swooshes with a small star, shown during outbound and return travel. The local pressure ring has a thicker outline and impact rays. No screen shake or flashing background.
+
+Impact now lasts 240 ms instead of 160 ms. The nominal complete sequence is 1,080 ms, up 80 ms; dwell and travel stay unchanged. Comic opacity holds use a linear timeline with the existing OUT curve on entry/exit segments so words do not fade prematurely. The scene's inner recoil group reaches 0.82 horizontal scale and 1.14 perpendicular scale, then resets to1. The projected base centre is unaffected.
+
+`comic-effects.ts` owns move-to-word mapping and pure placement. A conservative rotated/scaled footprint is clamped to the viewport and scored against actual heading glyph rectangles, the CTA, header controls and the character at contact. Nearby obstacle edges supply alternatives when the initial local positions do not fit. This keeps the actor visible and avoids treating empty full-width heading boxes as text. Measurements happen once per accepted activation; only transform and opacity animate. The jump apex is kept inside the viewport.
+
+Five reusable effect elements now reset together. Reduced motion suppresses all five; the existing controller cancels their registered animations on geometry/lifecycle changes. Tests cover word mapping, viewport/obstacle placement, 320/390 px light and dark browser views, visible cloud/burst windows, stable heading bounds and repeated cleanup. No new controller, dependency or particle collection.
 
 ## Tradeoffs and open gates
 

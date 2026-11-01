@@ -159,10 +159,10 @@ function Contents({ layout, active, motion, onFrame }: Props) {
     if (!active || document.hidden || gl.getContext().isContextLost()) return;
     for (const [id, group] of reactions.current) {
       const amount = motion.current?.id === id ? motion.current.amount : 0;
-      group.position.x = amount * 0.18;
-      group.rotation.z = -amount * 0.12;
+      group.position.x = amount * 0.28;
+      group.rotation.z = -amount * 0.18;
       const compression = Math.abs(amount);
-      group.scale.set(1 - compression * 0.12, 1 + compression * 0.08, 1);
+      group.scale.set(1 - compression * 0.18, 1 + compression * 0.14, 1);
     }
     gl.render(scene, camera);
     if (groups.current.size !== layout.targets.length) return;

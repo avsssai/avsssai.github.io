@@ -7,6 +7,70 @@ const base = process.env.BASE_URL || 'http://127.0.0.1:4330';
 const baseline = process.env.BASELINE_URL || 'http://127.0.0.1:4328';
 const hero = '[data-stack-experience]';
 const button = '[data-stack-target="react"]';
+const effects = ['speed', 'paper', 'pressure', 'puff', 'comic'];
+async function hiddenEffects(page) {
+  for (const effect of effects)
+    assert.equal(
+      await page
+        .locator(`[data-motion-effect="${effect}"]`)
+        .evaluate((node) => getComputedStyle(node).opacity),
+      '0',
+    );
+}
+async function inspectComic(page, effect) {
+  const value = await page
+    .locator(`[data-motion-effect="${effect}"]`)
+    .evaluate((node) => {
+      const box = node.getBoundingClientRect();
+      const protectedRects = [
+        ...document.querySelectorAll('.work-link, .identity, .header-actions'),
+      ].map((element) => ({
+        name: element.className,
+        rect: element.getBoundingClientRect(),
+      }));
+      if (node.dataset.motionEffect === 'comic')
+        protectedRects.push({
+          name: 'character',
+          rect: document.querySelector('[data-avatar]').getBoundingClientRect(),
+        });
+      const walker = document.createTreeWalker(
+        document.querySelector('h1'),
+        NodeFilter.SHOW_TEXT,
+      );
+      while (walker.nextNode()) {
+        if (!walker.currentNode.textContent.trim()) continue;
+        const range = document.createRange();
+        range.selectNodeContents(walker.currentNode);
+        protectedRects.push(
+          ...[...range.getClientRects()].map((rect) => ({
+            name: 'heading text',
+            rect,
+          })),
+        );
+      }
+      return {
+        visible: Number(getComputedStyle(node).opacity) > 0,
+        bounded:
+          box.left >= 0 &&
+          box.right <= innerWidth &&
+          box.top >= 0 &&
+          box.bottom <= innerHeight,
+        overlaps: protectedRects
+          .filter(({ rect: other }) => {
+            return (
+              box.left < other.right &&
+              box.right > other.left &&
+              box.top < other.bottom &&
+              box.bottom > other.top
+            );
+          })
+          .map(({ name }) => name),
+      };
+    });
+  assert.ok(value.visible, `${effect} is visible`);
+  assert.ok(value.bounded, `${effect} stays in viewport`);
+  assert.deepEqual(value.overlaps, [], `${effect} clears copy/navigation`);
+}
 const phase = (page, value) =>
   page.waitForFunction(
     (value) =>
@@ -204,13 +268,7 @@ async function main() {
     assert.equal((await data(page)).phase, 'idle');
     assert.equal((await data(page)).interactions, '0');
     assert.equal(await page.locator('canvas').count(), 0);
-    for (const effect of ['speed', 'paper', 'pressure'])
-      assert.equal(
-        await page
-          .locator(`[data-motion-effect="${effect}"]`)
-          .evaluate((node) => getComputedStyle(node).opacity),
-        '0',
-      );
+    await hiddenEffects(page);
     assert.equal(
       await page.locator(button).getAttribute('aria-pressed'),
       'true',
@@ -242,6 +300,7 @@ async function main() {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await phase(page, 'idle');
     assert.equal((await data(page)).interactions, '0');
+    await hiddenEffects(page);
   });
   await run('navigation', {}, async (page) => {
     for (const targetPhase of ['impact', 'return']) {
@@ -290,7 +349,8 @@ async function main() {
         animation.currentTime = 150;
       }),
     );
-    for (const effect of ['speed', 'paper']) {
+    await inspectComic(page, 'puff');
+    for (const effect of ['speed', 'paper', 'puff']) {
       assert.ok(
         (await page
           .locator(`[data-motion-effect="${effect}"]`)
@@ -318,6 +378,11 @@ async function main() {
         .locator('[data-motion-effect="pressure"]')
         .evaluate((node) => Number(getComputedStyle(node).opacity))) > 0,
     );
+    await inspectComic(page, 'comic');
+    assert.equal(
+      await page.locator('[data-comic-word]').textContent(),
+      (await data(page)).move === 'kick' ? 'KACHOW!' : 'KAPOW!',
+    );
     await page.screenshot({ path: path.join(output, 'impact-effects.png') });
     await page
       .locator(hero)
@@ -327,15 +392,76 @@ async function main() {
           .forEach((animation) => animation.play()),
       );
     await waitKick(page, 1);
-    for (const effect of ['speed', 'paper', 'pressure']) {
-      assert.equal(
-        await page
-          .locator(`[data-motion-effect="${effect}"]`)
-          .evaluate((node) => getComputedStyle(node).opacity),
-        '0',
-      );
-    }
+    await hiddenEffects(page);
     assert.deepEqual(await page.locator('h1').boundingBox(), heading);
+  });
+  await run('comic-responsive', {}, async (page) => {
+    for (const [width, height, scheme] of [
+      [390, 844, 'light'],
+      [320, 568, 'light'],
+      [390, 844, 'dark'],
+    ]) {
+      await page.setViewportSize({ width, height });
+      await page.emulateMedia({ colorScheme: scheme });
+      await page.goto(base);
+      await ready(page);
+      let count = 0;
+      for (const move of ['kick', 'punch']) {
+        await page.locator(button).evaluate((node, move) => {
+          Math.random = () => (move === 'kick' ? 0 : 0.9);
+          node.click();
+        }, move);
+        await phase(page, 'travel');
+        await page.locator(hero).evaluate((node) =>
+          node.getAnimations({ subtree: true }).forEach((animation) => {
+            animation.pause();
+            animation.currentTime = 150;
+          }),
+        );
+        await inspectComic(page, 'puff');
+        if (move === 'kick')
+          await page.screenshot({
+            path: path.join(output, `jump-${width}-${scheme}.png`),
+          });
+        await page
+          .locator(hero)
+          .evaluate((node) =>
+            node
+              .getAnimations({ subtree: true })
+              .forEach((animation) => animation.play()),
+          );
+        await phase(page, 'impact');
+        await page.locator(hero).evaluate((node) =>
+          node.getAnimations({ subtree: true }).forEach((animation) => {
+            animation.pause();
+            animation.currentTime = 60;
+          }),
+        );
+        await inspectComic(page, 'comic');
+        assert.equal(
+          await page.locator('[data-comic-word]').textContent(),
+          move === 'kick' ? 'KACHOW!' : 'KAPOW!',
+        );
+        assert.equal(
+          await page.evaluate(
+            () => document.documentElement.scrollWidth > innerWidth,
+          ),
+          false,
+        );
+        await page.screenshot({
+          path: path.join(output, `comic-${width}-${scheme}-${move}.png`),
+        });
+        await page
+          .locator(hero)
+          .evaluate((node) =>
+            node
+              .getAnimations({ subtree: true })
+              .forEach((animation) => animation.play()),
+          );
+        await waitKick(page, ++count);
+        await hiddenEffects(page);
+      }
+    }
   });
   await run('target-lost', {}, async (page) => {
     await page.locator(button).click();
@@ -371,14 +497,11 @@ async function main() {
     assert.equal((await data(page)).contacts, '20');
     assert.equal((await data(page)).kicks, '10');
     assert.equal((await data(page)).punches, '10');
-    assert.equal(await page.locator('[data-motion-effect]').count(), 3);
-    for (const effect of ['speed', 'paper', 'pressure'])
-      assert.equal(
-        await page
-          .locator(`[data-motion-effect="${effect}"]`)
-          .evaluate((node) => getComputedStyle(node).opacity),
-        '0',
-      );
+    assert.equal(
+      await page.locator('[data-motion-effect]').count(),
+      effects.length,
+    );
+    await hiddenEffects(page);
     assert.equal(
       await page
         .locator(hero)

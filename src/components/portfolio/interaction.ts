@@ -4,6 +4,7 @@ import {
   transition,
   type InteractionState,
 } from './interaction-state';
+import { impactWord, placeComic } from './comic-effects';
 import type { StackExperience } from './stack-bridge';
 import type { StackId } from './stack-items';
 
@@ -105,13 +106,76 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
       y: strikePoint.y - (home.height * anchor.y) / 150,
     };
     view.avatar.querySelector('svg')!.style.transform = `scaleX(${direction})`;
-    view.trail.style.left = direction > 0 ? '-65%' : '95%';
+    view.trail.style.left = direction > 0 ? '-165%' : '95%';
     view.trail.style.transform = `scaleX(${direction})`;
     view.dent.style.left = `${home.width / 2 - 72}px`;
     view.dent.style.top = `${home.height * 0.8 - 40}px`;
     const from = `translate(${home.x}px,${home.y}px)`;
     const to = `translate(${contact.x}px,${contact.y}px)`;
-    const middle = `translate(${(home.x + contact.x) / 2}px,${Math.min(home.y, contact.y) - 32}px) rotate(${-12 * direction}deg)`;
+    const heroBox = root.getBoundingClientRect();
+    const viewport = {
+      x: -heroBox.x,
+      y: -heroBox.y,
+      width: innerWidth,
+      height: innerHeight,
+    };
+    const protectedRects = [
+      ...document.querySelectorAll('.work-link, .identity, .header-actions'),
+    ].map((element) => element.getBoundingClientRect());
+    const heading = root.querySelector('h1')!;
+    const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+      if (!walker.currentNode.textContent?.trim()) continue;
+      const range = document.createRange();
+      range.selectNodeContents(walker.currentNode);
+      protectedRects.push(...range.getClientRects());
+    }
+    const obstacles = protectedRects.map((box) => {
+      return {
+        x: box.x - heroBox.x,
+        y: box.y - heroBox.y,
+        width: box.width,
+        height: box.height,
+      };
+    });
+    const locateComic = (
+      element: HTMLElement,
+      point: { x: number; y: number },
+      width: number,
+      height: number,
+      protectedAreas = obstacles,
+    ) => {
+      element.style.width = `${width}px`;
+      element.style.height = `${height}px`;
+      const footprint = { width: width * 1.28, height: height * 1.5 };
+      const position = placeComic(point, footprint, viewport, protectedAreas);
+      return `translate(${position.x + (footprint.width - width) / 2}px,${position.y + (footprint.height - height) / 2}px) rotate(-8deg)`;
+    };
+    const comicWidth = innerWidth <= 700 ? 128 : 160;
+    const comicPosition = locateComic(
+      view.burst,
+      strikePoint,
+      comicWidth,
+      comicWidth * 0.625,
+      [
+        ...obstacles,
+        {
+          x: contact.x - 8,
+          y: contact.y - 8,
+          width: home.width + 16,
+          height: home.height + 16,
+        },
+      ],
+    );
+    view.burst.querySelector('[data-comic-word]')!.textContent =
+      impactWord(move);
+    const puffPosition = locateComic(
+      view.puff,
+      { x: home.x + home.width / 2, y: home.y + home.height },
+      104,
+      74,
+    );
+    const middle = `translate(${(home.x + contact.x) / 2}px,${Math.max(viewport.y + 8, Math.min(home.y, contact.y) - 48)}px) rotate(${-12 * direction}deg)`;
     const valid = () => {
       const current = stack.target(id);
       if (
@@ -169,9 +233,38 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
         ),
         animate(
           view.trail,
-          [{ opacity: 0 }, { opacity: 0.55, offset: 0.25 }, { opacity: 0 }],
+          [
+            { opacity: 0 },
+            { opacity: 0.95, offset: 0.2 },
+            { opacity: 0.85, offset: 0.7 },
+            { opacity: 0 },
+          ],
           300,
           MOVE,
+        ),
+        animate(
+          view.puff,
+          [
+            {
+              transform: `${puffPosition} scale(.95)`,
+              opacity: 0,
+              easing: OUT,
+            },
+            {
+              transform: `${puffPosition} scale(1.05)`,
+              opacity: 1,
+              offset: 0.15,
+            },
+            {
+              transform: `${puffPosition} scale(1.1)`,
+              opacity: 1,
+              offset: 0.65,
+              easing: OUT,
+            },
+            { transform: `${puffPosition} scale(1.12)`, opacity: 0 },
+          ],
+          300,
+          'linear',
         ),
         animate(
           view.dent,
@@ -204,17 +297,17 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
       const impactStarted = performance.now();
       const recoil = () => {
         if (own !== generation) return;
-        const progress = Math.min(1, (performance.now() - impactStarted) / 160);
+        const progress = Math.min(1, (performance.now() - impactStarted) / 240);
         stack.recoil({ id, amount: Math.sin(progress * Math.PI) * direction });
         if (progress < 1) recoilFrame = requestAnimationFrame(recoil);
       };
       recoil();
-      const ringPosition = `translate(${strikePoint.x - 40}px,${strikePoint.y - 40}px)`;
+      const ringPosition = `translate(${strikePoint.x - 52}px,${strikePoint.y - 52}px)`;
       await Promise.all([
         animate(
           view.crack,
-          [{ opacity: 0 }, { opacity: 0.7, offset: 0.25 }, { opacity: 0 }],
-          160,
+          [{ opacity: 0 }, { opacity: 0.9, offset: 0.25 }, { opacity: 0 }],
+          240,
         ),
         animate(
           view.ring,
@@ -222,28 +315,62 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
             { transform: `${ringPosition} scale(.95)`, opacity: 0 },
             {
               transform: `${ringPosition} scale(1.1)`,
-              opacity: 0.45,
+              opacity: 0.85,
               offset: 0.25,
             },
-            { transform: `${ringPosition} scale(1.45)`, opacity: 0 },
+            { transform: `${ringPosition} scale(1.65)`, opacity: 0 },
           ],
-          160,
+          240,
+        ),
+        animate(
+          view.burst,
+          [
+            {
+              transform: `${comicPosition} scale(.95)`,
+              opacity: 0,
+              easing: OUT,
+            },
+            {
+              transform: `${comicPosition} scale(1.1)`,
+              opacity: 1,
+              offset: 0.16,
+            },
+            {
+              transform: `${comicPosition} scale(1.03)`,
+              opacity: 1,
+              offset: 0.75,
+              easing: OUT,
+            },
+            { transform: `${comicPosition} scale(1.12)`, opacity: 0 },
+          ],
+          240,
+          'linear',
         ),
       ]);
       cancelAnimationFrame(recoilFrame);
       stack.recoil(null);
       limb.style.transform = '';
       advance();
-      await animate(
-        view.avatar,
-        [
-          { transform: to },
-          { transform: middle, offset: 0.5 },
-          { transform: from },
-        ],
-        300,
-        MOVE,
-      );
+      view.trail.style.left = direction > 0 ? '95%' : '-165%';
+      view.trail.style.transform = `scaleX(${-direction})`;
+      await Promise.all([
+        animate(
+          view.avatar,
+          [
+            { transform: to },
+            { transform: middle, offset: 0.5 },
+            { transform: from },
+          ],
+          300,
+          MOVE,
+        ),
+        animate(
+          view.trail,
+          [{ opacity: 0 }, { opacity: 0.85, offset: 0.25 }, { opacity: 0 }],
+          300,
+          MOVE,
+        ),
+      ]);
       valid();
       completed++;
       root.dataset.interactions = String(completed);
