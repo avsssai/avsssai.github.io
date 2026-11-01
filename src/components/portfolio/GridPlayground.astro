@@ -1,8 +1,26 @@
+---
+interface Props {
+  documentMode?: boolean;
+}
+const { documentMode = false } = Astro.props;
+---
+
 <div class="grid-host" data-grid-host aria-hidden="true"></div>
-<div class="grid-instructions" data-grid-instructions hidden>
+<div
+  class:list={[
+    'grid-instructions',
+    { 'grid-instructions--document': documentMode },
+  ]}
+  data-grid-instructions
+  hidden
+>
   <span class="grid-instructions__x" aria-hidden="true">✕</span>
   <button type="button" data-grid-controls aria-describedby="grid-help"
-    >Click the grid. I’ll meet you there.</button
+    >{
+      documentMode
+        ? 'Click a clear spot. I’ll meet you there.'
+        : 'Click the grid. I’ll meet you there.'
+    }</button
   >
   <button
     type="button"
@@ -56,6 +74,13 @@
     justify-content: center;
     z-index: 2;
   }
+  .grid-instructions--document {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    margin: 1rem auto;
+  }
   .grid-instructions button[hidden] {
     display: none;
   }
@@ -76,11 +101,11 @@
     border: 0;
     background: transparent;
     padding: 0.4rem 0.1rem;
-    color: #68665f;
+    color: var(--color-muted);
     font: 400 0.75rem var(--font-sans);
   }
   .grid-instructions button:active {
-    color: #252523;
+    color: var(--color-ink);
   }
   .grid-readable {
     position: absolute;

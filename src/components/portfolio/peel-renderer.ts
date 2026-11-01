@@ -20,11 +20,16 @@ import {
 import { bendSheetPoint, peelFold, type PeelPoint } from './peel-math';
 import { createPaperCanvases } from './peel-paper';
 
-export function createPeelRenderer(host: HTMLElement, onFailure: () => void) {
+export function createPeelRenderer(
+  host: HTMLElement,
+  onFailure: () => void,
+  character: HTMLImageElement,
+) {
   const width = host.clientWidth;
   const height = host.clientHeight;
   const renderer = new WebGLRenderer({ alpha: true, antialias: true });
   let disposed = false;
+  let themeObserver: MutationObserver | undefined;
   const geometries: PlaneGeometry[] = [];
   const materials: (MeshStandardMaterial | ShadowMaterial)[] = [];
   const textures: CanvasTexture[] = [];
@@ -35,6 +40,7 @@ export function createPeelRenderer(host: HTMLElement, onFailure: () => void) {
   const dispose = () => {
     if (disposed) return;
     disposed = true;
+    themeObserver?.disconnect();
     renderer.domElement.removeEventListener('webglcontextlost', onLost);
     geometries.forEach((geometry) => geometry.dispose());
     materials.forEach((material) => material.dispose());
@@ -63,7 +69,8 @@ export function createPeelRenderer(host: HTMLElement, onFailure: () => void) {
     );
     geometries.push(geometry);
     const source = Float32Array.from(geometry.attributes.position.array);
-    const paper = createPaperCanvases(width, height);
+    const isDark = () => document.documentElement.dataset.theme === 'dark';
+    const paper = createPaperCanvases(width, height, isDark(), character);
     const print = new CanvasTexture(paper.colour);
     textures.push(print);
     print.colorSpace = SRGBColorSpace;
@@ -71,7 +78,7 @@ export function createPeelRenderer(host: HTMLElement, onFailure: () => void) {
     const relief = new CanvasTexture(paper.relief);
     textures.push(relief);
     const front = new MeshStandardMaterial({
-      color: '#fff0cc',
+      color: isDark() ? '#ffffff' : '#fff0cc',
       map: print,
       bumpMap: relief,
       bumpScale: 1.4,
@@ -79,7 +86,7 @@ export function createPeelRenderer(host: HTMLElement, onFailure: () => void) {
       roughness: 0.9,
     });
     const back = new MeshStandardMaterial({
-      color: '#f1dbad',
+      color: isDark() ? '#34332f' : '#f1dbad',
       side: BackSide,
       roughness: 0.72,
     });
@@ -117,8 +124,10 @@ export function createPeelRenderer(host: HTMLElement, onFailure: () => void) {
     host.append(renderer.domElement);
     const raycaster = new Raycaster();
     const pointer = new Vector2();
+    let lastTip: PeelPoint | undefined;
     const draw = (tip: PeelPoint) => {
       if (disposed) return;
+      lastTip = { ...tip };
       const fold = peelFold(width, height, tip);
       const positions = geometry.attributes.position;
       for (let i = 0; i < positions.count; i++) {
@@ -135,6 +144,20 @@ export function createPeelRenderer(host: HTMLElement, onFailure: () => void) {
       geometry.computeBoundingSphere();
       renderer.render(scene, camera);
     };
+    themeObserver = new MutationObserver(() => {
+      if (disposed) return;
+      const dark = isDark();
+      const next = createPaperCanvases(width, height, dark, character);
+      print.image = next.colour;
+      print.needsUpdate = true;
+      front.color.set(dark ? '#ffffff' : '#fff0cc');
+      back.color.set(dark ? '#34332f' : '#f1dbad');
+      if (lastTip) draw(lastTip);
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
     return {
       draw,
       hits(x: number, y: number) {

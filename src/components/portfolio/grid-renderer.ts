@@ -8,7 +8,7 @@ import {
   WebGLRenderer,
 } from 'three';
 
-/** One pixel-aligned Three.js grid, rendered only on creation and resize. */
+/** One pixel-aligned grid, rendered only on creation, resize and theme changes. */
 export function createGridRenderer(host: HTMLElement, onFailure: () => void) {
   const renderer = new WebGLRenderer({
     alpha: true,
@@ -59,12 +59,26 @@ export function createGridRenderer(host: HTMLElement, onFailure: () => void) {
     camera.updateProjectionMatrix();
     renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
     renderer.setSize(width, height);
+    render();
+  };
+  const render = () => {
+    if (disposed) return;
+    material.color.set(
+      getComputedStyle(document.body).getPropertyValue('--grid-line').trim() ||
+        '#dce2e9',
+    );
     renderer.render(scene, camera);
     host.dataset.gridRenders = String(++renders);
   };
+  const themeObserver = new MutationObserver(render);
   try {
     resize();
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
   } catch (error) {
+    themeObserver.disconnect();
     renderer.domElement.removeEventListener('webglcontextlost', lost);
     geometry.dispose();
     material.dispose();
@@ -77,6 +91,7 @@ export function createGridRenderer(host: HTMLElement, onFailure: () => void) {
     dispose() {
       if (disposed) return;
       disposed = true;
+      themeObserver.disconnect();
       renderer.domElement.removeEventListener('webglcontextlost', lost);
       geometry.dispose();
       material.dispose();

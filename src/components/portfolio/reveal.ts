@@ -178,9 +178,19 @@ export function mountReveal(
     if (value !== 'ready' || importing || active || !frame) return;
     importing = true;
     try {
-      const module = await import('./peel-renderer');
+      const character = new Image();
+      character.src = '/art/portfolio/character.svg';
+      const [module] = await Promise.all([
+        import('./peel-renderer'),
+        character.decode(),
+        document.fonts.load('600 28px "Space Grotesk"'),
+      ]);
       if (ended || !frame) return;
-      renderer = module.createPeelRenderer(frame, () => finish('failure'));
+      renderer = module.createPeelRenderer(
+        frame,
+        () => finish('failure'),
+        character,
+      );
       renderer.draw(tip);
       if (ended) return;
       active = true;
