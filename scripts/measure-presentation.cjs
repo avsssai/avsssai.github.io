@@ -54,7 +54,8 @@ async function main() {
     return { context, page };
   };
   const samples = [];
-  for (let i = 0; i < 5; i++)
+  const runs = Number(process.env.PERF_RUNS || 5);
+  for (let i = 0; i < runs; i++)
     for (const revision of ['trunk', 'head']) {
       const { context, page } = await create();
       await page.goto(revision === 'trunk' ? baseline : base, {
@@ -153,41 +154,24 @@ async function main() {
       'ready',
   );
   await active.page.waitForTimeout(500);
-  const trace = await active.page.evaluate(async () => {
-    const button = document.querySelector('[data-letter-demo]');
-    const root = document.querySelector('[data-stack-experience]');
-    const before = document.querySelectorAll('*').length;
-    const intervals = [];
-    let tracing = false;
-    let last = 0;
-    const tick = (t) => {
-      if (tracing && root.dataset.letterActive && last)
-        intervals.push(t - last);
-      last = t;
-      if (tracing) requestAnimationFrame(tick);
-    };
-    tracing = true;
-    requestAnimationFrame(tick);
-    for (let i = 0; i < 10; i++) {
-      button.click();
-      await new Promise((r) => setTimeout(r, 530));
-    }
-    while (button.getAttribute('aria-pressed') === 'true')
-      await new Promise((r) => setTimeout(r, 50));
-    tracing = false;
-    await new Promise((r) => setTimeout(r, 100));
-    return {
-      intervals,
-      nodesBefore: before,
-      nodesAfter: document.querySelectorAll('*').length,
-      animations: document
-        .querySelector('[data-letter-decoration]')
-        .getAnimations({ subtree: true }).length,
-    };
-  });
+  const before = await active.page.locator('*').count();
+  const word = active.page.locator('[data-static-lettering="comic"]');
+  const box = await word.boundingBox();
+  for (let i = 0; i < 10; i++)
+    await active.page.mouse.move(
+      box.x + (box.width * (i + 0.5)) / 10,
+      box.y + box.height / 2,
+    );
+  const trace = {
+    nodesBefore: before,
+    nodesAfter: await active.page.locator('*').count(),
+    animations: await word.evaluate(
+      (node) => node.getAnimations({ subtree: true }).length,
+    ),
+    demoControls: await active.page.locator('[data-letter-demo]').count(),
+    activeFrameMetric: 'not applicable; selected lettering is static',
+  };
   await active.context.close();
-  trace.intervals.sort((a, b) => a - b);
-  trace.p95Ms = trace.intervals[Math.floor(trace.intervals.length * 0.95)];
   const head = samples.filter((x) => x.revision === 'head'),
     trunk = samples.filter((x) => x.revision === 'trunk');
   const summary = {
@@ -211,7 +195,10 @@ async function main() {
     ['ready-to-dismiss <= 1800ms', summary.maxReadyToDismissMs <= 1800],
     ['stalled cover <= 5000ms', stalled <= 5000],
     ['skip acknowledgment <= 100ms', skipMs <= 100],
-    ['letter active rAF p95 <= 33.4ms', trace.p95Ms <= 33.4],
+    [
+      'selected lettering is static with no demo control',
+      trace.animations === 0 && trace.demoControls === 0,
+    ],
     [
       'no letter DOM growth or retained animations',
       trace.nodesAfter === trace.nodesBefore && trace.animations === 0,
@@ -233,10 +220,10 @@ async function main() {
           cpuThrottle: 4,
           network: 'local previews; no network throttle',
           coldCache: true,
-          runs: 5,
+          runs,
         },
         metricNotes:
-          'Static heading/native work sample HTML availability. Uncovered heading/work wait for whole hero cover removal. The cover is pointer-transparent and never disables native navigation. Heading cost is intentional entrance delay, not a like-for-like static paint regression. Ten demo activations exercise cancellation/restart before one final sequence settles.',
+          'Static heading/native work sample HTML availability. Uncovered heading/work wait for whole hero cover removal. The cover is pointer-transparent and never disables native navigation. Heading cost is intentional entrance delay, not a like-for-like static paint regression. The selected comic word is static; ten pointer passes must create no animations, controls or DOM growth. No letter-animation frame metric is applicable.',
         samples,
         summary,
         trace,

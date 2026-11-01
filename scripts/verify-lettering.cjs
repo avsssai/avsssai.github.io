@@ -31,7 +31,7 @@ fs.mkdirSync(output, { recursive: true });
     await page.screenshot({
       path: path.join(output, `${variant}-desktop.png`),
     });
-    const light = page.locator('[data-static-lettering] .light-art');
+    const light = page.locator('[data-static-lettering] .light-art svg');
     await light.screenshot({
       path: path.join(output, `${variant}-detail.png`),
     });
@@ -70,7 +70,7 @@ fs.mkdirSync(output, { recursive: true });
     await page.locator('[data-theme-toggle]').click();
     await page.waitForTimeout(150);
     assert.equal(
-      await page.locator('[data-static-lettering] .dark-art').isVisible(),
+      await page.locator('[data-static-lettering] .dark-art svg').isVisible(),
       true,
     );
     await page.screenshot({ path: path.join(output, `${variant}-dark.png`) });

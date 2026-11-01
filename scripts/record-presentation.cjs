@@ -23,17 +23,13 @@ const { chromium } = require('playwright');
       document.querySelector('[data-stack-experience]')?.dataset.revealState ===
       'complete',
   );
-  await page.waitForTimeout(700);
-  await page.locator('[data-letter-demo]').click();
-  await page.waitForTimeout(3400);
+  await page.waitForTimeout(4100);
   await page.locator('[data-stack-target="react"]').click();
   await page.waitForTimeout(1600);
   await page.reload();
   await page.waitForTimeout(1400);
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.waitForTimeout(800);
-  await page.locator('[data-letter-demo]').click();
-  await page.waitForTimeout(3400);
+  await page.waitForTimeout(4200);
   await page.locator('[data-stack-target="python"]').click();
   await page.waitForTimeout(1700);
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -66,7 +62,7 @@ const { chromium } = require('playwright');
         source: process.env.HEAD_SHA || 'working-tree',
         wallMs,
         scenes:
-          'first-visit peel, letter demo, cartoon kick, repeat load, resized narrow demo, reduced motion, delayed scene keyboard skip, work navigation',
+          'first-visit peel, selected static comic lettering, cartoon kick, repeat load, resized narrow static lettering, reduced motion, delayed scene keyboard skip, work navigation',
         note: 'Narrow segment is resized desktop, not touch hardware',
       },
       null,

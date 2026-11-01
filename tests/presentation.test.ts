@@ -8,10 +8,6 @@ import {
   PEEL_MS,
   COVER_LIMIT_MS,
 } from '../src/components/portfolio/reveal-state.ts';
-import {
-  letterEffects,
-  letterFrames,
-} from '../src/components/portfolio/letter-effects.ts';
 
 test('readiness starts one peel and completes', () => {
   assert.equal(transitionReveal('loading', 'scene-ready'), 'ready');
@@ -57,26 +53,21 @@ test('repeat visit marker and blocked storage access', () => {
   assert.equal(hasSeenReveal(blocked), false);
   assert.doesNotThrow(() => rememberReveal(blocked));
 });
-test('letter registry assigns bounded effects to unique natural word indexes', () => {
-  assert.equal(
-    new Set(letterEffects.map((spec) => spec.index)).size,
-    letterEffects.length,
-  );
-  assert.equal(new Set(letterEffects.map((spec) => spec.effect)).size, 4);
-  for (const spec of letterEffects) {
-    assert.ok(spec.index >= 0 && spec.index < 'Imagination'.length);
-    const frames = letterFrames(spec.effect);
-    assert.equal(frames[0].opacity, 0);
-    assert.equal(frames.at(-1)?.opacity, 0);
-    assert.ok(
-      frames.every((frame) => !('width' in frame) && !('height' in frame)),
+test('selected comic artwork is local static vector lettering in both themes', () => {
+  for (const name of ['comic', 'comic-dark']) {
+    const svg = readFileSync(
+      new URL(`../public/art/portfolio/lettering/${name}.svg`, import.meta.url),
+      'utf8',
     );
+    assert.match(svg, /viewBox="0 0 900 235"/);
+    assert.doesNotMatch(svg, /<(animate|animateTransform|script|image)\b/);
+    assert.match(svg, /<path/);
   }
 });
 test('server markup retains complete natural word and no cover or glyph tab stops', () => {
   const word = readFileSync(
     new URL(
-      '../src/components/portfolio/ImaginationLetters.astro',
+      '../src/components/portfolio/StaticLettering.astro',
       import.meta.url,
     ),
     'utf8',
@@ -85,8 +76,10 @@ test('server markup retains complete natural word and no cover or glyph tab stop
     new URL('../src/components/ImaginationHero.astro', import.meta.url),
     'utf8',
   );
-  assert.match(word, /data-letter-source>Imagination\.<\/span>/);
-  assert.match(word, /data-letter-decoration\s+aria-hidden="true"/);
+  assert.match(word, /class="lettering-readable">Imagination\.<\/span>/);
+  assert.match(word, /aria-hidden="true"/);
+  assert.match(hero, /lettering = 'comic'/);
+  assert.doesNotMatch(hero, /data-letter-demo|ImaginationLetters/);
   assert.doesNotMatch(word, /tabindex/);
   assert.doesNotMatch(hero, /data-reveal-cover/);
   assert.equal((hero.match(/<h1 /g) || []).length, 1);

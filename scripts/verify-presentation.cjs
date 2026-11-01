@@ -189,59 +189,44 @@ async function main() {
     await dismissed(page);
     await page.evaluate(() => document.fonts.ready);
     const before = await page.locator('h1').boundingBox();
-    const glyphs = page.locator('[data-letter-effect]');
-    for (let i = 0; i < (await glyphs.count()); i++) {
-      const box = await glyphs.nth(i).boundingBox();
-      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-      await page.waitForFunction(
-        () =>
-          !!document.querySelector('[data-stack-experience]').dataset
-            .letterActive,
-      );
-      if (i === 2) {
-        await page.locator('[data-letter-decoration]').evaluate((node) =>
-          node.getAnimations({ subtree: true }).forEach((a) => {
-            a.pause();
-            a.currentTime = 200;
-          }),
-        );
-        await page.screenshot({ path: path.join(output, 'letters.png') });
-        await page
-          .locator('[data-letter-decoration]')
-          .evaluate((node) =>
-            node.getAnimations({ subtree: true }).forEach((a) => a.play()),
-          );
-      }
-      await page.waitForTimeout(520);
-    }
-    assert.deepEqual(await page.locator('h1').boundingBox(), before);
-    assert.equal(await page.locator('h1 [tabindex], h1 button').count(), 0);
-    await page.locator('[data-letter-demo]').focus();
-    await page.keyboard.press('Enter');
-    await page.waitForFunction(
-      () =>
-        document
-          .querySelector('[data-letter-demo]')
-          .getAttribute('aria-pressed') === 'true',
-    );
-    await page.waitForFunction(
-      () =>
-        document
-          .querySelector('[data-letter-demo]')
-          .getAttribute('aria-pressed') === 'false',
-    );
+    const word = page.locator('[data-static-lettering="comic"]');
+    await word.waitFor();
     assert.equal(
-      await page
-        .locator('[data-letter-demo]')
-        .evaluate((node) => node === document.activeElement),
+      await word
+        .locator('[id]')
+        .evaluateAll(
+          (nodes) =>
+            new Set(nodes.map((node) => node.id)).size === nodes.length,
+        ),
       true,
+      'theme artwork gradient IDs are unique',
     );
+    const box = await word.boundingBox();
+    for (let i = 0; i < 11; i++)
+      await page.mouse.move(
+        box.x + (box.width * (i + 0.5)) / 11,
+        box.y + box.height / 2,
+      );
+    await page.waitForTimeout(200);
+    assert.deepEqual(await page.locator('h1').boundingBox(), before);
     assert.equal(
       await page
-        .locator('[data-letter-decoration]')
-        .evaluate((node) => node.getAnimations({ subtree: true }).length),
+        .locator(
+          'h1 [tabindex], h1 button, [data-letter-demo], [data-letter-effect]',
+        )
+        .count(),
       0,
     );
+    assert.equal(
+      await word.evaluate(
+        (node) => node.getAnimations({ subtree: true }).length,
+      ),
+      0,
+    );
+    await page.screenshot({ path: path.join(output, 'letters.png') });
+    await page.locator('[data-theme-toggle]').click();
+    assert.equal(await word.locator('.dark-art svg').isVisible(), true);
+    await page.screenshot({ path: path.join(output, 'dark.png') });
   });
   await run(
     'touch',
@@ -249,15 +234,14 @@ async function main() {
     async (page) => {
       await opened(page);
       await dismissed(page);
-      await page.locator('[data-letter-demo]').tap();
-      await page.waitForTimeout(700);
-      await page.screenshot({ path: path.join(output, 'mobile.png') });
-      await page.waitForFunction(
-        () =>
-          document
-            .querySelector('[data-letter-demo]')
-            .getAttribute('aria-pressed') === 'false',
+      await page.locator('[data-static-lettering]').tap();
+      assert.equal(
+        await page
+          .locator('[data-static-lettering]')
+          .evaluate((node) => node.getAnimations({ subtree: true }).length),
+        0,
       );
+      await page.screenshot({ path: path.join(output, 'mobile.png') });
       for (const width of [320, 390]) {
         await page.setViewportSize({ width, height: 844 });
         await page.waitForTimeout(100);
@@ -267,9 +251,11 @@ async function main() {
           ),
           false,
         );
-        const demo = await page.locator('[data-letter-demo]').boundingBox();
+        const word = await page
+          .locator('[data-static-lettering]')
+          .boundingBox();
         const work = await page.locator('.work-link').boundingBox();
-        assert.ok(demo.y >= work.y + work.height);
+        assert.ok(work.y >= word.y + word.height);
       }
     },
   );
@@ -277,10 +263,10 @@ async function main() {
     await opened(page);
     await dismissed(page);
     assert.equal(await page.locator('canvas').count(), 0);
-    assert.equal(await page.locator('[data-letter-demo]').isDisabled(), true);
+    assert.equal(await page.locator('[data-letter-demo]').count(), 0);
     assert.equal(
       await page
-        .locator('[data-letter-decoration]')
+        .locator('[data-static-lettering]')
         .evaluate((node) => node.getAnimations({ subtree: true }).length),
       0,
     );
@@ -295,7 +281,7 @@ async function main() {
         name: 'Full stack web developer with an Imagination.',
       })
       .waitFor();
-    assert.equal(await page.locator('[data-letter-demo]').isVisible(), false);
+    assert.equal(await page.locator('[data-letter-demo]').count(), 0);
     await page.screenshot({ path: path.join(output, 'no-js.png') });
     await page.locator('.work-link').click();
     await page.waitForURL('**/work/');
@@ -303,8 +289,7 @@ async function main() {
   await run('lifecycle', {}, async (page) => {
     await opened(page);
     await dismissed(page);
-    await page.locator('[data-letter-demo]').click();
-    await page.waitForTimeout(150);
+    await page.locator('[data-static-lettering="comic"]').waitFor();
     await page.evaluate(() =>
       document.dispatchEvent(new Event('astro:before-swap')),
     );
@@ -318,15 +303,14 @@ async function main() {
       document.dispatchEvent(new Event('astro:page-load')),
     );
     await page.waitForFunction(
-      () => document.querySelectorAll('[data-letter-effect]').length === 6,
+      () => document.querySelectorAll('[data-avatar]').length === 1,
     );
     assert.equal(await page.locator('[data-reveal-cover]').count(), 0);
     await page.locator('.work-link').click();
     await page.waitForURL('**/work/');
     await page.goBack();
-    await page.waitForFunction(
-      () => document.querySelectorAll('[data-letter-effect]').length === 6,
-    );
+    await page.locator('[data-static-lettering="comic"]').waitFor();
+    assert.equal(await page.locator('[data-letter-demo]').count(), 0);
     assert.equal(await page.locator('h1').count(), 1);
   });
   await browser.close();

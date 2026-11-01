@@ -1,13 +1,12 @@
 ---
 import StackFallback from './portfolio/StackFallback.astro';
-import ImaginationLetters from './portfolio/ImaginationLetters.astro';
 import StaticLettering from './portfolio/StaticLettering.astro';
 import './portfolio/presentation.css';
 
 interface Props {
   lettering?: 'sculpted' | 'objects' | 'comic';
 }
-const { lettering } = Astro.props;
+const { lettering = 'comic' } = Astro.props;
 ---
 
 <section
@@ -20,32 +19,11 @@ const { lettering } = Astro.props;
     <h1 id="hero-heading">
       Full stack<br /><span class="developer">web developer</span><br />
       <span class="with">with an</span>{' '}
-      <em
-        >{
-          lettering ? (
-            <StaticLettering variant={lettering} />
-          ) : (
-            <ImaginationLetters />
-          )
-        }</em
-      >
+      <em><StaticLettering variant={lettering} /></em>
     </h1>
     <a class="work-link" href="/work/"
       >Explore my work <span aria-hidden="true">↗</span></a
     >
-    {
-      !lettering && (
-        <button
-          class="letter-demo"
-          type="button"
-          data-letter-demo
-          aria-pressed="false"
-          hidden
-        >
-          Animate Imagination
-        </button>
-      )
-    }
   </div>
   <StackFallback />
 </section>

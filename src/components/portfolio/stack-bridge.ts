@@ -8,7 +8,6 @@ import {
 import type { SceneSession, SceneReport, Recoil } from './StackExperience';
 import { mountInteraction } from './interaction';
 import { mountReveal } from './reveal';
-import { mountLetters } from './letters';
 import type { SceneReadiness } from './reveal-state';
 
 type StackEvent =
@@ -334,7 +333,6 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
     dispose() {
       if (disposed) return;
       reveal.dispose();
-      letters.dispose();
       character.dispose();
       disposed = true;
       release();
@@ -351,7 +349,6 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
     },
   };
   const character = mountInteraction(root, handle);
-  const letters = mountLetters(root);
   const reveal = mountReveal(root, handle.subscribeReadiness);
   document.addEventListener('astro:before-swap', () => handle.dispose(), {
     signal: lifetime.signal,
