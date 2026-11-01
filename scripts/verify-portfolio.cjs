@@ -581,9 +581,11 @@ async function main() {
 }
 
 const run =
-  process.env.PORTFOLIO_TICKET === 'P03'
-    ? require('./verify-stack.cjs').main
-    : main;
+  process.env.PORTFOLIO_TICKET === 'P04'
+    ? require('./verify-interaction.cjs').main
+    : process.env.PORTFOLIO_TICKET === 'P03'
+      ? require('./verify-stack.cjs').main
+      : main;
 run().catch((error) => {
   console.error(error);
   process.exitCode = 1;

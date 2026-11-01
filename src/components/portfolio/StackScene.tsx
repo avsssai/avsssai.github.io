@@ -7,7 +7,7 @@ import {
   type GeometryKind,
   type SceneLayout,
 } from './stack-items';
-import type { SceneReport } from './StackExperience';
+import type { SceneReport, RecoilChannel } from './StackExperience';
 
 const extrusion = {
   depth: 0.25,
@@ -22,6 +22,7 @@ const extrusion = {
 type Props = {
   layout: SceneLayout;
   active: boolean;
+  motion: RecoilChannel;
   onFrame(value: SceneReport): void;
 };
 
@@ -133,9 +134,18 @@ function Sculpture({ kind, colour }: { kind: GeometryKind; colour: string }) {
   );
 }
 
-function Contents({ layout, active, onFrame }: Props) {
+function Contents({ layout, active, motion, onFrame }: Props) {
   const { camera, gl, invalidate } = useThree();
   const groups = useRef(new Map<string, Group>());
+  const reactions = useRef(new Map<string, Group>());
+  useLayoutEffect(() => {
+    motion.invalidate = () => {
+      if (active) invalidate();
+    };
+    return () => {
+      motion.invalidate = () => {};
+    };
+  }, [motion, active, invalidate]);
   useLayoutEffect(() => {
     const orthographic = camera as OrthographicCamera;
     orthographic.left = -layout.width / 2;
@@ -147,6 +157,11 @@ function Contents({ layout, active, onFrame }: Props) {
   }, [layout, active, camera, invalidate]);
   useFrame(({ scene }) => {
     if (!active || document.hidden || gl.getContext().isContextLost()) return;
+    for (const [id, group] of reactions.current) {
+      const amount = motion.current?.id === id ? motion.current.amount : 0;
+      group.position.x = amount * 0.18;
+      group.rotation.z = -amount * 0.12;
+    }
     gl.render(scene, camera);
     if (groups.current.size !== layout.targets.length) return;
     const points = layout.targets.map((target) => {
@@ -190,11 +205,18 @@ function Contents({ layout, active, onFrame }: Props) {
           ]}
           scale={target.size * 0.43}
         >
-          <group rotation={[0, 0, (-target.tilt * Math.PI) / 180]}>
-            <Sculpture
-              kind={stackItems[index].geometry}
-              colour={stackItems[index].colour}
-            />
+          <group
+            ref={(group) => {
+              if (group) reactions.current.set(target.id, group);
+              else reactions.current.delete(target.id);
+            }}
+          >
+            <group rotation={[0, 0, (-target.tilt * Math.PI) / 180]}>
+              <Sculpture
+                kind={stackItems[index].geometry}
+                colour={stackItems[index].colour}
+              />
+            </group>
           </group>
           <mesh position={[0.05, -1.03, -0.6]} scale={[0.8, 0.11, 1]}>
             <circleGeometry args={[1, 24]} />

@@ -1,7 +1,10 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import StackScene from './StackScene';
-import type { Point, SceneLayout } from './stack-items';
+import type { Point, SceneLayout, StackId } from './stack-items';
+
+export type Recoil = Readonly<{ id: StackId; amount: number }>;
+export type RecoilChannel = { current: Recoil | null; invalidate(): void };
 
 export type SceneReport = Readonly<{
   revision: number;
@@ -11,6 +14,7 @@ export type SceneReport = Readonly<{
 }>;
 export interface SceneSession {
   update(layout: SceneLayout, active: boolean): void;
+  recoil(value: Recoil | null): void;
   dispose(): void;
 }
 
@@ -36,6 +40,7 @@ export function attachStackScene(
   onFailure: (reason: string) => void,
 ): SceneSession {
   const root = createRoot(host);
+  const motion: RecoilChannel = { current: null, invalidate() {} };
   let disposed = false;
   let generation = 0;
   const contextLost = (event: Event) => {
@@ -60,12 +65,18 @@ export function attachStackScene(
           <StackScene
             layout={layout}
             active={active}
+            motion={motion}
             onFrame={(value) => {
               if (!disposed && own === generation) onFrame(value);
             }}
           />
         </SceneBoundary>,
       );
+    },
+    recoil(value) {
+      if (disposed) return;
+      motion.current = value;
+      motion.invalidate();
     },
     dispose() {
       if (disposed) return;
