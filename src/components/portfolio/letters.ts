@@ -1,7 +1,8 @@
 import { letterEffects, letterFrames } from './letter-effects';
 
 export function mountLetters(root: HTMLElement) {
-  const word = root.querySelector<HTMLElement>('[data-imagination-word]')!;
+  const word = root.querySelector<HTMLElement>('[data-imagination-word]');
+  if (!word) return { dispose() {} };
   const source = word.querySelector<HTMLElement>('[data-letter-source]')!;
   const decoration = word.querySelector<HTMLElement>(
     '[data-letter-decoration]',

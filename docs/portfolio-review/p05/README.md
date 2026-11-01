@@ -1,5 +1,11 @@
 # P05 letters and paper reveal
 
+## Latest: static lettering alternatives
+
+The operator rejected the animated word treatment below and requested static cartoon/3D lettering. [Compare three new static studies here](lettering/README.md). They are isolated review routes, not a chosen homepage replacement. The screenshots and video below retain the older interactive treatment and do not show those studies.
+
+## Earlier interactive version
+
 P05 adds six deliberate accents to the natural word Imagination: stretch, ink offset, outline and a small colour burst. Explore the mapped letters with a fine pointer, or use the single **Animate Imagination** button with touch or keyboard. The source word stays readable and the heading layout does not move.
 
 On a first visit, a hero-local paper cover waits for the scene's real first frame, then peels away over 1400 ms. **Skip intro** is available immediately. Errors, reduced motion, resize or hidden-page transitions dismiss it; a separate deadline removes it after at most 4800 ms of scheduled time. Repeat visits omit it. Storage failures never block the page. Header navigation remains outside the cover; the cover never disables native links.

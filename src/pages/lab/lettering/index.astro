@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+const studies = [
+  {
+    id: 'sculpted',
+    title: '01 / Sculpted serif',
+    description: 'Paper-cut capital, ribbon g, star dot and a ceramic loop.',
+  },
+  {
+    id: 'objects',
+    title: '02 / Object letters',
+    description:
+      'Inflated lavender, folded paper, a pencil and glazed ceramic.',
+  },
+  {
+    id: 'comic',
+    title: '03 / Comic title',
+    description:
+      'Chunky ink extrusion, irregular lettering and warm cream faces.',
+  },
+];
+---
+
+<BaseLayout title="Static lettering studies">
+  <section class="studies">
+    <header>
+      <h1>Static lettering studies</h1><p>
+        Static lettering studies. Open a direction to see it in the hero.
+      </p>
+    </header>
+    {
+      studies.map((study) => (
+        <a class="study" href={`/lab/lettering/${study.id}/`}>
+          <div class="study-label">
+            <>
+              <h2>{study.title}</h2>
+              <span aria-hidden="true">↗</span>
+            </>
+          </div>
+          <div class="art">
+            <img
+              src={`/art/portfolio/lettering/${study.id}.svg`}
+              alt="Imagination."
+              width="900"
+              height="235"
+            />
+          </div>
+          <p>{study.description}</p>
+        </a>
+      ))
+    }
+  </section>
+</BaseLayout>
+<style>
+  .studies {
+    width: min(920px, calc(100% - 40px));
+    margin: 24px auto 56px;
+  }
+  header {
+    margin-bottom: 30px;
+  }
+  h1 {
+    font: 400 42px/1.1 var(--font-serif);
+    margin: 0 0 10px;
+  }
+  header p {
+    color: var(--color-muted);
+    font-size: 12px;
+    margin: 0;
+  }
+  .study {
+    display: block;
+    border-top: 1px solid var(--color-line);
+    padding: 16px 0 20px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .study-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  h2 {
+    font: 600 11px var(--font-sans);
+    margin: 0;
+  }
+  .art {
+    margin: 4px 0 0;
+    background: #f6f5f1;
+    border-radius: 12px;
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .study p {
+    margin: 0;
+    font-size: 11px;
+    color: var(--color-muted);
+  }
+</style>

@@ -1,0 +1,55 @@
+---
+interface Props {
+  variant: 'sculpted' | 'objects' | 'comic';
+}
+const { variant } = Astro.props;
+---
+
+<span class="static-lettering" data-static-lettering={variant}>
+  <span class="lettering-readable">Imagination.</span>
+  <img
+    class="light-art"
+    src={`/art/portfolio/lettering/${variant}.svg`}
+    alt=""
+    aria-hidden="true"
+    width="900"
+    height="235"
+  />
+  <img
+    class="dark-art"
+    src={`/art/portfolio/lettering/${variant}-dark.svg`}
+    alt=""
+    aria-hidden="true"
+    width="900"
+    height="235"
+  />
+</span>
+
+<style>
+  .static-lettering {
+    position: relative;
+    display: inline-block;
+  }
+  .lettering-readable {
+    opacity: 0;
+  }
+  .dark-art {
+    display: none;
+  }
+  :global([data-theme='dark']) .light-art {
+    display: none;
+  }
+  :global([data-theme='dark']) .dark-art {
+    display: block;
+  }
+  img {
+    position: absolute;
+    width: 116%;
+    max-width: none;
+    height: auto;
+    left: -6%;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+</style>
