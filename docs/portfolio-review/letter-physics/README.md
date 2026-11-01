@@ -1,6 +1,6 @@
 # Walking through Imagination — physics preview
 
-**Proposal only. The live site has not changed.** This keeps the approved white Three.js grid, original colourful comic letters, pointing-finger cursor and red-X destinations.
+**Historical loose-letter-only preview.** The subsequent [heavy-headline + loose-letter version](../headline-physics/README.md) was approved and is now [live](https://avsssai.github.io/). These earlier clips keep the approved white Three.js grid, original colourful comic letters, pointing-finger cursor and red-X destinations.
 
 ## Watch the interaction
 
@@ -35,4 +35,4 @@ These are recordings of the working local build, not keyframed mockups. The fing
 
 Implementation: [`633c6fe97072d7b1852b6ae81e3c84f1fc655e4c`](https://github.com/avsssai/avsssai.github.io/commit/633c6fe97072d7b1852b6ae81e3c84f1fc655e4c), branch [`poteto/portfolio-letter-physics`](https://github.com/avsssai/avsssai.github.io/tree/poteto/portfolio-letter-physics). Local interactive preview: `http://127.0.0.1:4333/` on the development machine.
 
-This branch is **media-only**; its historical application code is not the proposed implementation. Public main remains the approved white-grid deployment at `5cce6c5d7dd3b795bc218d31e2ecd3376a0869fe`. Await visual/feel approval before merging or deploying physics.
+This branch is **media-only**; its historical application code is not the implementation. The final combined version deployed via [PR #13](https://github.com/avsssai/avsssai.github.io/pull/13) at main `904aec78bc07945e3361cf9c9110749a74def5a8`. The metrics above describe this earlier loose-letter-only checkpoint.

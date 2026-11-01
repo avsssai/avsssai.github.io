@@ -1,6 +1,6 @@
 # Heavy headline, loose Imagination — updated preview
 
-**Preview only; the live site is unchanged.** The headline now has two physical personalities: solid, restrained **Full stack / web developer** blocks above the loose comic letters.
+**Approved and deployed: [avsssai.github.io](https://avsssai.github.io/).** The headline has two physical personalities: solid, restrained **Full stack / web developer** blocks above the loose comic letters. These clips were captured before deployment.
 
 ## Watch
 
@@ -34,4 +34,4 @@ Two high-density, locally constrained headline bodies share the existing Matter.
 
 Implementation: [`58d29be912f85b5a0deb459b6ed8af90e9ac5139`](https://github.com/avsssai/avsssai.github.io/commit/58d29be912f85b5a0deb459b6ed8af90e9ac5139), branch [`poteto/portfolio-letter-physics`](https://github.com/avsssai/avsssai.github.io/tree/poteto/portfolio-letter-physics). Interactive development preview: `http://127.0.0.1:4333/` on the development machine.
 
-This branch is a media gallery, not the implementation. Public main remains the approved white-grid deployment at `5cce6c5d7dd3b795bc218d31e2ecd3376a0869fe`. **Await feel/visual approval before deploying.** [Previous loose-letter-only preview](../letter-physics/README.md).
+This branch is a media gallery, not the implementation. The owner approved deployment; [PR #13](https://github.com/avsssai/avsssai.github.io/pull/13) merged to main `904aec78bc07945e3361cf9c9110749a74def5a8`. [Deployment succeeded](https://github.com/avsssai/avsssai.github.io/actions/runs/41332600613); PR/main CI and seven additional public Chrome checks passed. Physical-device/Safari/AT/performance limitations above remain. [Previous loose-letter-only preview](../letter-physics/README.md).
