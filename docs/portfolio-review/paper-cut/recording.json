@@ -10,46 +10,46 @@
       "events": [
         {
           "kind": "ready",
-          "ms": 1271
+          "ms": 974
         },
         {
           "kind": "outbound",
           "id": "react",
-          "ms": 3890
+          "ms": 3592
         },
         {
           "kind": "return",
           "id": "react",
-          "ms": 5274
+          "ms": 4976
         },
         {
           "kind": "home",
           "id": "react",
-          "ms": 6641
+          "ms": 6342
         },
         {
           "kind": "dark",
-          "ms": 7701
+          "ms": 7391
         },
         {
           "kind": "outbound",
           "id": "typescript",
-          "ms": 9723
+          "ms": 9375
         },
         {
           "kind": "return",
           "id": "typescript",
-          "ms": 12508
+          "ms": 12159
         },
         {
           "kind": "home",
           "id": "typescript",
-          "ms": 15107
+          "ms": 14744
         }
       ],
       "errors": [],
-      "bytes": 1162488,
-      "wallMs": 17794
+      "bytes": 1125342,
+      "wallMs": 17472
     }
   ]
 }

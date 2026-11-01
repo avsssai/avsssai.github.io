@@ -2,14 +2,14 @@
   {
     "name": "phone",
     "encoded": {
-      "sourceDuration": 17.08,
+      "sourceDuration": 16.56,
       "width": 390,
       "height": 844,
-      "bytes": 295905,
+      "bytes": 289113,
       "mime": "video/mp4"
     },
     "decoded": {
-      "duration": 17.076867,
+      "duration": 16.524367,
       "width": 390,
       "height": 844,
       "frames": [
