@@ -166,7 +166,6 @@ export function mountInteraction(root: HTMLElement, stack: StackExperience) {
       ]);
       view.avatar.style.transform = to;
       advance();
-      // Hold the striking limb through impact, using its transformed rig endpoint.
       await animate(
         limb,
         [{ transform: 'rotate(0deg)' }, { transform: 'rotate(-85deg)' }],

@@ -268,6 +268,19 @@ async function main() {
       'visible',
     );
   });
+  await run('target-lost', {}, async (page) => {
+    await page.locator(button).click();
+    await phase(page, 'travel');
+    await page.locator(button).evaluate((node) => node.remove());
+    await phase(page, 'idle');
+    assert.equal((await data(page)).interactions, '0');
+    assert.equal(
+      await page
+        .locator('[data-avatar-perch]')
+        .evaluate((node) => getComputedStyle(node).visibility),
+      'visible',
+    );
+  });
   await run('repeat', {}, async (page) => {
     const before = await page.locator('*').count();
     for (let i = 1; i <= 20; i++) {

@@ -271,7 +271,7 @@ export function mountStackExperience(root: HTMLElement): StackExperience {
     target(id) {
       if (disposed) return { kind: 'unavailable', reason: 'disposed' };
       const index = stackItems.findIndex((item) => item.id === id);
-      if (index < 0 || !root.isConnected)
+      if (index < 0 || !root.isConnected || !controls[index].isConnected)
         return { kind: 'unavailable', reason: 'unmeasured' };
       if (projected && projected.revision === layout?.revision && active())
         return {

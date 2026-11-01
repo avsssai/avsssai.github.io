@@ -1,6 +1,5 @@
 import character from '../../../public/art/portfolio/character.svg?raw';
 
-/** The provisional original rig shares its source with the static header image. */
 export function mountAvatar(root: HTMLElement, perch: HTMLImageElement) {
   const layer = document.createElement('div');
   layer.dataset.avatarLayer = '';
