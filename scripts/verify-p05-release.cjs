@@ -74,7 +74,8 @@ async function main() {
             const root = document.querySelector('[data-stack-experience]');
             return (
               root?.getAttribute('data-reveal-state') === 'ready' ||
-              root?.getAttribute('data-reveal-state') === 'complete'
+              root?.getAttribute('data-reveal-state') === 'complete' ||
+              root?.getAttribute('data-reveal-state') === 'failed'
             );
           },
           {},
