@@ -55,6 +55,8 @@ Impact now lasts 240 ms instead of 160 ms. The nominal complete sequence is 1,08
 
 `comic-effects.ts` owns move-to-word mapping and pure placement. A conservative rotated/scaled footprint is clamped to the viewport and scored against actual heading glyph rectangles, the CTA, header controls and the character at contact. Nearby obstacle edges supply alternatives when the initial local positions do not fit. This keeps the actor visible and avoids treating empty full-width heading boxes as text. Measurements happen once per accepted activation; only transform and opacity animate. The jump apex is kept inside the viewport.
 
+Horizontal viewport frames clip the longer trails and background dent without clipping the header perch vertically. Their inner origin stays hero-local, including a centred 1720 px hero inside a wider viewport. This prevents the return swoosh at edge targets from creating horizontal page scroll. An initial phone return-overflow probe failed before this fix; preserve that receipt rather than claiming first-run success.
+
 Five reusable effect elements now reset together. Reduced motion suppresses all five; the existing controller cancels their registered animations on geometry/lifecycle changes. Tests cover word mapping, viewport/obstacle placement, 320/390 px light and dark browser views, visible cloud/burst windows, stable heading bounds and repeated cleanup. No new controller, dependency or particle collection.
 
 ## Tradeoffs and open gates

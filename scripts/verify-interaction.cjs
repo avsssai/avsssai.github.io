@@ -400,6 +400,7 @@ async function main() {
       [390, 844, 'light'],
       [320, 568, 'light'],
       [390, 844, 'dark'],
+      [1920, 1080, 'light'],
     ]) {
       await page.setViewportSize({ width, height });
       await page.emulateMedia({ colorScheme: scheme });
@@ -419,6 +420,12 @@ async function main() {
           }),
         );
         await inspectComic(page, 'puff');
+        assert.equal(
+          await page.evaluate(
+            () => document.documentElement.scrollWidth > innerWidth,
+          ),
+          false,
+        );
         if (move === 'kick')
           await page.screenshot({
             path: path.join(output, `jump-${width}-${scheme}.png`),
@@ -461,6 +468,38 @@ async function main() {
         await waitKick(page, ++count);
         await hiddenEffects(page);
       }
+      await page
+        .locator('[data-stack-target="fastapi"]')
+        .evaluate((node) => node.click());
+      await phase(page, 'return');
+      await page.locator(hero).evaluate((node) =>
+        node.getAnimations({ subtree: true }).forEach((animation) => {
+          animation.pause();
+          animation.currentTime = 60;
+        }),
+      );
+      assert.equal(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth > innerWidth,
+        ),
+        false,
+        'return swoosh is clipped to viewport',
+      );
+      await page
+        .locator(hero)
+        .evaluate((node) =>
+          node
+            .getAnimations({ subtree: true })
+            .forEach((animation) => animation.play()),
+        );
+      await waitKick(page, ++count);
+      assert.equal(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth > innerWidth,
+        ),
+        false,
+      );
+      await hiddenEffects(page);
     }
   });
   await run('target-lost', {}, async (page) => {

@@ -1,11 +1,19 @@
 import character from '../../../public/art/portfolio/character.svg?raw';
 
 export function mountAvatar(root: HTMLElement, perch: HTMLImageElement) {
+  const viewportFrame = (zIndex: number) => {
+    const frame = document.createElement('div');
+    frame.setAttribute('aria-hidden', 'true');
+    frame.style.cssText = `position:absolute;top:0;bottom:0;left:0;width:100%;overflow-x:clip;overflow-y:visible;pointer-events:none;z-index:${zIndex};`;
+    return frame;
+  };
+  const foreground = viewportFrame(5);
+  const background = viewportFrame(0);
   const layer = document.createElement('div');
   layer.dataset.avatarLayer = '';
   layer.setAttribute('aria-hidden', 'true');
   layer.style.cssText =
-    'position:absolute;inset:0;pointer-events:none;z-index:5;overflow:visible;';
+    'position:absolute;top:0;bottom:0;left:0;width:100%;pointer-events:none;overflow:visible;';
   const avatar = document.createElement('div');
   avatar.dataset.avatar = '';
   avatar.style.cssText =
@@ -54,11 +62,20 @@ export function mountAvatar(root: HTMLElement, perch: HTMLImageElement) {
   dent.dataset.motionEffect = 'paper';
   dent.style.cssText =
     'position:absolute;width:144px;height:80px;opacity:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 50% 50%,transparent 32%,color-mix(in srgb,var(--color-ink) 9%,transparent) 48%,transparent 67%);';
-  root.prepend(dent);
+  background.append(dent);
+  root.prepend(background);
   layer.append(avatar, crack, ring, puff, burst);
-  root.append(layer);
+  foreground.append(layer);
+  root.append(foreground);
   const home = () => {
     const box = root.getBoundingClientRect();
+    for (const frame of [foreground, background]) {
+      frame.style.left = `${-box.x}px`;
+      frame.style.width = `${innerWidth}px`;
+    }
+    layer.style.left = `${box.x}px`;
+    layer.style.width = `${box.width}px`;
+    dent.style.marginLeft = `${box.x}px`;
     const anchor = perch.getBoundingClientRect();
     avatar.style.width = `${anchor.width}px`;
     avatar.style.height = `${anchor.height}px`;
@@ -97,8 +114,8 @@ export function mountAvatar(root: HTMLElement, perch: HTMLImageElement) {
     },
     dispose() {
       perch.style.visibility = '';
-      layer.remove();
-      dent.remove();
+      foreground.remove();
+      background.remove();
     },
   };
 }
