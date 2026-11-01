@@ -4,7 +4,9 @@ This is the replacement direction requested after the paper-cut homepage: a whit
 
 Click an empty spot to place the cartoon red X and show a dotted route. The character walks there and stays. A new click changes the destination from its current position; it does not return home automatically. The cream peel entrance is retained.
 
-**Preview only — not deployed.** These images were captured from the current local implementation at <http://127.0.0.1:4332/> in `portfolio-grid`, branch `poteto/portfolio-grid`. This gallery-only branch still contains historical application source; it is not the source of the screenshots. Publishing these images does not replace the live site.
+**Now deployed, after the owner approved these screenshots:** <https://avsssai.github.io/>. PR [#12](https://github.com/avsssai/avsssai.github.io/pull/12), main commit `5cce6c5d7dd3b795bc218d31e2ecd3376a0869fe`; [successful deployment](https://github.com/avsssai/avsssai.github.io/actions/runs/41323415349).
+
+These are the pre-deployment images captured from <http://127.0.0.1:4332/> in `portfolio-grid`, branch `poteto/portfolio-grid`. This gallery-only branch still contains historical application source; it is not the source of the screenshots. Publication of this gallery did not itself deploy the application.
 
 ## Desktop
 
