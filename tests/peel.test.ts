@@ -5,6 +5,8 @@ import {
   peelFold,
   settleAxis,
   isDetachPull,
+  peelProgress,
+  PEEL_COMMIT_PROGRESS,
   detachedTip,
   clampTip,
 } from '../src/components/portfolio/peel-math.ts';
@@ -72,9 +74,31 @@ test('cylinder position is continuous at both flat-to-curve joins', () => {
     assert.ok(Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z) < 0.001);
   }
 });
-test('releasing halfway does not imply full detachment', () => {
-  assert.equal(isDetachPull({ x: 720, y: 350 }, 1440, 900), false);
-  assert.equal(isDetachPull({ x: 20, y: 880 }, 1440, 900), true);
+test('a pull commits at 60% of usable distance, not at the far screen edge', () => {
+  assert.equal(PEEL_COMMIT_PROGRESS, 0.6);
+  for (const [width, height] of [
+    [1440, 900],
+    [390, 844],
+    [320, 568],
+  ]) {
+    for (const angle of [0.35, Math.PI / 4, 1.2]) {
+      for (const progress of [0.2, 0.59, 0.601, 0.8, 1]) {
+        const distance =
+          51 + progress * (Math.hypot(width, height) * 0.94 - 51);
+        const tip = {
+          x: width - Math.cos(angle) * distance,
+          y: Math.sin(angle) * distance,
+        };
+        near(peelProgress(tip, width, height), progress);
+        assert.equal(isDetachPull(tip, width, height), progress >= 0.6);
+      }
+    }
+    near(peelProgress({ x: width - 36, y: 36 }, width, height), 0);
+    assert.equal(
+      peelProgress({ x: -width * 2, y: height * 3 }, width, height),
+      1,
+    );
+  }
 });
 test('a completed pull moves every corner beyond the bend into the free sheet', () => {
   const tip = detachedTip({ x: 30, y: 850 }, 1440, 900);

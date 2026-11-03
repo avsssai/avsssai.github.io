@@ -89,14 +89,27 @@ export function clampTip(
   };
 }
 
-// Only a deliberate pull to the far edge can detach. A release in the middle
-// never projects momentum into an unsolicited full dismissal.
+// Progress shares the slider's usable pull distance (the curled corner is 0).
+export function peelProgress(tip: PeelPoint, width: number, height: number) {
+  return Math.max(
+    0,
+    Math.min(
+      1,
+      (Math.hypot(width - tip.x, tip.y) - 51) /
+        (Math.hypot(width, height) * 0.94 - 51),
+    ),
+  );
+}
+
+export const PEEL_COMMIT_PROGRESS = 0.6;
+
+// Once most of the gesture is intentional, finish the rest for the visitor.
 export function isDetachPull(
   tip: PeelPoint,
   width: number,
   height: number,
 ): boolean {
-  return Math.hypot(width - tip.x, tip.y) >= Math.hypot(width, height) * 0.94;
+  return peelProgress(tip, width, height) >= PEEL_COMMIT_PROGRESS;
 }
 
 export function detachedTip(
