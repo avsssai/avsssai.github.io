@@ -6,6 +6,7 @@ import type { SceneReadiness } from './reveal-state';
 import type { createGridRenderer } from './grid-renderer';
 import type { mountLetterPhysics } from './letter-physics';
 import { readProtectedRects } from './copy-obstacles';
+import { mountGridInvitation } from './grid-invitation';
 
 const mounted = new WeakMap<HTMLElement, { dispose(): void }>();
 export function mountGrid(root: HTMLElement) {
@@ -27,6 +28,7 @@ export function mountGrid(root: HTMLElement) {
   )!;
   let letters: ReturnType<typeof mountLetterPhysics>;
   let lettersLoading = false;
+  let invitation: ReturnType<typeof mountGridInvitation> | undefined;
   const instructions = root.querySelector<HTMLElement>(
     '[data-grid-instructions]',
   )!;
@@ -144,6 +146,7 @@ export function mountGrid(root: HTMLElement) {
     marker.style.transform = `translate(${point.x - 19}px,${point.y - 19}px)`;
   };
   const stop = () => {
+    invitation?.clearBubble();
     serial++;
     letters?.stop();
     walking.cancel();
@@ -169,6 +172,7 @@ export function mountGrid(root: HTMLElement) {
       return;
     }
     stop();
+    invitation?.complete();
     const own = serial;
     destination = { ...point };
     aim = { ...point };
@@ -184,7 +188,9 @@ export function mountGrid(root: HTMLElement) {
       position(point);
       letters?.stop();
       root.dataset.gridPhase = 'idle';
-      status.textContent = 'Made it. Pick another spot when you like.';
+      status.textContent = invitation?.arrive(point)
+        ? 'Nice. Where next? Click another clear grid square.'
+        : 'Made it. Pick another spot when you like.';
     };
     if (instant || reduce.matches || !route) {
       letters?.releaseCharacter();
@@ -269,6 +275,21 @@ export function mountGrid(root: HTMLElement) {
   root.dataset.gridPhase = 'idle';
   instructions.hidden = false;
   const reveal = documentMode ? undefined : mountReveal(root, subscribe);
+  if (!documentMode) {
+    invitation = mountGridInvitation({
+      root,
+      current,
+      control,
+      choose,
+      reachable(point) {
+        const { bounds, obstacles } = geometry();
+        return (
+          legal(point, bounds, obstacles) &&
+          Boolean(walkingRoute(current(), point, bounds, obstacles))
+        );
+      },
+    });
+  }
   if (documentMode) {
     root.dataset.gridRenderer = 'fallback';
   } else if (reduce.matches) notify('reduced');
@@ -411,6 +432,7 @@ export function mountGrid(root: HTMLElement) {
     avatar.style.visibility = 'hidden';
     perch.style.visibility = '';
     status.textContent = 'Pick a spot on the grid.';
+    invitation?.refresh();
     try {
       letters?.reset();
     } catch {
@@ -487,6 +509,7 @@ export function mountGrid(root: HTMLElement) {
       renderer?.dispose();
       letters?.dispose();
       walking.dispose();
+      invitation?.dispose();
       layer.remove();
       perch.style.visibility = '';
       instructions.hidden = true;

@@ -10,6 +10,8 @@ import {
   clampTip,
   detachedTip,
   isDetachPull,
+  peelProgress,
+  PEEL_COMMIT_PROGRESS,
   settleAxis,
   type PeelPoint,
   type SpringAxis,
@@ -38,6 +40,8 @@ export function mountReveal(
   let raf = 0;
   let lastTime = 0;
   let completing = false;
+  let completionStart = 0;
+  let completionFrom: PeelPoint | undefined;
   const width = innerWidth;
   const height = innerHeight;
   const diagonal = Math.hypot(width, height);
@@ -51,9 +55,6 @@ export function mountReveal(
         x: number;
         y: number;
         tip: PeelPoint;
-        time: number;
-        vx: number;
-        vy: number;
       }
     | undefined;
   let moved = false;
@@ -84,6 +85,7 @@ export function mountReveal(
     unsubscribe();
     lifetime.abort();
     if (mark) rememberReveal(() => localStorage);
+    root.dispatchEvent(new Event('portfolio:revealed'));
     if (focus)
       root
         .querySelector<HTMLAnchorElement>('.work-link')
@@ -93,15 +95,8 @@ export function mountReveal(
     if (ended || !renderer || !grip || !range) return;
     try {
       renderer.draw(tip);
-      grip.style.transform = `translate(${Math.max(28, Math.min(width - 28, tip.x)) - 28}px, ${Math.max(28, Math.min(height - 110, tip.y)) - 28}px)`;
-      const progress = Math.min(
-        100,
-        Math.max(
-          0,
-          ((Math.hypot(width - tip.x, tip.y) - 51) / (diagonal * 0.94 - 51)) *
-            100,
-        ),
-      );
+      grip.style.transform = `translate(${Math.max(36, Math.min(width - 36, tip.x)) - 36}px, ${Math.max(36, Math.min(height - 110, tip.y)) - 36}px)`;
+      const progress = peelProgress(tip, width, height) * 100;
       range.value = String(Math.round(progress));
       root.dataset.peelProgress = String(progress);
       root.dataset.peelTipX = String(tip.x);
@@ -118,6 +113,19 @@ export function mountReveal(
     if (ended) return;
     const dt = Math.min(0.05, Math.max(0.001, (now - lastTime) / 1000));
     lastTime = now;
+    if (completing && completionFrom) {
+      const progress = Math.min(1, (now - completionStart) / 280);
+      // easeOutCubic: finish from the actual grab, without restarting the peel.
+      const eased = 1 - (1 - progress) ** 3;
+      tip = {
+        x: completionFrom.x + (target.x - completionFrom.x) * eased,
+        y: completionFrom.y + (target.y - completionFrom.y) * eased,
+      };
+      draw();
+      if (progress === 1) finish('finish');
+      else if (!ended) raf = requestAnimationFrame(tick);
+      return;
+    }
     if (!drag) {
       sx = settleAxis(sx, target.x, dt);
       sy = settleAxis(sy, target.y, dt);
@@ -131,7 +139,6 @@ export function mountReveal(
       tip = { ...target };
       draw();
       root.dataset.peelMotion = 'held';
-      if (completing) finish('finish');
     } else if (!drag) raf = requestAnimationFrame(tick);
   };
   const schedule = () => {
@@ -140,12 +147,24 @@ export function mountReveal(
       raf = requestAnimationFrame(tick);
     }
   };
+  const commit = () => {
+    if (ended || completing) return;
+    const own = drag;
+    drag = undefined;
+    completing = true;
+    completionStart = performance.now();
+    completionFrom = { ...tip };
+    target = detachedTip(tip, width, height);
+    if (own && grip?.hasPointerCapture(own.id))
+      grip.releasePointerCapture(own.id);
+    root.dataset.peelMotion = 'detaching';
+    schedule();
+  };
   const keyboardProgress = (value: number) => {
-    if (!active || ended) return;
-    completing = false;
+    if (!active || ended || completing) return;
     cancelAnimationFrame(raf);
     raf = 0;
-    if (value >= 100) return finish('finish');
+    if (value >= PEEL_COMMIT_PROGRESS * 100) return finish('finish');
     update('peel');
     const angle = Math.atan2(tip.y, width - tip.x);
     const length = 51 + (Math.max(0, value) / 100) * (diagonal * 0.94 - 51);
@@ -158,18 +177,18 @@ export function mountReveal(
   };
   const release = (event: PointerEvent, cancelled = false) => {
     if (!drag || event.pointerId !== drag.id || ended) return;
+    if (!cancelled && moved && isDetachPull(tip, width, height)) {
+      commit();
+      return;
+    }
     const own = drag;
     drag = undefined;
     if (grip?.hasPointerCapture(own.id)) grip.releasePointerCapture(own.id);
-    // Preserve the exact release location as the resting position. Velocity
-    // causes a small physical settle, never a projected halfway auto-dismiss.
-    target = { ...tip };
-    const fresh = performance.now() - own.time < 80;
-    sx = { position: tip.x, velocity: fresh && !cancelled ? own.vx : 0 };
-    sy = { position: tip.y, velocity: fresh && !cancelled ? own.vy : 0 };
-    completing = !cancelled && moved && isDetachPull(tip, width, height);
-    if (completing) target = detachedTip(tip, width, height);
-    root.dataset.peelMotion = completing ? 'detaching' : 'settling';
+    // An unfinished/cancelled pull returns to the loose corner, not a stuck sheet.
+    target = { x: width - 36, y: 36 };
+    sx = { position: tip.x, velocity: 0 };
+    sy = { position: tip.y, velocity: 0 };
+    root.dataset.peelMotion = 'settling';
     schedule();
   };
   const scene = async (value: SceneReadiness) => {
@@ -230,7 +249,7 @@ export function mountReveal(
     grip.append(tab);
     grip.setAttribute(
       'aria-label',
-      'Peel cover further. Drag to peel, release to hold.',
+      'Pull to peel. The cover comes off automatically after sixty percent.',
     );
     grip.addEventListener(
       'click',
@@ -250,7 +269,7 @@ export function mountReveal(
     status.textContent = 'Loading scene';
     const instructions = document.createElement('span');
     instructions.className = 'reveal-instructions';
-    instructions.textContent = 'Pull the tab. Release to hold.';
+    instructions.textContent = 'Pull the tab — I’ll take it from there.';
     const label = document.createElement('label');
     label.className = 'reveal-range-label';
     label.textContent = 'Peel';
@@ -282,13 +301,14 @@ export function mountReveal(
         if (
           !active ||
           ended ||
+          completing ||
           drag ||
           !event.isPrimary ||
           event.button !== 0 ||
           controls?.contains(event.target as Node)
         )
           return;
-        const onGrip = event.target === grip;
+        const onGrip = grip?.contains(event.target as Node);
         if (!onGrip && !renderer?.hits(event.clientX, event.clientY)) return;
         event.preventDefault();
         event.stopPropagation();
@@ -301,9 +321,6 @@ export function mountReveal(
           x: event.clientX,
           y: event.clientY,
           tip: { ...tip },
-          time: performance.now(),
-          vx: 0,
-          vy: 0,
         };
         completing = false;
         target = { ...tip };
@@ -317,7 +334,7 @@ export function mountReveal(
     document.addEventListener(
       'pointermove',
       (event) => {
-        if (!drag || drag.id !== event.pointerId) return;
+        if (!drag || drag.id !== event.pointerId || completing) return;
         const next = clampTip(
           {
             x: drag.tip.x + event.clientX - drag.x,
@@ -326,18 +343,13 @@ export function mountReveal(
           width,
           height,
         );
-        const now = performance.now();
-        const dt = Math.max(8, now - drag.time) / 1000;
-        const limit = diagonal * 0.8;
-        drag.vx = Math.max(-limit, Math.min(limit, (next.x - tip.x) / dt));
-        drag.vy = Math.max(-limit, Math.min(limit, (next.y - tip.y) / dt));
-        drag.time = now;
         moved ||=
           Math.hypot(event.clientX - drag.x, event.clientY - drag.y) > 8;
         tip = next;
         sx.position = tip.x;
         sy.position = tip.y;
-        schedule();
+        if (moved && isDetachPull(tip, width, height)) commit();
+        else schedule();
       },
       { signal },
     );
